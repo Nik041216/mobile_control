@@ -11,6 +11,8 @@ def handle_user_sessions(page):
     if os.path.exists("database_client.db"):
         if scr.BD.bd_users.local.select_bd.select_user_data():
             result = scr.BD.bd_users.local.select_bd.select_user_data()
+        else:
+            result = None
         if result:  # Проверяем, что содержимое не пустое
             for record in result:
                 login = record[1]
