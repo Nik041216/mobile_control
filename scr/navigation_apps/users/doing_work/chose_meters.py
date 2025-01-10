@@ -1,11 +1,6 @@
-import datetime
 import flet as ft
 import scr.BD.bd_users.local.update_bd
-import scr.BD.bd_users.local.delete_bd
-import scr.BD.bd_users.local.insert_bd
 import scr.BD.bd_users.local.select_bd
-import scr.BD.bd_users.bd_server_user
-import scr.toggle_user_sessions
 import scr.func
 import scr.constants as const
 import scr.navigation_apps.users.pages.main_users_screen
@@ -22,8 +17,8 @@ def show_meters_data(page, id_task, where):
     screen_width = page.width
     screen_height = page.height
     page.controls.clear()
-    results_meters_data_v2 = scr.BD.bd_users.local.select_bd.select_meters_data_new_v2(id_task)
-    results_address_data_v2 = scr.BD.bd_users.local.select_bd.select_tasks_data_for_one_v2(id_task)
+    results_meters_data_v2 = scr.BD.bd_users.local.select_bd.select_meters_data_new(id_task)
+    results_address_data_v2 = scr.BD.bd_users.local.select_bd.select_tasks_data_for_one(id_task)
     filtered_results_v2 = [
         result_address_data_v2 for result_address_data_v2 in results_address_data_v2
     ]
@@ -249,23 +244,22 @@ def show_meters_data(page, id_task, where):
         else:
             scr.navigation_apps.users.pages.future_user_screen.main(page)
 
-    def on_click_save_v2(e):
-        scr.BD.bd_users.local.update_bd.update_dop_data_address_v2(
-            remark_textfield_v2.value, registered_residing_textfield_v2.value, standarts_textfield_v2.value,
+    def on_click_save(e):
+        scr.BD.bd_users.local.update_bd.update_dop_data_address(
+            remark_textfield.value, registered_residing_textfield.value, standarts_textfield.value,
             area_textfield.value, id_address, id_task)
         call_show_meters_data(page, id_task, where)
         page.update()
 
     button_back = ft.ElevatedButton("Назад", on_click=on_click_back, bgcolor=ft.colors.RED_200)
-    # button_save = ft.ElevatedButton("Сохранить", on_click=on_click_save, bgcolor=ft.colors.BLUE_200, visible=False)
-    button_save_v2 = ft.ElevatedButton("Сохранить", on_click=on_click_save_v2, bgcolor=ft.colors.BLUE_200,
+    button_save_v2 = ft.ElevatedButton("Сохранить", on_click=on_click_save, bgcolor=ft.colors.BLUE_200,
                                        visible=False)
     filtered_results_meters = [result for result in results_meters_data_v2]
     column = ft.Column(scroll=ft.ScrollMode.AUTO, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
     color = ft.colors.GREY
     column.controls.clear()
 
-    def on_change_dop_data_v2(e):
+    def on_change_dop_data(e):
         button_save_v2.visible = True
         page.update()
 
@@ -317,41 +311,36 @@ def show_meters_data(page, id_task, where):
         )
         column.controls.append(container)
 
-    remark_textfield_v2 = ft.TextField(label="Примечание", value=remark_task, on_change=on_change_dop_data_v2)
-    registered_residing_textfield_v2 = ft.TextField(label="Прописанно", value=registered_residing,
-                                                    on_change=on_change_dop_data_v2)
+    remark_textfield = ft.TextField(label="Примечание", value=remark_task, on_change=on_change_dop_data)
+    registered_residing_textfield = ft.TextField(label="Прописанно", value=registered_residing,
+                                                 on_change=on_change_dop_data)
     for i in const.norma_water_supply:
         if i == standarts:
             standarts = i
-    standarts_textfield_v2 = ft.Dropdown(
-        on_change=on_change_dop_data_v2,
+    standarts_textfield = ft.Dropdown(
+        on_change=on_change_dop_data,
         label="Нормативы",
         value=standarts,
         options=[
             ft.dropdown.Option(value) for value in const.norma_water_supply
         ],
     )
-    content_standarts = ft.Column()
-    standarts_setting = ft.AlertDialog(
-        title=ft.Text("Определение нормативов"),
-        content=content_standarts,
-    )
-    area_textfield = ft.TextField(label="Площадь", value=area, on_change=on_change_dop_data_v2)
+    area_textfield = ft.TextField(label="Площадь", value=area, on_change=on_change_dop_data)
 
-    dop_buttons_redact_v2 = ft.Row(
+    dop_buttons_redact = ft.Row(
         [
             ft.Column(
                 [
-                    remark_textfield_v2,
-                    registered_residing_textfield_v2,
-                    standarts_textfield_v2,
+                    remark_textfield,
+                    registered_residing_textfield,
+                    standarts_textfield,
                     area_textfield
 
                 ]
             )
         ]
     )
-    panels_v2 = [
+    panels = [
         ft.ExpansionPanel(
             header=ft.Row(
                 [
@@ -361,7 +350,7 @@ def show_meters_data(page, id_task, where):
                 expand=True
             ),
             can_tap_header=True,
-            content=dop_buttons_redact_v2,
+            content=dop_buttons_redact,
             expanded=False,
             aspect_ratio=100,
             bgcolor=ft.colors.BLUE_100,
@@ -369,7 +358,7 @@ def show_meters_data(page, id_task, where):
     ]
     panel_list = ft.ExpansionPanelList(
         elevation=25,
-        controls=panels_v2,
+        controls=panels,
         expanded_header_padding=3
     )
     container = ft.Container(

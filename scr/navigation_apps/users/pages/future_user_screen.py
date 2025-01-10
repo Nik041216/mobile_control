@@ -38,7 +38,7 @@ def main(page):
         completed_icon.color = ft.colors.WHITE
         completed_tasks_container.shadow.color = ft.colors.BLACK38
 
-        scr.BD.bd_users.bd_server_user.select_task_data_for_update_v2(page)
+        scr.BD.bd_users.bd_server_user.select_task_data_for_update(page)
         update_results()
         page.update()
 
@@ -155,18 +155,12 @@ def main(page):
 
         page.overlay.append(date_picker)
         search_value = search_bar.value
-        results_v2 = scr.BD.bd_users.local.select_bd.select_tasks_data_new_v2(sorting, search_value, "future")
-        # results = scr.BD.bd_users.local.select_bd.select_future_tasks_data_new(sorting, search_value)
-
-        # if filter_statuses:
-        #     filtered_results = [result for result in results if result[10] in filter_statuses]
-        # else:
-        #     filtered_results = [result for result in results]
+        results = scr.BD.bd_users.local.select_bd.select_tasks_data_new(sorting, search_value, "future")
         if filter_statuses:
-            filtered_results_v2 = [result_v2 for result_v2 in results_v2 if result_v2[12] in filter_statuses]
+            filtered_results = [result for result in results if result[12] in filter_statuses]
         else:
-            filtered_results_v2 = [
-                result_v2 for result_v2 in results_v2
+            filtered_results = [
+                result for result in results
             ]
 
         column.controls.clear()
@@ -179,15 +173,10 @@ def main(page):
             expanded_header_padding=3
         )
 
-        # for result in filtered_results:
-        #     id_task, person_name, district, street, dom, apartment, phone_number, \
-        #         personal_account, date, remark, status, purpose, registered_residing, \
-        #         status_address, standarts, area, saldo = result
-
-        for result_v2 in filtered_results_v2:
+        for result in filtered_results:
             id_task, fio, district, hamlet, street, dom, apartment, phone_number, \
                 personal_account, date, date_end, remark_task, status, purpose, \
-                registered_residing, standarts, area, saldo = result_v2
+                registered_residing, standarts, area, saldo = result
 
             # Проверяем, существует ли уже ключ для этой даты, если нет - создаем
             if date not in tasks_by_date:
@@ -216,7 +205,7 @@ def main(page):
                 def on_click(e):
                     page.close(view)
 
-                results_address_data = scr.BD.bd_users.local.select_bd.select_tasks_data_for_one_v2(id_task)
+                results_address_data = scr.BD.bd_users.local.select_bd.select_tasks_data_for_one(id_task)
                 filtered_results = [
                     result_address_data for result_address_data in results_address_data
                 ]
@@ -310,7 +299,7 @@ def main(page):
                                         ft.ElevatedButton("Просмотреть",
                                                           on_click=lambda e: viewing(e, id_task),
                                                           bgcolor=ft.colors.BLUE_200,
-                                                          width=screen_width * 0.30),
+                                                          width=screen_width * 0.35),
                                         ft.ElevatedButton("Выполнить",
                                                           on_click=on_click,
                                                           bgcolor=ft.colors.BLUE_200,
@@ -390,7 +379,7 @@ def main(page):
     column = ft.Column(scroll=ft.ScrollMode.AUTO, expand=True)
 
     def on_click_upload(e):
-        scr.BD.bd_users.bd_server_user.upload_data_to_server_v2(page)
+        scr.BD.bd_users.bd_server_user.upload_data_to_server(page)
 
     update_results()
 

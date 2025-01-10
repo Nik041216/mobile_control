@@ -19,7 +19,7 @@ def setting(page):
     )
 
     def on_click_exit(e):
-        scr.BD.bd_users.local.delete_bd.delete_data_db_v2()
+        scr.BD.bd_users.local.delete_bd.delete_data_db()
         scr.toggle_user_sessions.handle_user_sessions(page)
 
     result = scr.BD.bd_users.local.select_bd.select_user_data()

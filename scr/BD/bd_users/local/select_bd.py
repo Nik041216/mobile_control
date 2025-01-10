@@ -14,17 +14,6 @@ def select_meters_data_new(id_task):
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
         query = f""" Select m.* from meters as m
-          join tasks as t on t.id_address = m.id_address
-          where t.id ={id_task} """
-        cursor.execute(query)
-        result = cursor.fetchall()
-        return result
-
-
-def select_meters_data_new_v2(id_task):
-    with sl.connect('database_client.db') as db:
-        cursor = db.cursor()
-        query = f""" Select m.* from meters as m
           join meter_task as mt on mt.meter_id = m.meter_number
           where mt.task_id ={id_task} """
         cursor.execute(query)
@@ -43,18 +32,7 @@ def select_meter_reading_new(meter_id):
         return result
 
 
-def select_meter_reading_new_v2(meter_id):
-    with sl.connect('database_client.db') as db:
-        cursor = db.cursor()
-        query = f""" Select meter_id, last_reading_date, last_reading_value, 
-            new_reading_date, new_reading_value from meter_reading 
-          where meter_id = {meter_id} """
-        cursor.execute(query)
-        result = cursor.fetchall()
-        return result
-
-
-def select_tasks_data_new_v2(sorting, search_value, date):
+def select_tasks_data_new(sorting, search_value, date):
     search_value = search_value.lower()
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
@@ -91,19 +69,6 @@ def select_tasks_data_new_v2(sorting, search_value, date):
 def select_tasks_data_for_one(id_task):
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
-        query = f""" Select t.id|| '', t.name, a.street, a.dom, a.apartment, t.phone_number, 
-        t.personal_account || '', t.date, t.remark, t.status, t.purpose, a.registered_residing|| '', 
-        a.status, a.standarts|| '', a.area|| '', t.saldo, a.type_address from tasks as t
-            join address as a on a.id = t.id_address 
-            where t.id = {id_task} """
-        cursor.execute(query)
-        result = cursor.fetchall()
-        return result
-
-
-def select_tasks_data_for_one_v2(id_task):
-    with sl.connect('database_client.db') as db:
-        cursor = db.cursor()
         query = f""" Select a.id, t.id|| '', t.fio, a.street, a.dom, a.apartment, t.phone_number, 
         t.personal_account || '', t.date, t.date_end, t.remark_task, t.status, t.purpose, a.registered_residing|| '', 
         a.standarts|| '', a.area|| '', t.saldo, a.type_address from tasks as t
@@ -115,17 +80,6 @@ def select_tasks_data_for_one_v2(id_task):
 
 
 def select_meters_data_new_for_one(id_task, meter_id):
-    with sl.connect('database_client.db') as db:
-        cursor = db.cursor()
-        query = f""" Select m.* from meters as m
-          join tasks as t on t.id_address = m.id_address
-          where t.id ={id_task} and m.id = {meter_id} """
-        cursor.execute(query)
-        result = cursor.fetchall()
-        return result
-
-
-def select_meters_data_new_for_one_v2(id_task, meter_id):
 
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
@@ -138,18 +92,6 @@ def select_meters_data_new_for_one_v2(id_task, meter_id):
 
 
 def get_data_to_upload():
-    with sl.connect('database_client.db') as db:
-        cursor = db.cursor()
-        query = """ Select t.id, t.unloading_time, mr.new_reading_value, 
-        mr.new_reading_date, t.remark, t.status, mr.meter_id, m.meter_remark, t.purpose, m.seal_number from tasks as t
-        join meters as m on m.id_address = t.id_address
-        join meter_reading as mr on mr.meter_id = m.id"""
-        cursor.execute(query)
-        result = cursor.fetchall()
-        return result
-
-
-def get_data_to_upload_v2():
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
         query = """ 
@@ -165,7 +107,7 @@ def get_data_to_upload_v2():
         return result
 
 
-def select_photo_data_new(meter_id, task_id):
+def select_photo_data(meter_id, task_id):
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
         query = f""" select * from picture where meter_id = {meter_id} and task_id = {task_id} """
@@ -175,16 +117,6 @@ def select_photo_data_new(meter_id, task_id):
 
 
 def get_dop_data_to_upload():
-    with sl.connect('database_client.db') as db:
-        cursor = db.cursor()
-        query = """ Select a.id, a.registered_residing, a.status, a.standarts, a.area, t.remark, t.id from address as a
-                    join tasks as t on t.id_address = a.id"""
-        cursor.execute(query)
-        result = cursor.fetchall()
-        return result
-
-
-def get_dop_data_to_upload_v2():
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
         query = """ Select a.id, a.registered_residing, a.standarts, a.area, t.remark_task,t.id from address as a

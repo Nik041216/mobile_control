@@ -9,29 +9,13 @@ def insert_bd_user(id_user, login, password, privileges, first_name, last_name, 
         query = f""" Insert into user values({id_user}, '{login}', '{password}', 
             {privileges}, '{first_name}','{last_name}' ) """
         cursor.execute(query)
-    scr.BD.bd_users.bd_server_user.select_task_data_v2(id_user)
+    scr.BD.bd_users.bd_server_user.select_task_data(id_user)
     scr.navigation_apps.navigations.role_definition(privileges, page)
 
 
-def insert_bd_task(task_id, name, address_id, city, district, street, dom, apartment,
-                   entrance, phone_number, personal_account, date_task, remark, status_task, purpose,
-                   registered_residing, address_status, standarts, area, saldo, type_address):
-    with sl.connect('database_client.db') as db:
-        cursor = db.cursor()
-        query = f""" Insert into tasks 
-        (id, name, id_address, phone_number, personal_account, date, remark, status, purpose, saldo)
-         values ({task_id}, '{name}', {address_id}, '{phone_number}', '{personal_account}', 
-            '{date_task}', '{remark}', '{status_task}', '{purpose}', {saldo}) """
-        cursor.execute(query)
-
-        query2 = f""" Insert into address values ({address_id}, '{city}', '{district}', '{street}', '{dom}', 
-            '{apartment}', '{entrance}', {registered_residing}, '{address_status}',  {standarts}, {area}, '{type_address}')"""
-        cursor.execute(query2)
-
-
-def insert_bd_task_v2(task_id, name, address_id, city, district, hamlet, street, dom, apartment,
-                      entrance, phone_number, personal_account, date_task, date_end, task_remark, status_task, purpose,
-                      registered_residing, standarts, area, saldo, type_address):
+def insert_bd_task(task_id, name, address_id, city, district, hamlet, street, dom, apartment,
+                   entrance, phone_number, personal_account, date_task, date_end, task_remark, status_task, purpose,
+                   registered_residing, standarts, area, saldo, type_address):
     if hamlet is None:
         hamlet = ""
     if street is None:
@@ -65,21 +49,6 @@ def insert_bd_task_v2(task_id, name, address_id, city, district, hamlet, street,
         cursor.execute(query2)
 
 
-def insert_bd_meters(id_meter, meter_number, instalation_day, meter_type, id_address, meter_remark, marka, seal_number,
-                     date_next_verification, location, type_protection):
-    if meter_remark is None:
-        meter_remark = ""
-    with sl.connect('database_client.db') as db:
-        cursor = db.cursor()
-        query = f""" Insert into meters 
-        (id, meter_number, instalation_date, meter_type, id_address, status_filling, meter_remark,
-        marka, seal_number, date_next_verification, location, type_protection)
-         values ({id_meter}, '{meter_number}', '{instalation_day}', '{meter_type}', 
-            {id_address}, 'невыполнено', '{meter_remark}', '{marka}', '{seal_number}', 
-            '{date_next_verification}', '{location}', {type_protection})"""
-        cursor.execute(query)
-
-
 def insert_bd_meter_task(meter_task_id, task_id, meter_id, meter_remark):
     if meter_remark is None:
         meter_remark = ""
@@ -90,8 +59,8 @@ def insert_bd_meter_task(meter_task_id, task_id, meter_id, meter_remark):
             cursor.execute(query)
 
 
-def insert_bd_meters_v2(meter_number, instalation_day, meter_type, marka_id, marka, seal_number, seal_date_instalation,
-                        date_next_verification, location, antimagnetic_protection, average_consumption):
+def insert_bd_meters(meter_number, instalation_day, meter_type, marka_id, marka, seal_number, seal_date_instalation,
+                     date_next_verification, location, antimagnetic_protection, average_consumption):
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
         query = f""" Insert into meters 
@@ -104,15 +73,6 @@ def insert_bd_meters_v2(meter_number, instalation_day, meter_type, marka_id, mar
 
 
 def insert_bd_meter_reading(id_meter_reading, meter_id, reading_date, reading_values):
-    with sl.connect('database_client.db') as db:
-        cursor = db.cursor()
-        query = f""" Insert into meter_reading 
-        (id, meter_id,last_reading_date, last_reading_value)
-         values ({id_meter_reading},{meter_id}, '{reading_date}', {reading_values}) """
-        cursor.execute(query)
-
-
-def insert_bd_meter_reading_v2(id_meter_reading, meter_id, reading_date, reading_values):
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
         query = f""" Insert into meter_reading 

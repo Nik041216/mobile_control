@@ -67,7 +67,7 @@ def update_data(page, meter_id, id_task, where):
 
     def peredacha():
         today = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        scr.BD.bd_users.local.update_bd.update_local_tasks_v2(
+        scr.BD.bd_users.local.update_bd.update_local_tasks(
             str(today), id_task, reading_value.value, remark.value, meter_id)
         scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where)
         page.close(dlg_modal)
@@ -109,9 +109,9 @@ def update_data(page, meter_id, id_task, where):
     location = "Неизвестно"
     remark_meter = "Неизвестно"
 
-    results_meters_data_v2 = scr.BD.bd_users.local.select_bd.select_meters_data_new_for_one_v2(id_task, meter_id)
-    if results_meters_data_v2:
-        for result in results_meters_data_v2:
+    results_meters_data = scr.BD.bd_users.local.select_bd.select_meters_data_new_for_one(id_task, meter_id)
+    if results_meters_data:
+        for result in results_meters_data:
             meter_number, seal_number, seal_date_instalation, instalation_date, type_service, \
                 marka_id, marka_name, date_next_verification, location, \
                 status_filling, antimagnetic_protection, average_consumption, remark_meter = result
@@ -316,7 +316,7 @@ def update_data(page, meter_id, id_task, where):
         page.update()
 
     def update_saving_data(meter_id, id_task):
-        images = scr.BD.bd_users.local.select_bd.select_photo_data_new(meter_id, id_task)
+        images = scr.BD.bd_users.local.select_bd.select_photo_data(meter_id, id_task)
         if images:
             selected_images.clear()
             for result in images:

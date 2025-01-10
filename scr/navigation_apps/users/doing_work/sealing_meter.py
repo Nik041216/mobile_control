@@ -13,7 +13,7 @@ import scr.navigation_apps.users.doing_work.chose_meters
 def sealing(page, id_task, meter_id, where):
     screen_width = page.width
     screen_height = page.height
-    results_meters_data_v2 = scr.BD.bd_users.local.select_bd.select_meters_data_new_for_one_v2(id_task, meter_id)
+    results_meters_data_v2 = scr.BD.bd_users.local.select_bd.select_meters_data_new_for_one(id_task, meter_id)
     if results_meters_data_v2:
         for result in results_meters_data_v2:
             meter_number, seal_number, seal_date_instalation, instalation_date, type_service, \
@@ -204,7 +204,7 @@ def sealing(page, id_task, meter_id, where):
         if seal_number_new.value is None:
             seal_number_new.error_text = "Введите номер пломбы"
         else:
-            scr.BD.bd_users.local.update_bd.update_seal_v2(seal_number_new.value, meter_id, id_task, remark.value)
+            scr.BD.bd_users.local.update_bd.update_seal(seal_number_new.value, meter_id, id_task, remark.value)
         page.close(alert)
 
     def on_click_back(e):

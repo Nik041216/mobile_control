@@ -1,12 +1,7 @@
 import datetime
 import flet as ft
-import scr.BD.bd_users.local.update_bd
-import scr.BD.bd_users.local.delete_bd
-import scr.BD.bd_users.local.insert_bd
 import scr.BD.bd_users.local.select_bd
 import scr.BD.bd_users.bd_server_user
-import scr.toggle_user_sessions
-import scr.func
 import scr.constants as const
 import scr.navigation_apps.users.doing_work.chose_meters
 
@@ -37,7 +32,7 @@ def user_main(page):
         completed_icon.color = ft.colors.WHITE
         completed_tasks_container.shadow.color = ft.colors.BLACK38
 
-        scr.BD.bd_users.bd_server_user.select_task_data_for_update_v2(page)
+        scr.BD.bd_users.bd_server_user.select_task_data_for_update(page)
         update_results()
         page.update()
 
@@ -134,19 +129,12 @@ def user_main(page):
 
     def update_results(filter_statuses=None):
         search_value = search_bar.value
-        # results = scr.BD.bd_users.local.select_bd.select_tasks_data_new_v2(sorting, search_value, "today")
-        results_v2 = scr.BD.bd_users.local.select_bd.select_tasks_data_new_v2(sorting, search_value, "now")
-        # if filter_statuses:
-        #     filtered_results = [result for result in results if result[10] in filter_statuses]
-        # else:
-        #     filtered_results = [
-        #         result for result in results
-        #     ]
+        results = scr.BD.bd_users.local.select_bd.select_tasks_data_new(sorting, search_value, "now")
         if filter_statuses:
-            filtered_results_v2 = [result_v2 for result_v2 in results_v2 if result_v2[12] in filter_statuses]
+            filtered_results = [result_v2 for result_v2 in results if result_v2[12] in filter_statuses]
         else:
-            filtered_results_v2 = [
-                result_v2 for result_v2 in results_v2
+            filtered_results = [
+                result for result in results
             ]
 
         column.controls.clear()
@@ -158,15 +146,10 @@ def user_main(page):
             expanded_header_padding=3
         )
 
-        for result_v2 in filtered_results_v2:
+        for result in filtered_results:
             id_task, fio, district, hamlet, street, dom, apartment, phone_number, \
                 personal_account, date, date_end, remark_task, status, purpose, \
-                registered_residing, standarts, area, saldo = result_v2
-
-        # for result in filtered_results:
-        #     id_task, person_name, district, street, dom, apartment, phone_number, \
-        #         personal_account, date, remark, status, purpose, registered_residing, \
-        #         status_address, standarts, area, saldo = result
+                registered_residing, standarts, area, saldo = result
 
             # Проверяем, существует ли уже ключ для этого района, если нет - создаем
             if street not in tasks_by_street:
@@ -230,7 +213,7 @@ def user_main(page):
     column = ft.Column(scroll=ft.ScrollMode.AUTO, expand=True)
 
     def on_click_upload(e):
-        scr.BD.bd_users.bd_server_user.upload_data_to_server_v2(page)
+        scr.BD.bd_users.bd_server_user.upload_data_to_server(page)
 
     update_results()
 
