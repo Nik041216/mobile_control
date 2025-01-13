@@ -1,7 +1,6 @@
 import os
 
 import flet as ft
-import psycopg2
 
 
 def show_snack_bar(page, message):
@@ -34,20 +33,6 @@ def show_alert_yn(page, message):
     page.update()
 
 
-def get_user_db_connection(login, password):
-    try:
-        conn = psycopg2.connect(
-            dbname=os.environ.get("DBNAME", default="Vodocanal_new"),
-            user=login,  # Логин пользователя
-            password=password,  # Пароль пользователя
-            host=os.environ.get("HOST", default="45.151.31.154"),
-            port=os.environ.get("PORT", default="5432")
-        )
-        return conn
-    except Exception as ex:
-        return None  # Возвращаем None в случае ошибки подключения
-
-
 def create_filter_button(icon, color, status, on_click):
     return ft.Container(
         content=ft.Row([icon], alignment=ft.MainAxisAlignment.CENTER),
@@ -65,6 +50,3 @@ def create_filter_button(icon, color, status, on_click):
         col=1,
         on_click=lambda e: on_click(e, icon.color, status)
     )
-
-
-

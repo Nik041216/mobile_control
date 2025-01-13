@@ -7,6 +7,13 @@ def main(page: ft.Page):
     page.title = "Мобильный контралер"
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     scr.toggle_user_sessions.handle_user_sessions(page)
+    page.locale_configuration = ft.LocaleConfiguration(
+        supported_locales=[
+            ft.Locale("es", "ES"),
+            ft.Locale("ru", "RU"),
+        ],
+        current_locale=ft.Locale("ru", "RU")
+    )
 
 
 ft.app(target=main)
