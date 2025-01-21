@@ -126,6 +126,7 @@ def upload_address_data(login: str, password: str, address_updates: List[Dict[st
         return False
 
 
+# выгрузка всех данных
 def upload_data_to_server(page):
     try:
         # Получаем данные пользователя
@@ -147,8 +148,6 @@ def upload_data_to_server(page):
 
                     if status != "выполнен":
                         continue
-
-                    print(meter_id)
 
                     update_data = {
                         "task_id": task_id,

@@ -1,4 +1,5 @@
 import os
+import socket
 
 import flet as ft
 
@@ -50,3 +51,12 @@ def create_filter_button(icon, color, status, on_click):
         col=1,
         on_click=lambda e: on_click(e, icon.color, status)
     )
+
+
+def check_internet():
+    try:
+        # Проверяем доступность DNS-сервера Google
+        socket.create_connection(("8.8.8.8", 53), timeout=5)
+        return True
+    except OSError:
+        return False

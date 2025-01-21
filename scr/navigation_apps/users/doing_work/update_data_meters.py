@@ -12,8 +12,6 @@ import scr.navigation_apps.users.doing_work.chose_meters
 
 
 def update_data(page, meter_id, id_task, where):
-    screen_width = page.width
-    screen_height = page.height
 
     def bottom_sheet_yes(e):
         page.close(bottom_sheet)

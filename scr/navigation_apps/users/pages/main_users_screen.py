@@ -16,6 +16,7 @@ def user_main(page: ft.Page):
     page.window.height = 800
     page.vertical_alignment = ft.MainAxisAlignment.START
     page.controls.clear()
+    page.floating_action_button = None
 
     completed_icon = ft.Icon(ft.icons.TASK_ALT, color=ft.colors.WHITE)
     failed_icon = ft.Icon(ft.icons.ERROR_OUTLINE, color=ft.colors.WHITE)
@@ -155,7 +156,7 @@ def user_main(page: ft.Page):
                 content=ft.Text("Фильтры", size=20, weight=ft.FontWeight.BOLD),
                 padding=20,
             ),
-            ft.Checkbox(label="Новые"),
+            ft.Checkbox(label="Новые", ),
             ft.Checkbox(label="В работе"),
             ft.Checkbox(label="Выполненные"),
             ft.Checkbox(label="Просроченные"),
@@ -175,22 +176,25 @@ def user_main(page: ft.Page):
         toolbar_height=50,
         leading=ft.IconButton(icon=ft.icons.MENU, on_click=lambda _: toggle_drawer(_)),
         bgcolor=ft.colors.BLUE_GREY_50,
-        actions=[ft.IconButton(icon=ft.icons.AUTORENEW, on_click=lambda _: on_click_update())]
+        actions=[ft.IconButton(icon=ft.icons.AUTORENEW, on_click=lambda _: on_click_update(_))]
     )
 
     def on_click_update(e):
-        statuses.clear()
-        unloaded_icon.color = ft.colors.WHITE
-        unloaded_tasks_container.shadow.color = ft.colors.BLACK38
-        pending_icon.color = ft.colors.WHITE
-        pending_tasks_container.shadow.color = ft.colors.BLACK38
-        failed_icon.color = ft.colors.WHITE
-        failed_tasks_container.shadow.color = ft.colors.BLACK38
-        completed_icon.color = ft.colors.WHITE
-        completed_tasks_container.shadow.color = ft.colors.BLACK38
+        if scr.func.check_internet():
+            statuses.clear()
+            unloaded_icon.color = ft.colors.WHITE
+            unloaded_tasks_container.shadow.color = ft.colors.BLACK38
+            pending_icon.color = ft.colors.WHITE
+            pending_tasks_container.shadow.color = ft.colors.BLACK38
+            failed_icon.color = ft.colors.WHITE
+            failed_tasks_container.shadow.color = ft.colors.BLACK38
+            completed_icon.color = ft.colors.WHITE
+            completed_tasks_container.shadow.color = ft.colors.BLACK38
 
-        scr.BD.bd_users.bd_server_user.select_task_data_for_update(page)
-        update_results()
+            scr.BD.bd_users.bd_server_user.select_task_data_for_update(page)
+            update_results()
+        else:
+            scr.func.show_alert_yn(page, "Нет доступа к сети, проверте интернет соеденение")
         page.update()
 
     page.add(

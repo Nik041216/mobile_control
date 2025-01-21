@@ -27,6 +27,9 @@ def main(page):
     page.vertical_alignment = ft.MainAxisAlignment.START
     global statuses, sorting
 
+    page.floating_action_button = None
+
+
     def on_click_update(e):
         statuses.clear()
         unloaded_icon.color = ft.colors.WHITE

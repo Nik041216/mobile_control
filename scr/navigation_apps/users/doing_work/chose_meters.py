@@ -7,6 +7,7 @@ import scr.navigation_apps.users.pages.main_users_screen
 import scr.navigation_apps.users.pages.future_user_screen
 import scr.navigation_apps.users.doing_work.update_data_meters
 import scr.navigation_apps.users.doing_work.sealing_meter
+import scr.navigation_apps.users.doing_work.create_new_meters as new_meters
 
 
 def call_show_meters_data(page, id_task, where):
@@ -27,6 +28,14 @@ def show_meters_data(page, id_task, where):
         id_address, id_task, person_name, street, dom, apartment, phone_number, \
             personal_account, date, date_end, remark_task, status, purpose, registered_residing, \
             standarts, area, saldo, type_address = result
+
+    def onclick_floating_button(e):
+        new_meters.create_meter(page, id_task, where)
+
+    if purpose == "Замена/Поверка ИПУ":
+        page.floating_action_button = ft.FloatingActionButton(icon=ft.icons.ADD,
+                                                              on_click=onclick_floating_button)
+        page.update()
     result_info_address = f"Адрес: ул.{street} д.{dom} кв.{apartment}"
     result_info_person = f"ФИО владельца: {person_name}"
 
@@ -285,7 +294,7 @@ def show_meters_data(page, id_task, where):
         # Используем замыкание для передачи правильного apartment
         def create_on_click(id_task, id_meters):
             def on_click(e):
-                if purpose == "Контрольный съем":
+                if purpose == "Контрольный съем" or purpose == "Замена/Поверка ИПУ":
                     scr.navigation_apps.users.doing_work.update_data_meters.update_data(page, id_meters, id_task, where)
                 elif purpose == "Повторная опломбировка":
                     scr.navigation_apps.users.doing_work.sealing_meter.sealing(page, id_task, id_meters, where)

@@ -5,14 +5,12 @@ import scr.BD.bd_users.local.delete_bd
 import scr.BD.bd_users.local.insert_bd
 import scr.BD.bd_users.local.select_bd
 import scr.BD.bd_users.bd_server_user
-import scr.toggle_user_sessions
 import scr.func
 import scr.navigation_apps.users.doing_work.chose_meters
 
 
 def sealing(page, id_task, meter_id, where):
     screen_width = page.width
-    screen_height = page.height
     results_meters_data_v2 = scr.BD.bd_users.local.select_bd.select_meters_data_new_for_one(id_task, meter_id)
     if results_meters_data_v2:
         for result in results_meters_data_v2:
@@ -21,10 +19,13 @@ def sealing(page, id_task, meter_id, where):
                 status_filling, antimagnetic_protection, average_consumption, remark_meter = result
     result_info_meters = f"Счетчик: {marka_name} \nДата установки: {instalation_date} \nТип: {type_service}"
 
-    if antimagnetic_protection is True:
-        seal_type = "роторную"
+    if antimagnetic_protection is not None:
+        if antimagnetic_protection is True:
+            seal_type = "роторную"
+        else:
+            seal_type = "антимагнитную пломбу"
     else:
-        seal_type = "антимагнитную пломбу"
+        seal_type = ""
 
     dict_checkboxes = {}
 
@@ -187,16 +188,46 @@ def sealing(page, id_task, meter_id, where):
     )
 
     seal_number_new = ft.TextField(label="Номер пломбы", )
-    type_seal = ft.TextField(label="Тип пломбы", value=seal_type, multiline=True, min_lines=1,
-                             max_lines=3)
     remark = ft.TextField(label="Примечание", value=remark_meter, multiline=True, min_lines=1,
                           max_lines=3)
+
+    seal_type_radio = ft.RadioGroup(
+        content=ft.Column([
+            ft.Radio(value="антимагнитная", label="Антимагнитная пломба"),
+            ft.Radio(value="роторная", label="Роторная пломба"),
+        ])
+    )
+
+    # Добавление кнопок выбора типа защиты счетчика
+    protection_type_radio = ft.RadioGroup(
+        content=ft.Row([
+            ft.Radio(value="с антимагнитной защитой", label="Да"),
+            ft.Radio(value="без антимагнитной защиты", label="Нет"),
+        ])
+    )
+    meter_reading = ft.TextField(label="Показания счетчика")
+
+    # Добавление кнопки для выбора фотографии
+    photo_button = ft.ElevatedButton("Выбрать фотографию")
 
     content = ft.Column(
         [
             seal_number_new,
-            type_seal,
-            remark
+            meter_reading,
+            ft.Column(
+                [
+                    ft.Text("Есть ли антимагнитная защита у счетчика?", weight=ft.FontWeight.BOLD),
+                    protection_type_radio
+                ]
+            ),
+            ft.Column(
+                [
+                    ft.Text("Тип пломбы", weight=ft.FontWeight.BOLD),
+                    seal_type_radio
+                ]
+            ),
+            remark,
+            photo_button
         ]
     )
 
