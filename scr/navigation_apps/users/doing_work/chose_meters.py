@@ -18,13 +18,13 @@ def show_meters_data(page, id_task, where):
     screen_width = page.width
     screen_height = page.height
     page.controls.clear()
-    results_meters_data_v2 = scr.BD.bd_users.local.select_bd.select_meters_data_new(id_task)
-    results_address_data_v2 = scr.BD.bd_users.local.select_bd.select_tasks_data_for_one(id_task)
-    filtered_results_v2 = [
-        result_address_data_v2 for result_address_data_v2 in results_address_data_v2
+    results_meters_data = scr.BD.bd_users.local.select_bd.select_meters_data_new(id_task)
+    results_address_data = scr.BD.bd_users.local.select_bd.select_tasks_data_for_one(id_task)
+    filtered_results = [
+        result_address_data_v2 for result_address_data_v2 in results_address_data
     ]
 
-    for result in filtered_results_v2:
+    for result in filtered_results:
         id_address, id_task, person_name, street, dom, apartment, phone_number, \
             personal_account, date, date_end, remark_task, status, purpose, registered_residing, \
             standarts, area, saldo, type_address = result
@@ -263,7 +263,7 @@ def show_meters_data(page, id_task, where):
     button_back = ft.ElevatedButton("Назад", on_click=on_click_back, bgcolor=ft.colors.RED_200)
     button_save_v2 = ft.ElevatedButton("Сохранить", on_click=on_click_save, bgcolor=ft.colors.BLUE_200,
                                        visible=False)
-    filtered_results_meters = [result for result in results_meters_data_v2]
+    filtered_results_meters = [result for result in results_meters_data]
     column = ft.Column(scroll=ft.ScrollMode.AUTO, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
     color = ft.colors.GREY
     column.controls.clear()

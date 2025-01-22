@@ -1,6 +1,7 @@
 import os
 import sqlite3 as sl
 import scr.navigation_apps.navigations
+import datetime
 
 
 def insert_bd_user(id_user, login, password, privileges, first_name, last_name, page):
@@ -88,4 +89,53 @@ def insert_photo(name_file, value, task_id, meter_id):
                    (name_file, value, task_id, meter_id) 
                    VALUES (?, ?, ?, ?)"""
         cursor.execute(query, (name_file, value, task_id, meter_id))
+        db.commit()
+
+
+def insert_new_meters(id_task, meter_id, meter_marka, meter_reading, meter_protection, seal_id, remark, meter_type,
+                      seal_type):
+    """ seal_type здесь заготовка на будующее обновновление сервера"""
+    with sl.connect('database_client.db') as db:
+        today = datetime.datetime.now().strftime("%Y-%m-%d")
+        today_task_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        cursor = db.cursor()
+
+        query = """ insert into meters values (
+                        meter_number, sea_id, type_service, meter_marka, antimagnetic_protection, status_filling
+                    ) 
+                    values (?, ?, ?, ?, ?, ?) """
+        cursor.execute(query, (meter_id, seal_id, meter_type, meter_marka, meter_protection, 'выполнен'))
+        db.commit()
+
+        query = """ insert into meter_reading (
+                        meter_id, last_reading_date, last_reading_value, new_reading_date, new_reading_value
+                    )
+                    values (?, ?, ?, ?, ?) """
+        cursor.execute(query, (meter_id, today, meter_reading, today, meter_reading))
+        db.commit()
+
+        query = """ insert into meter_task (meter_id, task_id, remark_meter)
+                    values (?,?,?)"""
+        cursor.execute(query, (meter_id, id_task, remark))
+        db.commit()
+
+        query = f""" update tasks set 
+                                   unloading_time = '{str(today)}',  
+                                   status = 'в_исполнении'
+                                   where id = {id_task}"""
+        cursor.execute(query)
+        db.commit()
+
+        query = f""" update tasks set 
+                                    unloading_time = '{str(today)}',  
+                                    status = 'выполнен'
+                                    where id = {id_task} and id IN (
+                                      SELECT DISTINCT t.id
+                                      FROM tasks t
+                                      JOIN meter_task mt ON t.id = mt.task_id
+                                      JOIN meters m ON mt.meter_id = m.meter_number
+                                      WHERE m.status_filling = 'выполнен'
+                                    );
+                          """
+        cursor.execute(query)
         db.commit()
