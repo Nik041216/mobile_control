@@ -9,6 +9,7 @@ import scr.toggle_user_sessions
 import scr.func
 import scr.constants as const
 import scr.navigation_apps.users.doing_work.chose_meters
+import scr.navigation_apps.users.doing_work.alert_check_data as check_alert
 from scr.components.search_field import SearchField
 
 statuses = []
@@ -28,7 +29,6 @@ def main(page):
     global statuses, sorting
 
     page.floating_action_button = None
-
 
     def on_click_update(e):
         statuses.clear()
@@ -245,7 +245,7 @@ def main(page):
                 )
                 page.open(view)
 
-            def reschedule_to_another_date(e, task_id, date):
+            def reschedule_to_another_date(e, id_task, date):
 
                 def on_click(e):
                     current_date = datetime.datetime.now().strftime('%Y-%m-%d')
@@ -292,39 +292,43 @@ def main(page):
 
             # Используем замыкание для передачи правильного id_task + выбор действия
             def create_on_click(id_task, date):
+                def on_click(e):
+                    page.close(chose_action)
+                    check_alert.func_check_address_data(page, id_task, where="task")
+                    scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where="fff")
+
+                chose_action = ft.AlertDialog(
+                    title=ft.Text("Вы хотите просмотреть данные или выполнить задание?"),
+                    actions=[
+                        ft.Row(
+                            [
+                                ft.ElevatedButton("Просмотреть",
+                                                  on_click=lambda e: viewing(e, id_task),
+                                                  bgcolor=ft.colors.BLUE_200,
+                                                  width=screen_width * 0.35),
+                                ft.ElevatedButton("Выполнить",
+                                                  on_click=on_click,
+                                                  bgcolor=ft.colors.BLUE_200,
+                                                  width=screen_width * 0.30)
+                            ], alignment=ft.MainAxisAlignment.CENTER
+                        ),
+                        ft.Row(),
+                        ft.Row(
+                            [
+                                ft.ElevatedButton("Перенос задания",
+                                                  on_click=lambda e: reschedule_to_another_date(e, id_task,
+                                                                                                date),
+                                                  bgcolor=ft.colors.BLUE_200),
+                            ],
+                            alignment=ft.MainAxisAlignment.CENTER
+                        )
+                    ]
+                )
+
                 def show(e):
                     page.open(
-                        ft.AlertDialog(
-                            title=ft.Text("Вы хотите просмотреть данные или выполнить задание?"),
-                            actions=[
-                                ft.Row(
-                                    [
-                                        ft.ElevatedButton("Просмотреть",
-                                                          on_click=lambda e: viewing(e, id_task),
-                                                          bgcolor=ft.colors.BLUE_200,
-                                                          width=screen_width * 0.35),
-                                        ft.ElevatedButton("Выполнить",
-                                                          on_click=on_click,
-                                                          bgcolor=ft.colors.BLUE_200,
-                                                          width=screen_width * 0.30)
-                                    ], alignment=ft.MainAxisAlignment.CENTER
-                                ),
-                                ft.Row(),
-                                ft.Row(
-                                    [
-                                        ft.ElevatedButton("Перенос задания",
-                                                          on_click=lambda e: reschedule_to_another_date(e, id_task,
-                                                                                                        date),
-                                                          bgcolor=ft.colors.BLUE_200),
-                                    ],
-                                    alignment=ft.MainAxisAlignment.CENTER
-                                )
-                            ]
-                        )
+                        chose_action
                     )
-
-                def on_click(e):
-                    scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where="fff")
 
                 return show
 
