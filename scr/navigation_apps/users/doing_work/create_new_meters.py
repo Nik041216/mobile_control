@@ -33,14 +33,12 @@ def create_meter(page, id_task, where):
         page.open(bottom_sheet)
 
     def on_click_save(e):
-        print(bool(protection_type_radio.value))
         if (meter_id.value is None or meter_id.value == ""
                 or meter_marka.value is None or meter_marka.value == ""
                 or meter_reading.value is None or meter_reading.value == ""
                 or seal_number.value is None or seal_number.value == ""
                 or seal_type_radio.value is None
                 or meter_type.value is None or meter_type.value == ""):
-            print("if1")
             if meter_id.value is None or meter_id.value == "":
                 meter_id.error_text = "* Введите серийный номер"
                 meter_id.update()
