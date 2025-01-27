@@ -33,20 +33,31 @@ def create_meter(page, id_task, where):
         page.open(bottom_sheet)
 
     def on_click_save(e):
-        if meter_id.value is None:
-            meter_id.error_text = "* Введите серийный номер"
-        elif meter_marka.value is None:
-            meter_marka.error_text = "* Введите марку счетчика"
-        elif meter_reading.value is None:
-            meter_reading.error_text = "* Введите текущие показания"
-        elif seal_number.value is None:
-            seal_number.error_text = "* Введите номер установленной пломбы"
-        elif seal_type_radio.value is None:
-            create_bottom_sheet("Выберете тип установленной пломбы")
-        elif protection_type_radio.value is None:
-            create_bottom_sheet("Укажите наличие или же отсутствие антимагнитной защиты на счетчике")
-        elif meter_type.value is None:
-            meter_type.error_text = "* Введите тип услуги"
+        print(bool(protection_type_radio.value))
+        if (meter_id.value is None or meter_id.value == ""
+                or meter_marka.value is None or meter_marka.value == ""
+                or meter_reading.value is None or meter_reading.value == ""
+                or seal_number.value is None or seal_number.value == ""
+                or seal_type_radio.value is None
+                or meter_type.value is None or meter_type.value == ""):
+            print("if1")
+            if meter_id.value is None or meter_id.value == "":
+                meter_id.error_text = "* Введите серийный номер"
+                meter_id.update()
+            if meter_marka.value is None or meter_marka.value == "":
+                meter_marka.error_text = "* Введите марку счетчика"
+                meter_marka.update()
+            if meter_reading.value is None or meter_reading.value == "":
+                meter_reading.error_text = "* Введите текущие показания"
+                meter_reading.update()
+            if seal_number.value is None or seal_number.value == "":
+                seal_number.error_text = "* Введите номер установленной пломбы"
+                seal_number.update()
+            if seal_type_radio.value is None:
+                create_bottom_sheet("Выберете тип установленной пломбы")
+            if meter_type.value is None or meter_type.value == "":
+                meter_type.error_text = "* Введите тип услуги"
+                meter_type.update()
         else:
             insert.insert_new_meters(
                 id_task, meter_id.value, meter_marka.value, meter_reading.value, bool(protection_type_radio.value),
@@ -57,12 +68,12 @@ def create_meter(page, id_task, where):
     def on_click_back(e):
         scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where)
 
-    meter_id = ft.TextField(label="Серийный номер счетчика")
-    meter_marka = ft.TextField(label="Марка счетчика")
-    meter_reading = ft.TextField(label="Показания счетчика")
-    seal_number = ft.TextField(label="Номер пломбы", )
+    meter_id = ft.TextField(label="Серийный номер счетчика", value=None)
+    meter_marka = ft.TextField(label="Марка счетчика", value=None)
+    meter_reading = ft.TextField(label="Показания счетчика", value=None)
+    seal_number = ft.TextField(label="Номер пломбы", value=None)
     remark = ft.TextField(label="Примечание", multiline=True, min_lines=1,
-                          max_lines=3)
+                          max_lines=3, value=None)
 
     seal_type_radio = ft.RadioGroup(
         content=ft.Column([
@@ -78,7 +89,7 @@ def create_meter(page, id_task, where):
         ])
     )
 
-    meter_type = ft.TextField(label="Тип услуги счетчика")
+    meter_type = ft.TextField(label="Тип услуги счетчика", value=None)
     photo_button = ft.ElevatedButton("Выбрать фотографию")
 
     content = ft.Column(
