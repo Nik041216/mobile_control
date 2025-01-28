@@ -239,6 +239,7 @@ def sealing(page, id_task, meter_id, where):
         page.close(alert)
 
     def on_click_back(e):
+        page.close(alert)
         scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where)
 
     alert = ft.AlertDialog(

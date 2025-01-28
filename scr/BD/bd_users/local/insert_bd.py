@@ -100,8 +100,8 @@ def insert_new_meters(id_task, meter_id, meter_marka, meter_reading, meter_prote
         today_task_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         cursor = db.cursor()
 
-        query = """ insert into meters values (
-                        meter_number, sea_id, type_service, meter_marka, antimagnetic_protection, status_filling
+        query = """ insert into meters (
+                        meter_number, seal_id, type_service, marka_name, antimagnetic_protection, status_filling
                     ) 
                     values (?, ?, ?, ?, ?, ?) """
         cursor.execute(query, (meter_id, seal_id, meter_type, meter_marka, meter_protection, 'выполнен'))
