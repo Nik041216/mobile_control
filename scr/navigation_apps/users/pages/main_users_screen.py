@@ -130,10 +130,13 @@ def user_main(page: ft.Page):
         chose_meters.show_meters_data(page, id_task, where="task")
 
     def create_task_container(result):
-        id_task, _, _, _, street, dom, apartment, _, _, _, _, _, status, purpose, *_ = result
+        id_task, _, _, _, street, dom, apartment, phone, _, _, _, _, status, purpose, *_ = result
         result_info = ft.Column([
             ft.Text(f"ул.{street} д.{dom} кв.{apartment}", weight=ft.FontWeight.BOLD),
-            ft.Text(f"Статус: {status}"),
+            ft.Row([
+                ft.Text(f"Статус: {status}"),
+            ]),
+            ft.Text(f"Номер: {phone}"),
             ft.Text(f"Цель: {purpose}")
         ])
         color = const.tasks_completed_color if status == 'выполнен' else (
@@ -143,7 +146,7 @@ def user_main(page: ft.Page):
         return ft.Card(
             content=ft.Container(
                 content=ft.Row([
-                    ft.Container(width=10, height=80, bgcolor=color),
+                    ft.Container(width=10, height=105, bgcolor=color),
                     result_info
                 ]),
                 padding=10,
