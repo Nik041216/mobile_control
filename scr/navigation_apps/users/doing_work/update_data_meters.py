@@ -113,7 +113,7 @@ def update_data(page, meter_id, id_task, where):
             meter_number, seal_number, seal_date_instalation, instalation_date, type_service, \
                 marka_id, marka_name, date_next_verification, location, \
                 status_filling, antimagnetic_protection, average_consumption, remark_meter = result
-    result_info_meters = f"Счетчик: {marka_name} \nДата установки: {instalation_date} \nТип: {type_service}"
+    result_info_meters = f"Счетчик: {meter_number} \nДата установки: {instalation_date} \nТип: {type_service}"
 
     dict_checkboxes = {}
 

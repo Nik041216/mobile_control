@@ -201,11 +201,17 @@ def update_meter_reading_data_from_server(id_meter_reading, meter_id, reading_da
         db.commit()
 
 
-def update_seal(seal_number, meter_id, task_id, remark):
+def update_seal(seal_number, meter_id, task_id, remark, meter_reading, seal_type):  # seal_type задел на будующее
     with sl.connect('database_client.db') as db:
         today_seal = datetime.datetime.now().strftime("%Y-%m-%d")
         today = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         cursor = db.cursor()
+        query1 = f""" update meter_reading set  
+                            new_reading_date = '{today_seal}',
+                            new_reading_value = '{meter_reading}'
+                            where meter_id = {meter_id} """
+        cursor.execute(query1)
+        db.commit()
         query2 = f""" update meters set  
                             status_filling = 'выполнен',
                             seal_id = '{seal_number}',

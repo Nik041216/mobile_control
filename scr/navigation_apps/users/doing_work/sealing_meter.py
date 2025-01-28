@@ -17,7 +17,7 @@ def sealing(page, id_task, meter_id, where):
             meter_number, seal_number, seal_date_instalation, instalation_date, type_service, \
                 marka_id, marka_name, date_next_verification, location, \
                 status_filling, antimagnetic_protection, average_consumption, remark_meter = result
-    result_info_meters = f"Счетчик: {marka_name} \nДата установки: {instalation_date} \nТип: {type_service}"
+    result_info_meters = f"Счетчик: {meter_number} \nДата установки: {instalation_date} \nТип: {type_service}"
 
     if antimagnetic_protection is not None:
         if antimagnetic_protection is True:
@@ -51,67 +51,67 @@ def sealing(page, id_task, meter_id, where):
         [
             ft.Container(
                 content=ft.Column(
-                        [
-                            ft.Row([
-                                ft.Checkbox(on_change=lambda e, name="marka": on_checkbox_change(e.control, name),
-                                            ref=marka_checkbox),
-                                ft.Text("Марка счетчика совпадает с "),
-                            ]),
-                            ft.Row([
-                                ft.Text(f"{marka_name}", weight=ft.FontWeight.BOLD),
-                                ft.Text("?")
-                            ]),
-                        ]
-                    ),
+                    [
+                        ft.Row([
+                            ft.Checkbox(on_change=lambda e, name="marka": on_checkbox_change(e.control, name),
+                                        ref=marka_checkbox),
+                            ft.Text("Марка счетчика совпадает с "),
+                        ]),
+                        ft.Row([
+                            ft.Text(f"{marka_name}", weight=ft.FontWeight.BOLD),
+                            ft.Text("?")
+                        ]),
+                    ]
+                ),
                 on_click=lambda e, name="marka": toggle_checkbox(e, marka_checkbox.current, name)
             ),
             ft.Container(
                 content=ft.Column(
-                        [
-                            ft.Row([
-                                ft.Checkbox(
-                                    on_change=lambda e, name="serial_number": on_checkbox_change(e.control, name),
-                                    ref=serial_number_checkbox),
-                                ft.Text("Заводской номер счетчика"),
-                            ]),
-                            ft.Row([
-                                ft.Text("совпадает с "),
-                                ft.Text(f"{meter_number}", weight=ft.FontWeight.BOLD),
-                                ft.Text("?")
-                            ]),
-                        ]
-                    ),
+                    [
+                        ft.Row([
+                            ft.Checkbox(
+                                on_change=lambda e, name="serial_number": on_checkbox_change(e.control, name),
+                                ref=serial_number_checkbox),
+                            ft.Text("Заводской номер счетчика"),
+                        ]),
+                        ft.Row([
+                            ft.Text("совпадает с "),
+                            ft.Text(f"{meter_number}", weight=ft.FontWeight.BOLD),
+                            ft.Text("?")
+                        ]),
+                    ]
+                ),
                 on_click=lambda e, name="serial_number": toggle_checkbox(e, serial_number_checkbox.current, name)
             ),
             ft.Container(
                 content=ft.Column(
-                        [
-                            ft.Row([
-                                ft.Checkbox(
-                                    on_change=lambda e, name="installation": on_checkbox_change(e.control, name),
-                                    ref=installation_checkbox),
-                                ft.Text("Прибор учета устрановлен"),
-                            ]),
-                            ft.Row([
-                                ft.Text("по протоколу?"),
-                            ]),
-                        ]
-                    ),
+                    [
+                        ft.Row([
+                            ft.Checkbox(
+                                on_change=lambda e, name="installation": on_checkbox_change(e.control, name),
+                                ref=installation_checkbox),
+                            ft.Text("Прибор учета устрановлен"),
+                        ]),
+                        ft.Row([
+                            ft.Text("по протоколу?"),
+                        ]),
+                    ]
+                ),
                 on_click=lambda e, name="seal": toggle_checkbox(e, installation_checkbox.current, name)
             ),
             ft.Container(
                 content=ft.Column(
-                        [
-                            ft.Row([
-                                ft.Checkbox(on_change=lambda e, name="star": on_checkbox_change(e.control, name),
-                                            ref=star_checkbox),
-                                ft.Text("Сигнальная звезочка"),
-                            ]),
-                            ft.Row([
-                                ft.Text("вращается равномерно? "),
-                            ]),
-                        ]
-                    ),
+                    [
+                        ft.Row([
+                            ft.Checkbox(on_change=lambda e, name="star": on_checkbox_change(e.control, name),
+                                        ref=star_checkbox),
+                            ft.Text("Сигнальная звезочка"),
+                        ]),
+                        ft.Row([
+                            ft.Text("вращается равномерно? "),
+                        ]),
+                    ]
+                ),
                 on_click=lambda e, name="seal": toggle_checkbox(e, star_checkbox.current, name)
             )
         ]
@@ -150,7 +150,7 @@ def sealing(page, id_task, meter_id, where):
                     ft.ElevatedButton("Ввод прибора учета",
                                       on_click=button_yes,
                                       bgcolor=ft.colors.BLUE_200,
-                                      width=screen_width*0.30
+                                      width=screen_width * 0.30
                                       ),
                     ft.ElevatedButton("Назад",
                                       on_click=button_no,
@@ -201,14 +201,14 @@ def sealing(page, id_task, meter_id, where):
     # Добавление кнопок выбора типа защиты счетчика
     protection_type_radio = ft.RadioGroup(
         content=ft.Row([
-            ft.Radio(value="с антимагнитной защитой", label="Да"),
-            ft.Radio(value="без антимагнитной защиты", label="Нет"),
+            ft.Radio(value="вывы", label="Да"),  # белеберда чисто для приведения в bool
+            ft.Radio(value="", label="Нет"),
         ])
     )
     meter_reading = ft.TextField(label="Показания счетчика")
 
     # Добавление кнопки для выбора фотографии
-    photo_button = ft.ElevatedButton("Выбрать фотографию")
+    photo_button = ft.ElevatedButton("Выбрать фотографию")  # они пока что чисто затычки
 
     content = ft.Column(
         [
@@ -231,12 +231,47 @@ def sealing(page, id_task, meter_id, where):
         ]
     )
 
+    def create_bottom_sheet(text):
+        def bottom_sheet_yes(e):
+            page.close(bottom_sheet)
+
+        bottom_sheet = ft.BottomSheet(
+            content=ft.Container(
+                padding=50,
+                content=ft.Column(
+                    tight=True,
+                    controls=[
+                        ft.Text(f"{text}"),
+                        ft.Row(
+                            [
+                                ft.ElevatedButton("ОК", on_click=bottom_sheet_yes),
+                            ],
+                            alignment=ft.MainAxisAlignment.CENTER
+                        ),
+                    ],
+                ),
+            ),
+        )
+        page.open(bottom_sheet)
+
     def on_click_save(e):
-        if seal_number_new.value is None:
-            seal_number_new.error_text = "Введите номер пломбы"
+        if (seal_number_new.value is None or seal_number_new.value == ""
+                or meter_reading.value is None or meter_reading.value == ""
+                or seal_type_radio.value is None):
+            if seal_number_new.value is None or seal_number_new.value == "":
+                seal_number_new.error_text = "Введите номер пломбы"
+                seal_number_new.update()
+            if meter_reading.value is None or meter_reading.value == "":
+                meter_reading.error_text = "Введите показания"
+                meter_reading.update()
+            if seal_type_radio.value is None:
+                create_bottom_sheet("Выберете тип установленной пломбы")
         else:
-            scr.BD.bd_users.local.update_bd.update_seal(seal_number_new.value, meter_id, id_task, remark.value)
-        page.close(alert)
+            scr.BD.bd_users.local.update_bd.update_seal(
+                seal_number_new.value, meter_id, id_task, remark.value, meter_reading.value, seal_type_radio.value
+            )
+            scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where)
+            page.close(alert)
 
     def on_click_back(e):
         page.close(alert)
