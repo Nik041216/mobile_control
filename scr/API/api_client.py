@@ -13,7 +13,6 @@ class WaterUtilityAPIClient:
     def _make_request(self, method: str, endpoint: str,
                       data: Dict[str, Any] = None, params: Dict[str, Any] = None) -> Dict[str, Any]:
         url = f"{self.base_url}/{endpoint}"
-        print(url)
         params = params or {}
         params.update({"username": self.username, "password": self.password})
 

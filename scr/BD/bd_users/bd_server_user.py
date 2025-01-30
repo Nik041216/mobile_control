@@ -144,10 +144,16 @@ def upload_data_to_server(page):
             if result:
                 for record in result:
                     task_id, unloading_time, last_reading_value, last_reading_date, task_remark, \
-                        status, meter_id, meter_remark, purpose, seal_number, date_installation = record
+                        status, meter_id, meter_remark, purpose, seal_number, date_installation, meter_marka, \
+                        antimagnetic_protection, type_water, id_address = record
 
                     if status != "выполнен":
                         continue
+
+                    if antimagnetic_protection == 1:
+                        antimagnetic_protection = True
+                    else:
+                        antimagnetic_protection = False
 
                     update_data = {
                         "task_id": task_id,
@@ -162,6 +168,10 @@ def upload_data_to_server(page):
                         "meter_remark": meter_remark or "",
                         "seal_number": seal_number,
                         "date_installation": date_installation,
+                        "meter_marka": meter_marka,
+                        "antimagnetic_protection": antimagnetic_protection,
+                        "type_water": type_water,
+                        "id_address": id_address
                     }
                     task_updates.append(update_data)
         except Exception as ex:

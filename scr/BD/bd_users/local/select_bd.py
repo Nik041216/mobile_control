@@ -97,7 +97,8 @@ def get_data_to_upload():
         query = """ 
         SELECT 
             t.id, t.unloading_time, mr.new_reading_value, mr.new_reading_date, t.remark_task, t.status, mt.meter_id, 
-            mt.remark_meter, t.purpose, m.seal_id, m.seal_date_instalation
+            mt.remark_meter, t.purpose, m.seal_id, m.seal_date_instalation, m.marka_name, m.antimagnetic_protection,
+            m.type_service, t.id_address
         FROM tasks AS t
         JOIN meter_task AS mt ON mt.task_id = t.id
         JOIN meters AS m ON mt.meter_id = m.meter_number
