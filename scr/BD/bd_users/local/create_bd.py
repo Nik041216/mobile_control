@@ -8,7 +8,7 @@ def local_user_db():
                 (id Integer, login Text, password Text, privileges integer, first_name Text, last_name Text) """
 
         table_address = """ Create table if not exists address(id integer, city text, district text, hamlet Text, 
-                street Text, dom text, apartment text, entrance text, registered_residing integer, standarts REAL, 
+                street Text, dom text, apartment text, entrance text, registered_residing Text, standarts REAL, 
                 area REAL , type_address Text,
                 CONSTRAINT address_pk PRIMARY KEY (id))"""
 
@@ -18,8 +18,8 @@ def local_user_db():
                 CONSTRAINT task_pk PRIMARY KEY (id)) """
 
         table_meters = """ Create table if not exists meters(
-                meter_number Text, seal_id text, seal_date_instalation Text, instalation_date Text, type_service text, 
-                marka_id integer, marka_name Text, date_next_verification Text, location Text,
+                meter_number Text, seal_number text, instalation_date Text, type_service text, 
+                marka_id integer, marka_name Text, date_of_death Text, location Text,
                 status_filling Text, antimagnetic_protection bool, average_consumption REAL,
                 CONSTRAINT meters_pk PRIMARY KEY (meter_number)) """
 

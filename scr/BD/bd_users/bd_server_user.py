@@ -41,9 +41,8 @@ def select_task_data(id_user):
         for record in meter_data:
             scr.BD.bd_users.local.insert_bd.insert_bd_meters(
                 record['meter_number'], record['installation_date'], record['type_service'], record['marka_id'],
-                record['marka_name'], record['seal_number'], record['seal_date_installation'],
-                record['date_next_verification'], record['location'], record['antimagnetic_protection'],
-                record['average_consumption']
+                record['marka_name'], record['seal_number'], record['date_next_verification'],
+                record['location'], record['antimagnetic_protection'],  record['average_consumption']
             )
 
     meter_reading_data = api.get_latest_readings(login, password, id_user)
@@ -83,7 +82,7 @@ def select_task_data_for_update(page):
         for record in meter_data:
             scr.BD.bd_users.local.update_bd.update_meter_data_from_server(
                 record['meter_number'], record['installation_date'], record['type_service'], record['marka_id'],
-                record['marka_name'], record['seal_number'], record['seal_date_installation'],
+                record['marka_name'], record['seal_number'],
                 record['date_next_verification'], record['location'], record['antimagnetic_protection'],
                 record['average_consumption']
             )

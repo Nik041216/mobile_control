@@ -60,15 +60,15 @@ def insert_bd_meter_task(meter_task_id, task_id, meter_id, meter_remark):
             cursor.execute(query)
 
 
-def insert_bd_meters(meter_number, instalation_day, meter_type, marka_id, marka, seal_number, seal_date_instalation,
+def insert_bd_meters(meter_number, instalation_day, meter_type, marka_id, marka, seal_number,
                      date_next_verification, location, antimagnetic_protection, average_consumption):
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
         query = f""" Insert into meters 
-        (meter_number, instalation_date, type_service, status_filling, marka_id, marka_name, seal_id, 
-        seal_date_instalation, date_next_verification, location, antimagnetic_protection, average_consumption)
-         values ({meter_number}, '{instalation_day}', '{meter_type}', 'невыполнено', '{marka_id}', '{marka}', 
-                '{seal_number}', '{seal_date_instalation}', '{date_next_verification}', '{location}', 
+        (meter_number, instalation_date, type_service, status_filling, marka_id, marka_name, seal_number, 
+        date_of_death, location, antimagnetic_protection, average_consumption)
+         values ('{meter_number}', '{instalation_day}', '{meter_type}', 'невыполнено', '{marka_id}', '{marka}', 
+                '{seal_number}', '{date_next_verification}', '{location}', 
                 {antimagnetic_protection}, {average_consumption})"""
         cursor.execute(query)
 
@@ -101,7 +101,7 @@ def insert_new_meters(id_task, meter_id, meter_marka, meter_reading, meter_prote
         cursor = db.cursor()
 
         query = """ insert into meters (
-                        meter_number, seal_id, type_service, marka_name, antimagnetic_protection, status_filling
+                        meter_number, seal_number, type_service, marka_name, antimagnetic_protection, status_filling
                     ) 
                     values (?, ?, ?, ?, ?, ?) """
         cursor.execute(query, (meter_id, seal_id, meter_type, meter_marka, meter_protection, 'выполнен'))

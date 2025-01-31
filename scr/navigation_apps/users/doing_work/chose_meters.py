@@ -65,8 +65,8 @@ def show_meters_data(page, id_task, where):
         page.update()
 
     for result in filtered_results_meters:
-        id_meters, seal_number, seal_date_instalation, instalation_day, meter_type, marka_id, marka, \
-            date_next_verification, location, status_filling, antimagnetic_protection, average_consumption = result
+        id_meters, seal_number, instalation_day, meter_type, marka_id, marka, date_meter_end, \
+             location, status_filling, antimagnetic_protection, average_consumption = result
 
         if status_filling == 'выполнен':
             color = const.tasks_completed_color
@@ -86,9 +86,9 @@ def show_meters_data(page, id_task, where):
         # Используем замыкание для передачи правильного apartment
         def create_on_click(id_task, id_meters):
             def on_click(e):
-                if purpose == "Контрольный съем" or purpose == "Замена/Поверка ИПУ":
+                if purpose == "Контрольный съем с ИПУ" or purpose == "Замена/Поверка ИПУ":
                     scr.navigation_apps.users.doing_work.update_data_meters.update_data(page, id_meters, id_task, where)
-                elif purpose == "Повторная опломбировка":
+                elif purpose == "Повторная опломбировка ИПУ":
                     scr.navigation_apps.users.doing_work.sealing_meter.sealing(page, id_task, id_meters, where)
 
             return on_click

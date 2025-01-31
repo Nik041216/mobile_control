@@ -160,25 +160,23 @@ def update_meter_task_from_server(meter_task_id, task_id, meter_id, meter_remark
 
 
 def update_meter_data_from_server(meter_number, instalation_day, meter_type, marka_id, marka, seal_number,
-                                  seal_date_instalation, date_next_verification, location, antimagnetic_protection,
+                                  date_next_verification, location, antimagnetic_protection,
                                   average_consumption):
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
         query = f""" 
-        insert into meters (meter_number, instalation_date, type_service, marka_id, marka_name, seal_id, 
-        seal_date_instalation, date_next_verification, location, antimagnetic_protection, average_consumption)
+        insert into meters (meter_number, instalation_date, type_service, marka_id, marka_name, seal_number, 
+        date_of_death, location, antimagnetic_protection, average_consumption)
         values
         ('{meter_number}', '{instalation_day}', '{meter_type}', '{marka_id}', '{marka}', '{seal_number}', 
-        '{seal_date_instalation}', '{date_next_verification}', '{location}', '{antimagnetic_protection}', 
-        {average_consumption})
+        '{date_next_verification}', '{location}', '{antimagnetic_protection}', {average_consumption})
         on conflict(meter_number) do update set
             instalation_date = '{instalation_day}', 
             type_service = '{meter_type}', 
             marka_name = '{marka}', 
             marka_id = '{marka_id}',
-            seal_id = '{seal_number}', 
-            seal_date_instalation = '{seal_date_instalation}',
-            date_next_verification = '{date_next_verification}', 
+            seal_number = '{seal_number}', 
+            date_of_death = '{date_next_verification}', 
             location = '{location}',
             antimagnetic_protection = '{antimagnetic_protection}', 
             average_consumption = {average_consumption} """
@@ -214,7 +212,7 @@ def update_seal(seal_number, meter_id, task_id, remark, meter_reading, seal_type
         db.commit()
         query2 = f""" update meters set  
                             status_filling = 'выполнен',
-                            seal_id = '{seal_number}',
+                            seal_number = '{seal_number}',
                             seal_date_instalation = '{str(today_seal)}'
                             where meter_number = {meter_id} """
         cursor.execute(query2)
