@@ -26,7 +26,7 @@ def select_meter_reading_new(meter_id):
         cursor = db.cursor()
         query = f""" Select meter_id, last_reading_date, last_reading_value, 
             new_reading_date, new_reading_value from meter_reading 
-          where meter_id = {meter_id} """
+          where meter_id = '{meter_id}' """
         cursor.execute(query)
         result = cursor.fetchall()
         return result
@@ -80,12 +80,11 @@ def select_tasks_data_for_one(id_task):
 
 
 def select_meters_data_new_for_one(id_task, meter_id):
-
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
         query = f""" Select m.*, mt.remark_meter from meters as m
           left join meter_task as mt on mt.meter_id = m.meter_number
-          where mt.task_id ={id_task} and mt.meter_id = {meter_id} """
+          where mt.task_id ={id_task} and mt.meter_id = '{meter_id}' """
         cursor.execute(query)
         result = cursor.fetchall()
         return result
@@ -97,7 +96,7 @@ def get_data_to_upload():
         query = """ 
         SELECT 
             t.id, t.unloading_time, mr.new_reading_value, mr.new_reading_date, t.remark_task, t.status, mt.meter_id, 
-            mt.remark_meter, t.purpose, m.seal_number, m.seal_date_instalation, m.marka_name, m.antimagnetic_protection,
+            mt.remark_meter, t.purpose, m.seal_number, m.marka_name, m.antimagnetic_protection,
             m.type_service, t.id_address
         FROM tasks AS t
         JOIN meter_task AS mt ON mt.task_id = t.id
@@ -111,7 +110,7 @@ def get_data_to_upload():
 def select_photo_data(meter_id, task_id):
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
-        query = f""" select * from picture where meter_id = {meter_id} and task_id = {task_id} """
+        query = f""" select * from picture where meter_id = '{meter_id}' and task_id = {task_id} """
         cursor.execute(query)
         result = cursor.fetchall()
         return result

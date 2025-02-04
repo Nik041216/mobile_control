@@ -74,7 +74,7 @@ def update_data(page, meter_id, id_task, where):
     # Обработка нажатия кнопки сохранения
     def on_click_time_task(e):
         if reading_value.value:
-            value = int(reading_value.value) - int(last_reading_value)
+            value = float(reading_value.value) - float(last_reading_value)
             if average_consumption is None:
                 peredacha()
             else:
@@ -110,9 +110,8 @@ def update_data(page, meter_id, id_task, where):
     results_meters_data = scr.BD.bd_users.local.select_bd.select_meters_data_new_for_one(id_task, meter_id)
     if results_meters_data:
         for result in results_meters_data:
-            meter_number, seal_number, seal_date_instalation, instalation_date, type_service, \
-                marka_id, marka_name, date_next_verification, location, \
-                status_filling, antimagnetic_protection, average_consumption, remark_meter = result
+            (meter_number, seal_number, instalation_date, type_service, marka_id, marka_name, date_of_death,
+             location, status_filling, antimagnetic_protection, average_consumption, remark_meter) = result
     result_info_meters = f"Счетчик: {meter_number} \nДата установки: {instalation_date} \nТип: {type_service}"
 
     dict_checkboxes = {}
@@ -191,7 +190,7 @@ def update_data(page, meter_id, id_task, where):
         chect_list = [name for name, is_checked in dict_checkboxes.items() if not is_checked]
         message_string = ""
         today = datetime.datetime.now()
-        date = datetime.datetime.strptime(date_next_verification, "%Y-%m-%d")
+        date = datetime.datetime.strptime(date_of_death, "%Y-%m-%d")
         total_months = (today.year - date.year) * 12 + (today.month - date.month)
         if not chect_list:
             page.close(check_meters_data)
@@ -205,7 +204,8 @@ def update_data(page, meter_id, id_task, where):
         if total_months >= 6:
             message_string += "Включите в акт предписание о скором выходе МПИ\n"
         page.open(dlg_modal)
-        scr.func.show_alert_yn(page, message_string)
+        if bool(message_string):
+            scr.func.show_alert_yn(page, message_string)
         page.close(check_meters_data)
 
     def button_no(e):

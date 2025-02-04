@@ -9,13 +9,13 @@ def update_local_tasks(unloading_time, task_id, reading_value, remark, meter_id)
         query1 = f""" update meter_reading set  
                     new_reading_date = '{today}',
                     new_reading_value = '{reading_value}'
-                    where meter_id = {meter_id} """
+                    where meter_id = '{meter_id}' """
         query2 = f""" update meters set  
                     status_filling = 'выполнен'
-                    where meter_number = {meter_id} """
+                    where meter_number = '{meter_id}' """
         query3 = f""" update meter_task set  
                     remark_meter = '{remark}'
-                    where meter_id = {meter_id} """
+                    where meter_id = '{meter_id}' """
         cursor.execute(query1)
         cursor.execute(query2)
         cursor.execute(query3)
@@ -149,11 +149,11 @@ def update_meter_task_from_server(meter_task_id, task_id, meter_id, meter_remark
         query = f""" 
         insert into meter_task (id, meter_id, task_id, remark_meter)
         values
-        ({meter_task_id}, {task_id}, '{meter_id}', '{meter_remark}')
+        ({meter_task_id}, {task_id}, ''{meter_id}'', '{meter_remark}')
         on conflict(id) do update set
             id = {meter_task_id},
             task_id = {task_id},
-            meter_id = {meter_id}, 
+            meter_id = ''{meter_id}'', 
             remark_meter = '{meter_remark}' """
         cursor.execute(query)
         db.commit()
@@ -190,9 +190,9 @@ def update_meter_reading_data_from_server(id_meter_reading, meter_id, reading_da
         query = f""" 
         insert into meter_reading (id, meter_id, last_reading_date, last_reading_value)
         values
-        ({id_meter_reading}, {meter_id}, '{reading_date}', '{reading_values}')
+        ({id_meter_reading}, '{meter_id}', '{reading_date}', '{reading_values}')
         on conflict(id) do update set
-            meter_id = {meter_id}, 
+            meter_id = '{meter_id}', 
             last_reading_date = '{reading_date}', 
             last_reading_value = '{reading_values}' """
         cursor.execute(query)
@@ -207,19 +207,18 @@ def update_seal(seal_number, meter_id, task_id, remark, meter_reading, seal_type
         query1 = f""" update meter_reading set  
                             new_reading_date = '{today_seal}',
                             new_reading_value = '{meter_reading}'
-                            where meter_id = {meter_id} """
+                            where meter_id = '{meter_id}' """
         cursor.execute(query1)
         db.commit()
         query2 = f""" update meters set  
                             status_filling = 'выполнен',
-                            seal_number = '{seal_number}',
-                            seal_date_instalation = '{str(today_seal)}'
-                            where meter_number = {meter_id} """
+                            seal_number = '{seal_number}'
+                            where meter_number = '{meter_id}' """
         cursor.execute(query2)
         db.commit()
         query = f""" update meter_task set  
                             remark_meter = '{remark}'
-                            where meter_id = {meter_id} """
+                            where meter_id = '{meter_id}' """
         cursor.execute(query)
         db.commit()
 

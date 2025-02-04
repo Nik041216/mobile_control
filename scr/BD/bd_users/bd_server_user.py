@@ -113,7 +113,7 @@ def upload_address_data(login: str, password: str, address_updates: List[Dict[st
     """Отправка данных по адресам"""
     try:
         if address_updates:
-            print(f"Отправка данных адресов: {json.dumps(address_updates, indent=2)}")
+            print(f"Отправка данных адресов: {json.dumps(address_updates, indent=2, ensure_ascii=False)}")
             result = api.batch_update_address(login, password, address_updates)
             print(f"Результат отправки: {result}")
             return bool(result)
@@ -143,7 +143,7 @@ def upload_data_to_server(page):
             if result:
                 for record in result:
                     task_id, unloading_time, last_reading_value, last_reading_date, task_remark, \
-                        status, meter_id, meter_remark, purpose, seal_number, date_installation, meter_marka, \
+                        status, meter_id, meter_remark, purpose, seal_number, meter_marka, \
                         antimagnetic_protection, type_water, id_address = record
 
                     if status != "выполнен":
@@ -166,7 +166,6 @@ def upload_data_to_server(page):
                         "last_reading_value": last_reading_value or "",
                         "meter_remark": meter_remark or "",
                         "seal_number": seal_number,
-                        "date_installation": date_installation,
                         "meter_marka": meter_marka,
                         "antimagnetic_protection": antimagnetic_protection,
                         "type_water": type_water,

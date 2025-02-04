@@ -78,7 +78,7 @@ def insert_bd_meter_reading(id_meter_reading, meter_id, reading_date, reading_va
         cursor = db.cursor()
         query = f""" Insert into meter_reading 
         (id, meter_id, last_reading_date, last_reading_value)
-         values ({id_meter_reading}, {meter_id}, '{reading_date}', {reading_values}) """
+         values ({id_meter_reading}, '{meter_id}', '{reading_date}', {reading_values}) """
         cursor.execute(query)
 
 
