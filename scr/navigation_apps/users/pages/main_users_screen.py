@@ -20,7 +20,7 @@ def user_main(page: ft.Page):
     page.controls.clear()
     page.floating_action_button = None
 
-    completed_icon = ft.Icon(ft.icons.TASK_ALT)
+    completed_icon = ft.Icon(ft.icons.CHECK_CIRCLE_OUTLINE)
     failed_icon = ft.Icon(ft.icons.ERROR_OUTLINE)
     pending_icon = ft.Icon(ft.icons.HOURGLASS_EMPTY)
     unloaded_icon = ft.Icon(ft.icons.BUILD)
@@ -81,7 +81,6 @@ def user_main(page: ft.Page):
         chose_meters.show_meters_data(page, id_task, where="task")
 
     def create_task_container(result):
-        stat = ft.Row()
         id_task, _, _, _, street, dom, apartment, phone, _, _, _, _, status, purpose, *_ = result
         stat = ft.Row([
                 ft.Text(f"Статус: {status}"),
@@ -156,7 +155,7 @@ def user_main(page: ft.Page):
             ft.Text("Фильтры", size=20, weight=ft.FontWeight.BOLD),
             create_checkbox_with_icon("Не выполненные", ft.icons.HOURGLASS_EMPTY, 'не выполнен'),
             create_checkbox_with_icon("В работе", ft.icons.BUILD, 'в_исполнении'),
-            create_checkbox_with_icon("Выполненные", ft.icons.TASK_ALT, 'выполнен'),
+            create_checkbox_with_icon("Выполненные", ft.icons.CHECK_CIRCLE_OUTLINE, 'выполнен'),
             create_checkbox_with_icon("Просроченные", ft.icons.ERROR_OUTLINE, 'просрочен'),
             ft.Container(expand=True),  # Заполняет пространство
 
@@ -217,9 +216,12 @@ def user_main(page: ft.Page):
                     spacing=5,
                     alignment=ft.MainAxisAlignment.CENTER
                 ),
-                column,
-            ]),
-        ])
+                ft.Container(
+                    content=column,
+                    expand=True,
+                ),
+            ], expand=True),
+        ], expand=True)
     )
     page.overlay.append(overlay_container)
     page.overlay.append(menu_container)
