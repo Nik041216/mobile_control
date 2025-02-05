@@ -20,20 +20,18 @@ def user_main(page: ft.Page):
     page.controls.clear()
     page.floating_action_button = None
 
-    completed_icon = ft.Icon(ft.icons.TASK_ALT, color=ft.colors.WHITE)
-    failed_icon = ft.Icon(ft.icons.ERROR_OUTLINE, color=ft.colors.WHITE)
-    pending_icon = ft.Icon(ft.icons.HOURGLASS_EMPTY, color=ft.colors.WHITE)
-    unloaded_icon = ft.Icon(ft.icons.BUILD, color=ft.colors.WHITE)
+    completed_icon = ft.Icon(ft.icons.TASK_ALT)
+    failed_icon = ft.Icon(ft.icons.ERROR_OUTLINE)
+    pending_icon = ft.Icon(ft.icons.HOURGLASS_EMPTY)
+    unloaded_icon = ft.Icon(ft.icons.BUILD)
     checkboxes = []
 
     # Создание чекбоксов и добавление их в список
-    checkbox_ne_vypolnen = ft.Checkbox(label="Не выполненные", on_change=lambda e: filtration_check(e, 'не выполнен'))
-    checkbox_v_ispolnenii = ft.Checkbox(label="В работе", on_change=lambda e: filtration_check(e, 'в_исполнении'))
-    checkbox_vypolnen = ft.Checkbox(label="Выполненные", on_change=lambda e: filtration_check(e, 'выполнен'))
-    checkbox_prosrochen = ft.Checkbox(label="Просроченные", on_change=lambda e: filtration_check(e, 'просрочен'))
-
-    # Добавляем чекбоксы в список
-    checkboxes.extend([checkbox_ne_vypolnen, checkbox_v_ispolnenii, checkbox_vypolnen, checkbox_prosrochen])
+    def create_checkbox_with_icon(label, icon, status_text):
+        checkbox = ft.Checkbox(label=label, on_change=lambda e: filtration_check(e, status_text))
+        row = ft.Row([ft.Icon(icon, size=20), checkbox], alignment=ft.MainAxisAlignment.START)
+        checkboxes.append(checkbox)  # Добавляем в список для сброса
+        return row
 
     def reset_filters(e):
         global statuses
@@ -83,19 +81,29 @@ def user_main(page: ft.Page):
         chose_meters.show_meters_data(page, id_task, where="task")
 
     def create_task_container(result):
+        stat = ft.Row()
         id_task, _, _, _, street, dom, apartment, phone, _, _, _, _, status, purpose, *_ = result
+        stat = ft.Row([
+                ft.Text(f"Статус: {status}"),
+            ])
+        if status == 'выполнен':
+            stat.controls.append(completed_icon)
+            color = const.tasks_completed_color
+        if status == 'в_исполнении':
+            stat.controls.append(unloaded_icon)
+            color = const.tasks_unloaded_color
+        if status == 'не выполнен':
+            stat.controls.append(pending_icon)
+            color = ft.colors.BLUE
+        if status == 'просрочен':
+            stat.controls.append(failed_icon)
+            color = const.tasks_failed_color
         result_info = ft.Column([
             ft.Text(f"ул.{street} д.{dom} кв.{apartment}", weight=ft.FontWeight.BOLD),
-            ft.Row([
-                ft.Text(f"Статус: {status}"),
-            ]),
+            stat,
             ft.Text(f"Номер: {phone}"),
             ft.Text(f"Цель: {purpose}")
         ])
-        color = const.tasks_completed_color if status == 'выполнен' else (
-            const.tasks_unloaded_color if status == 'в_исполнении' else
-            (ft.colors.BLUE if status == 'не выполнен' else const.tasks_failed_color)
-        )
         return ft.Card(
             content=ft.Container(
                 content=ft.Row([
@@ -146,10 +154,10 @@ def user_main(page: ft.Page):
         animate=ft.animation.Animation(400, ft.AnimationCurve.DECELERATE),  # Исправлена ошибка
         content=ft.Column([
             ft.Text("Фильтры", size=20, weight=ft.FontWeight.BOLD),
-            checkbox_ne_vypolnen,
-            checkbox_v_ispolnenii,
-            checkbox_vypolnen,
-            checkbox_prosrochen,
+            create_checkbox_with_icon("Не выполненные", ft.icons.HOURGLASS_EMPTY, 'не выполнен'),
+            create_checkbox_with_icon("В работе", ft.icons.BUILD, 'в_исполнении'),
+            create_checkbox_with_icon("Выполненные", ft.icons.TASK_ALT, 'выполнен'),
+            create_checkbox_with_icon("Просроченные", ft.icons.ERROR_OUTLINE, 'просрочен'),
             ft.Container(expand=True),  # Заполняет пространство
 
             ft.Row(
