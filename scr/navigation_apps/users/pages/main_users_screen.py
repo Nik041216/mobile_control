@@ -10,6 +10,7 @@ from scr.func import create_filter_button
 
 statuses = []
 sorting = "Адрес"
+menu_visible = False
 
 
 def user_main(page: ft.Page):
@@ -23,72 +24,24 @@ def user_main(page: ft.Page):
     failed_icon = ft.Icon(ft.icons.ERROR_OUTLINE, color=ft.colors.WHITE)
     pending_icon = ft.Icon(ft.icons.HOURGLASS_EMPTY, color=ft.colors.WHITE)
     unloaded_icon = ft.Icon(ft.icons.BUILD, color=ft.colors.WHITE)
+    checkboxes = []
 
-    def filtration(e, color, text):
+    # Создание чекбоксов и добавление их в список
+    checkbox_ne_vypolnen = ft.Checkbox(label="Не выполненные", on_change=lambda e: filtration_check(e, 'не выполнен'))
+    checkbox_v_ispolnenii = ft.Checkbox(label="В работе", on_change=lambda e: filtration_check(e, 'в_исполнении'))
+    checkbox_vypolnen = ft.Checkbox(label="Выполненные", on_change=lambda e: filtration_check(e, 'выполнен'))
+    checkbox_prosrochen = ft.Checkbox(label="Просроченные", on_change=lambda e: filtration_check(e, 'просрочен'))
+
+    # Добавляем чекбоксы в список
+    checkboxes.extend([checkbox_ne_vypolnen, checkbox_v_ispolnenii, checkbox_vypolnen, checkbox_prosrochen])
+
+    def reset_filters(e):
         global statuses
-        if text not in statuses:
-            if color == ft.colors.WHITE:
-                statuses.append(text)
-                if text == 'выполнен':
-                    completed_icon.color = ft.colors.BLACK
-                    completed_tasks_container.shadow.color = const.tasks_completed_text_color
-                    update_results(filter_statuses=statuses)
-                elif text == 'просрочен':
-                    failed_icon.color = ft.colors.BLACK
-                    failed_tasks_container.shadow.color = const.tasks_failed_text_color
-                    update_results(filter_statuses=statuses)
-                elif text == 'не выполнен':
-                    pending_icon.color = ft.colors.BLACK
-                    pending_tasks_container.shadow.color = ft.colors.BLACK54
-                    update_results(filter_statuses=statuses)
-                elif text == 'в_исполнении':
-                    unloaded_icon.color = ft.colors.BLACK
-                    unloaded_tasks_container.shadow.color = const.tasks_unloaded_text_color
-                    update_results(filter_statuses=statuses)
-        else:
-            if color != ft.colors.WHITE:
-                statuses.remove(text)
-                if text == 'выполнен':
-                    completed_icon.color = ft.colors.WHITE
-                    completed_tasks_container.shadow.color = ft.colors.BLACK38
-                    update_results(filter_statuses=statuses)
-                elif text == 'просрочен':
-                    failed_icon.color = ft.colors.WHITE
-                    failed_tasks_container.shadow.color = ft.colors.BLACK38
-                    update_results(filter_statuses=statuses)
-                elif text == 'не выполнен':
-                    pending_icon.color = ft.colors.WHITE
-                    pending_tasks_container.shadow.color = ft.colors.BLACK38
-                    update_results(filter_statuses=statuses)
-                elif text == 'в_исполнении':
-                    unloaded_icon.color = ft.colors.WHITE
-                    unloaded_tasks_container.shadow.color = ft.colors.BLACK38
-                    update_results(filter_statuses=statuses)
-
-    completed_tasks_container = create_filter_button(
-        completed_icon,
-        const.tasks_completed_text_color,
-        'выполнен',
-        filtration
-    )
-    failed_tasks_container = create_filter_button(
-        failed_icon,
-        const.tasks_failed_text_color,
-        'просрочен',
-        filtration
-    )
-    pending_tasks_container = create_filter_button(
-        pending_icon,
-        const.tasks_pending_text_color,
-        'не выполнен',
-        filtration
-    )
-    unloaded_tasks_container = create_filter_button(
-        unloaded_icon,
-        const.tasks_unloaded_text_color,
-        'в_исполнении',
-        filtration
-    )
+        statuses.clear()
+        for checkbox in checkboxes:
+            checkbox.value = False
+        update_results(filter_statuses=statuses)
+        page.update()
 
     search_field = SearchField(on_change=lambda _: update_results(), on_submit=lambda _: update_results())
     search_bar = search_field.create_search_field()
@@ -158,25 +111,61 @@ def user_main(page: ft.Page):
             elevation=2
         )
 
-    drawer = ft.NavigationDrawer(
-        controls=[
-            ft.Container(
-                content=ft.Text("Фильтры", size=20, weight=ft.FontWeight.BOLD),
-                padding=20,
-            ),
-            ft.Checkbox(label="Новые", ),
-            ft.Checkbox(label="В работе"),
-            ft.Checkbox(label="Выполненные"),
-            ft.Checkbox(label="Просроченные"),
-            ft.ElevatedButton("Сбросить фильтры", on_click=lambda _: print("Сброс фильтров"))
-        ],
-        bgcolor=ft.colors.WHITE,
+    def filtration_check(e, text):
+        global statuses
+        if text not in statuses:
+            statuses.append(text)
+            update_results(filter_statuses=statuses)
+        else:
+            statuses.remove(text)
+            update_results(filter_statuses=statuses)
+
+    def toggle_drawer(e=None):
+        global menu_visible
+        menu_visible = not menu_visible
+        menu_container.visible = menu_visible
+        overlay_container.visible = menu_visible
+        page.update()
+
+    # Полупрозрачный фон для затемнения экрана при открытом меню
+    overlay_container = ft.Container(
+        visible=False,
+        bgcolor=ft.colors.BLACK54,
+        expand=True,
+        alignment=ft.alignment.center,
+        on_click=toggle_drawer  # Закрывает меню при клике
     )
 
     # Боковое меню
-    def toggle_drawer(e):
-        page.open(drawer)
-        drawer.update()
+    menu_container = ft.Container(
+        visible=False,
+        width=250,
+        height=page.window.height,
+        bgcolor=ft.colors.WHITE,
+        padding=20,
+        animate=ft.animation.Animation(400, ft.AnimationCurve.DECELERATE),  # Исправлена ошибка
+        content=ft.Column([
+            ft.Text("Фильтры", size=20, weight=ft.FontWeight.BOLD),
+            checkbox_ne_vypolnen,
+            checkbox_v_ispolnenii,
+            checkbox_vypolnen,
+            checkbox_prosrochen,
+            ft.Container(expand=True),  # Заполняет пространство
+
+            ft.Row(
+                [ft.ElevatedButton("Сбросить фильтры", on_click=reset_filters), ],
+                alignment=ft.MainAxisAlignment.CENTER
+            ),
+            ft.Row(
+                [ft.ElevatedButton(
+                    text="Отгрузить все данные",
+                    on_click=lambda _: bd_server_user.upload_data_to_server(page),
+                    icon="BACKUP_ROUNDED"
+                )],
+                alignment=ft.MainAxisAlignment.CENTER
+            )
+        ], expand=True),
+    )
 
     page.appbar = ft.AppBar(
         title=ft.Text("Задачи"),
@@ -190,15 +179,6 @@ def user_main(page: ft.Page):
     def on_click_update(e):
         if scr.func.check_internet():
             statuses.clear()
-            unloaded_icon.color = ft.colors.WHITE
-            unloaded_tasks_container.shadow.color = ft.colors.BLACK38
-            pending_icon.color = ft.colors.WHITE
-            pending_tasks_container.shadow.color = ft.colors.BLACK38
-            failed_icon.color = ft.colors.WHITE
-            failed_tasks_container.shadow.color = ft.colors.BLACK38
-            completed_icon.color = ft.colors.WHITE
-            completed_tasks_container.shadow.color = ft.colors.BLACK38
-
             scr.BD.bd_users.bd_server_user.select_task_data_for_update(page)
             update_results()
         else:
@@ -206,39 +186,34 @@ def user_main(page: ft.Page):
         page.update()
 
     page.add(
-        ft.ResponsiveRow(
-            [
+        ft.Stack([
+            ft.Column([
                 ft.ResponsiveRow(
                     [
-                        search_bar,
-                        ft.Dropdown(
-                            on_change=lambda e: globals().update(sorting=e.control.value) or update_results(),
-                            value=sorting,
-                            width=100,
-                            label="Сортировка",
-                            options=[ft.dropdown.Option("Адрес"), ft.dropdown.Option("Статус")],
-                            col=1.6
-                        )
+                        ft.ResponsiveRow(
+                            [
+                                search_bar,
+                                ft.Dropdown(
+                                    on_change=lambda e: globals().update(sorting=e.control.value) or update_results(),
+                                    value=sorting,
+                                    width=100,
+                                    label="Сортировка",
+                                    options=[ft.dropdown.Option("Адрес"), ft.dropdown.Option("Статус")],
+                                    col=1.6
+                                )
+                            ],
+                            columns=5
+                        ),
                     ],
-                    columns=5
+                    columns=4,
+                    spacing=5,
+                    alignment=ft.MainAxisAlignment.CENTER
                 ),
-                unloaded_tasks_container,
-                pending_tasks_container,
-                completed_tasks_container,
-                failed_tasks_container
-            ],
-            columns=4,
-            spacing=5,
-            alignment=ft.MainAxisAlignment.CENTER
-        ),
-        ft.Container(content=ft.Column([ft.Divider(thickness=4, color=ft.colors.WHITE)])),
-        column,
-        ft.Row(
-            [ft.ElevatedButton(text="Отгрузить все данные",
-                               on_click=lambda _: bd_server_user.upload_data_to_server(page), icon="BACKUP_ROUNDED")],
-            alignment=ft.MainAxisAlignment.CENTER
-        )
+                column,
+            ]),
+        ])
     )
-
+    page.overlay.append(overlay_container)
+    page.overlay.append(menu_container)
     update_results()
     page.update()
