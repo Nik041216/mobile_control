@@ -149,11 +149,11 @@ def update_meter_task_from_server(meter_task_id, task_id, meter_id, meter_remark
         query = f""" 
         insert into meter_task (id, meter_id, task_id, remark_meter)
         values
-        ({meter_task_id}, {task_id}, ''{meter_id}'', '{meter_remark}')
+        ({meter_task_id}, '{meter_id}', {task_id},  '{meter_remark}')
         on conflict(id) do update set
             id = {meter_task_id},
             task_id = {task_id},
-            meter_id = ''{meter_id}'', 
+            meter_id = '{meter_id}', 
             remark_meter = '{meter_remark}' """
         cursor.execute(query)
         db.commit()

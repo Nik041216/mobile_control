@@ -195,8 +195,10 @@ def user_main(page: ft.Page):
     )
 
     def on_click_update(e):
+        global statuses
         if scr.func.check_internet():
             statuses.clear()
+            statuses = ['не выполнен', 'выполнен', 'в исполнении', 'просрочен']
             scr.BD.bd_users.bd_server_user.select_task_data_for_update(page)
             update_results(statuses)
         else:
