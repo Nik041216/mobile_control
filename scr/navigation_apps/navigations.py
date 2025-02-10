@@ -42,7 +42,8 @@ def employee_navigation(privileges, page):
         ], on_change=navigate,
         label_behavior=ft.NavigationBarLabelBehavior.ONLY_SHOW_SELECTED,
         indicator_color=ft.colors.TRANSPARENT,
-        height=50
+        height=50,
+        bgcolor=ft.colors.BLUE_100
     )
 
 

@@ -23,7 +23,7 @@ def update_local_tasks(unloading_time, task_id, reading_value, remark, meter_id)
 
         query = f""" update tasks set 
                    unloading_time = '{unloading_time}',  
-                   status = 'в_исполнении'
+                   status = 'в исполнении'
                    where id = {task_id}"""
         cursor.execute(query)
         db.commit()
@@ -66,7 +66,7 @@ def update_dop_data_address(remark, registered_residing, standarts, area, addres
             where id = {task_id} """
         cursor.execute(query)
         query1 = f""" update address set  
-            registered_residing = {int(registered_residing)},
+            registered_residing = '{registered_residing}',
             standarts = {standarts},
             area = {area}
             where id = {address_id} """
@@ -224,7 +224,7 @@ def update_seal(seal_number, meter_id, task_id, remark, meter_reading, seal_type
 
         query = f""" update tasks set 
                            unloading_time = '{str(today)}',  
-                           status = 'в_исполнении'
+                           status = 'в исполнении'
                            where id = {task_id}"""
         cursor.execute(query)
         db.commit()

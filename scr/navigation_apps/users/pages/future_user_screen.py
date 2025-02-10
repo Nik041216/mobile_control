@@ -49,7 +49,7 @@ def main(page):
         title=ft.Text("Будущие задачи"),
         center_title=True,
         toolbar_height=50,
-        bgcolor=ft.colors.BLUE_GREY_50,
+        bgcolor=ft.colors.BLUE_100,
         actions=[
             ft.IconButton(icon=ft.icons.AUTORENEW, on_click=on_click_update)
         ]

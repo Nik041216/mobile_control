@@ -53,6 +53,7 @@ class SearchField:
             value="",
             controls=create_search_list(),
             col=3.4,
+            bar_bgcolor=ft.colors.WHITE
         )
 
         return self.search_bar

@@ -15,7 +15,7 @@ def setting(page):
         title=ft.Text("Профиль сотрудника"),
         center_title=True,
         toolbar_height=50,
-        bgcolor=ft.colors.BLUE_GREY_50
+        bgcolor=ft.colors.BLUE_100,
     )
 
     def on_click_exit(e):

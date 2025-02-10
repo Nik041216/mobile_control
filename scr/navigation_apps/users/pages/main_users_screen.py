@@ -8,12 +8,13 @@ import scr.BD.bd_users.bd_server_user
 from scr.components.search_field import SearchField
 from scr.func import create_filter_button
 
-statuses = []
+statuses = ['не выполнен', 'выполнен', 'в исполнении', 'просрочен']
 sorting = "Адрес"
 menu_visible = False
 
 
 def user_main(page: ft.Page):
+    global statuses
     page.window.width = 362.4
     page.window.height = 800
     page.vertical_alignment = ft.MainAxisAlignment.START
@@ -27,29 +28,29 @@ def user_main(page: ft.Page):
     checkboxes = []
 
     # Создание чекбоксов и добавление их в список
-    def create_checkbox_with_icon(label, icon, status_text):
-        checkbox = ft.Checkbox(label=label, on_change=lambda e: filtration_check(e, status_text))
-        row = ft.Row([ft.Icon(icon, size=20), checkbox], alignment=ft.MainAxisAlignment.START)
+    def create_checkbox_with_icon(label, icon, status_text, color):
+        checkbox = ft.Checkbox(label=label, on_change=lambda e: filtration_check(e, status_text), value=True)
+        row = ft.Row([ft.Icon(icon, size=25, color=color), checkbox], alignment=ft.MainAxisAlignment.START)
         checkboxes.append(checkbox)  # Добавляем в список для сброса
         return row
 
     def reset_filters(e):
         global statuses
-        statuses.clear()
+        statuses = ['не выполнен', 'выполнен', 'в исполнении', 'просрочен']
         for checkbox in checkboxes:
-            checkbox.value = False
-        update_results(filter_statuses=statuses)
+            checkbox.value = True
+        update_results(statuses)
         page.update()
 
-    search_field = SearchField(on_change=lambda _: update_results(), on_submit=lambda _: update_results())
+    search_field = SearchField(on_change=lambda _: update_results(filter_statuses=statuses),
+                               on_submit=lambda _: update_results(filter_statuses=statuses))
     search_bar = search_field.create_search_field()
 
     column = ft.Column(scroll=ft.ScrollMode.AUTO, expand=True)
 
-    def update_results(filter_statuses=None):
+    def update_results(filter_statuses):
         results = select_bd.select_tasks_data_new(sorting, search_bar.value, "now")
-        filtered_results = [result for result in results if not filter_statuses or result[12] in filter_statuses]
-
+        filtered_results = [result for result in results if filter_statuses and result[12] in filter_statuses]
         tasks_by_street = {}
         for result in filtered_results:
             street = result[4]
@@ -83,12 +84,12 @@ def user_main(page: ft.Page):
     def create_task_container(result):
         id_task, _, _, _, street, dom, apartment, phone, _, _, _, _, status, purpose, *_ = result
         stat = ft.Row([
-                ft.Text(f"Статус: {status}"),
-            ])
+            ft.Text(f"Статус: {status}"),
+        ])
         if status == 'выполнен':
             stat.controls.append(completed_icon)
             color = const.tasks_completed_color
-        if status == 'в_исполнении':
+        if status == 'в исполнении':
             stat.controls.append(unloaded_icon)
             color = const.tasks_unloaded_color
         if status == 'не выполнен':
@@ -148,26 +149,36 @@ def user_main(page: ft.Page):
         visible=False,
         width=250,
         height=page.window.height,
-        bgcolor=ft.colors.WHITE,
+        bgcolor=ft.colors.BLUE_50,
         padding=20,
-        animate=ft.animation.Animation(400, ft.AnimationCurve.DECELERATE),  # Исправлена ошибка
+        animate=ft.animation.Animation(400, ft.AnimationCurve.DECELERATE),
         content=ft.Column([
             ft.Text("Фильтры", size=20, weight=ft.FontWeight.BOLD),
-            create_checkbox_with_icon("Не выполненные", ft.icons.HOURGLASS_EMPTY, 'не выполнен'),
-            create_checkbox_with_icon("В работе", ft.icons.BUILD, 'в_исполнении'),
-            create_checkbox_with_icon("Выполненные", ft.icons.CHECK_CIRCLE_OUTLINE, 'выполнен'),
-            create_checkbox_with_icon("Просроченные", ft.icons.ERROR_OUTLINE, 'просрочен'),
-            ft.Container(expand=True),  # Заполняет пространство
+            create_checkbox_with_icon("Не выполненные", ft.icons.HOURGLASS_EMPTY, 'не выполнен',
+                                      color=ft.colors.BLUE),
+            create_checkbox_with_icon("В работе", ft.icons.BUILD_OUTLINED, 'в исполнении',
+                                      color='#ffc107'),
+            create_checkbox_with_icon("Выполненные", ft.icons.CHECK_CIRCLE_OUTLINE, 'выполнен',
+                                      color=ft.colors.GREEN),
+            create_checkbox_with_icon("Просроченные", ft.icons.ERROR_OUTLINE, 'просрочен',
+                                      color=ft.colors.RED),
+            ft.Container(expand=True),
 
-            ft.Row(
-                [ft.ElevatedButton("Сбросить фильтры", on_click=reset_filters), ],
-                alignment=ft.MainAxisAlignment.CENTER
-            ),
+            ft.Row([ft.ElevatedButton("Сбросить фильтры",
+                                      on_click=reset_filters,
+                                      bgcolor=ft.colors.RED_400,
+                                      icon=ft.icons.FILTER_ALT_OFF,
+                                      color=ft.colors.WHITE),
+                    ],
+                   alignment=ft.MainAxisAlignment.CENTER
+                   ),
             ft.Row(
                 [ft.ElevatedButton(
                     text="Отгрузить все данные",
                     on_click=lambda _: bd_server_user.upload_data_to_server(page),
-                    icon="BACKUP_ROUNDED"
+                    icon="BACKUP_ROUNDED",
+                    bgcolor=ft.colors.BLUE_400,
+                    color=ft.colors.WHITE
                 )],
                 alignment=ft.MainAxisAlignment.CENTER
             )
@@ -179,7 +190,7 @@ def user_main(page: ft.Page):
         center_title=True,
         toolbar_height=50,
         leading=ft.IconButton(icon=ft.icons.MENU, on_click=lambda _: toggle_drawer(_)),
-        bgcolor=ft.colors.BLUE_GREY_50,
+        bgcolor=ft.colors.BLUE_100,
         actions=[ft.IconButton(icon=ft.icons.AUTORENEW, on_click=lambda _: on_click_update(_))]
     )
 
@@ -187,7 +198,7 @@ def user_main(page: ft.Page):
         if scr.func.check_internet():
             statuses.clear()
             scr.BD.bd_users.bd_server_user.select_task_data_for_update(page)
-            update_results()
+            update_results(statuses)
         else:
             scr.func.show_alert_yn(page, "Нет доступа к сети, проверте интернет соеденение")
         page.update()
@@ -206,7 +217,8 @@ def user_main(page: ft.Page):
                                     width=100,
                                     label="Сортировка",
                                     options=[ft.dropdown.Option("Адрес"), ft.dropdown.Option("Статус")],
-                                    col=1.6
+                                    col=1.6,
+                                    bgcolor=ft.colors.WHITE
                                 )
                             ],
                             columns=5
@@ -225,5 +237,5 @@ def user_main(page: ft.Page):
     )
     page.overlay.append(overlay_container)
     page.overlay.append(menu_container)
-    update_results()
+    update_results(filter_statuses=statuses)
     page.update()

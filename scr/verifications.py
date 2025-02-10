@@ -15,8 +15,9 @@ def authentication(page):
 
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
 
-    login = ft.TextField(label="Логин", width=screen_width * 0.90, value="control1")
-    password = ft.TextField(label="Пароль", password=True, can_reveal_password=True, width=screen_width * 0.90, value="control1")
+    login = ft.TextField(label="Логин", width=screen_width * 0.90, value="control1", bgcolor=ft.colors.WHITE)
+    password = ft.TextField(label="Пароль", password=True, can_reveal_password=True,
+                            width=screen_width * 0.90, value="control1", bgcolor=ft.colors.WHITE)
 
     def validate(login, password) -> bool:
         return login != "" and password != ""
@@ -34,7 +35,7 @@ def authentication(page):
                     [
                         login,
                         password,
-                        ft.ElevatedButton(text="Вход", on_click=on_click,)
+                        ft.ElevatedButton(text="Вход", on_click=on_click, bgcolor=ft.colors.BLUE_400, color=ft.colors.BLACK54)
                     ],
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                 )

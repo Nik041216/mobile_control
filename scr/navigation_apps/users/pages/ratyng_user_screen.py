@@ -12,7 +12,7 @@ def rating(page):
         title=ft.Text("Рейтинг"),
         center_title=True,
         toolbar_height=50,
-        bgcolor=ft.colors.BLUE_GREY_50
+        bgcolor=ft.colors.BLUE_100,
     )
 
     page.add(
