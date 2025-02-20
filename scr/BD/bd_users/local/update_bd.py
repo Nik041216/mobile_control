@@ -252,3 +252,15 @@ def update_date(id_task, date):
                            where id = {id_task} """
         cursor.execute(query)
         db.commit()
+
+
+def update_status_task():
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = """ update tasks set
+                            status = 'просрочен' 
+                            where date_end < Date('now') and status != 'выполнен' """
+        cursor.execute(query)
+        db.commit()
+
+
