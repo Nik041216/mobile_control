@@ -82,7 +82,7 @@ def update_data(page, meter_id, id_task, where):
                 if procent < 20 or value == 0:
                     peredacha()
                 else:
-                    if selected_images is None:
+                    if selected_images is None or selected_images == {}:
                         page.open(photo_message)
                     else:
                         peredacha()
