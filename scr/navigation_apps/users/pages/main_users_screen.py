@@ -213,8 +213,8 @@ def user_main(page: ft.Page):
                         ft.ResponsiveRow(
                             [
                                 search_bar,
-                                ft.Dropdown(
-                                    on_change=lambda e: globals().update(sorting=e.control.value) or update_results(),
+                                ft.DropdownM2(
+                                    on_change=lambda e: globals().update(sorting=e.control.value) or update_results(statuses),
                                     value=sorting,
                                     width=100,
                                     label="Сортировка",
