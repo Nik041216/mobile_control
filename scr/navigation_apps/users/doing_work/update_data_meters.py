@@ -96,7 +96,6 @@ def update_data(page, meter_id, id_task, where):
             page.open(bottom_sheet)
         else:
             page.close(dlg_modal)
-            scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where)
 
     # Инициализация переменных на случай, если данные не будут получены
     marka_name = "Неизвестно"

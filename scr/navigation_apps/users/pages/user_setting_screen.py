@@ -8,7 +8,22 @@ import scr.navigation_apps.navigations
 import scr.constants as const
 
 
-def setting(page):
+def get_appbar(page):
+    return ft.AppBar(
+        title=ft.Text("Профиль сотрудника"),
+        center_title=True,
+        toolbar_height=50,
+        bgcolor=ft.colors.BLUE_100,
+    )
+
+
+def get_content(page):
+    container = ft.Container()
+    setting(page, container)
+    return container
+
+
+def setting(page: ft.Page, conteiner: ft.Container):
     page.vertical_alignment = ft.MainAxisAlignment.START
     page.controls.clear()
     page.appbar = ft.AppBar(
@@ -48,15 +63,14 @@ def setting(page):
         for record in result:
             user_id, login_user, password_user, privileges, first_name, last_name = record
 
-    page.add(
-        ft.Column(
-            [
-                ft.Text(f"Сотрудник: {last_name} {first_name}"),
-                ft.Text(f"Логин: {login_user}"),
-                ft.Text(f"Пароль: {password_user}"),
-                bte
-            ],
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER
-        )
+    content = ft.Column(
+        [
+            ft.Text(f"Сотрудник: {last_name} {first_name}"),
+            ft.Text(f"Логин: {login_user}"),
+            ft.Text(f"Пароль: {password_user}"),
+            bte
+        ],
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER
     )
-    page.update()
+    conteiner.content = content
+    return conteiner

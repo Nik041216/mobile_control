@@ -20,7 +20,7 @@ def handle_user_sessions(page):
                 privileges = record[3]
                 if login != "" and password != "":
                     scr.navigation_apps.navigations.role_definition(privileges, page)
-                    scr.func.show_snack_bar(page, "Успешний вход в систему.")
+                    scr.func.show_snack_bar(page, "Успешный вход в систему.")
                 else:
                     scr.verifications.authentication(page)
         else:

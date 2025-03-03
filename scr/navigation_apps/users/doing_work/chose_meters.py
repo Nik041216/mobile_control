@@ -10,11 +10,17 @@ import scr.navigation_apps.users.doing_work.sealing_meter
 import scr.navigation_apps.users.doing_work.create_new_meters as new_meters
 
 
-def call_show_meters_data(page, id_task, where):
-    show_meters_data(page, id_task, where)
+def call_show_meters_data(page, id_task, where, container):
+    show_meters_data(page, id_task, where, container)
 
 
-def show_meters_data(page, id_task, where):
+def get_content(page, id_task, where):
+    container = ft.Container()
+    show_meters_data(page, id_task, where, container)
+    return container
+
+
+def show_meters_data(page: ft.Page, id_task, where, container1: ft.Container):
     screen_width = page.width
     screen_height = page.height
     page.controls.clear()
@@ -41,9 +47,9 @@ def show_meters_data(page, id_task, where):
 
     def on_click_back(e):
         if where == "task":
-            scr.navigation_apps.users.pages.main_users_screen.user_main(page)
+            page.on_view_pop(e)
         else:
-            scr.navigation_apps.users.pages.future_user_screen.main(page)
+            page.on_view_pop(e)
 
     def on_click_save(e):
         scr.BD.bd_users.local.update_bd.update_dop_data_address(
@@ -66,7 +72,7 @@ def show_meters_data(page, id_task, where):
 
     for result in filtered_results_meters:
         id_meters, seal_number, instalation_day, meter_type, marka_id, marka, date_meter_end, \
-             location, status_filling, antimagnetic_protection, average_consumption = result
+            location, status_filling, antimagnetic_protection, average_consumption = result
 
         if status_filling == 'выполнен':
             color = const.tasks_completed_color
@@ -181,7 +187,7 @@ def show_meters_data(page, id_task, where):
     row_button.controls.append(button_save_v2)
     row_button.controls.append(button_back)
 
-    page.add(
+    content1 = ft.Column([
         ft.Column(
             [
                 title,
@@ -190,5 +196,6 @@ def show_meters_data(page, id_task, where):
             ],
             scroll=ft.ScrollMode.AUTO, expand=True, horizontal_alignment=ft.CrossAxisAlignment.CENTER
         )
-    )
-    page.update()
+    ])
+    container1.content = content1
+    return container
