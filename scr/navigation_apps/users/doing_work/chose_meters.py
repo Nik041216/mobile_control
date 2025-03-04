@@ -14,6 +14,19 @@ def call_show_meters_data(page, id_task, where, container):
     show_meters_data(page, id_task, where, container)
 
 
+def get_appbar(page):
+    return ft.AppBar(
+        title=ft.Text("Выбор счетчика"),
+        center_title=True,
+        toolbar_height=50,
+        bgcolor=ft.colors.BLUE_100,
+    )
+
+
+def get_floating_action_button(page):
+    pass
+
+
 def get_content(page, id_task, where):
     container = ft.Container()
     show_meters_data(page, id_task, where, container)
@@ -38,18 +51,19 @@ def show_meters_data(page: ft.Page, id_task, where, container1: ft.Container):
     def onclick_floating_button(e):
         new_meters.create_meter(page, id_task, where)
 
+    floating_action_button = None
     if purpose == "Замена/Поверка ИПУ":
-        page.floating_action_button = ft.FloatingActionButton(icon=ft.icons.ADD,
-                                                              on_click=onclick_floating_button)
+        floating_action_button = ft.FloatingActionButton(icon=ft.icons.ADD,
+                                                         on_click=onclick_floating_button)
         page.update()
     result_info_address = f"Адрес: ул.{street} д.{dom} кв.{apartment}"
     result_info_person = f"ФИО владельца: {person_name}"
 
     def on_click_back(e):
         if where == "task":
-            page.on_view_pop(e)
+            page.go("/")
         else:
-            page.on_view_pop(e)
+            page.go("/future")
 
     def on_click_save(e):
         scr.BD.bd_users.local.update_bd.update_dop_data_address(
@@ -192,6 +206,7 @@ def show_meters_data(page: ft.Page, id_task, where, container1: ft.Container):
             [
                 title,
                 content_dialog,
+                floating_action_button,
                 row_button
             ],
             scroll=ft.ScrollMode.AUTO, expand=True, horizontal_alignment=ft.CrossAxisAlignment.CENTER

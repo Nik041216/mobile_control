@@ -209,7 +209,7 @@ def update_data(page, meter_id, id_task, where):
 
     def button_no(e):
         page.close(check_meters_data)
-        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where)
+        page.go(f"/chose_meters/{id_task}/{where}")
 
     check_meters_data = ft.AlertDialog(
         modal=True,

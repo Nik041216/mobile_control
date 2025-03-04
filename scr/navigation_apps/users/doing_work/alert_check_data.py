@@ -205,9 +205,9 @@ def func_check_address_data(page, id_task, where):
     def button_no(e):
         page.close(check_address_data)
         if where == "task":
-            scr.navigation_apps.users.pages.main_users_screen.user_main(page)
+            page.go("/")
         else:
-            scr.navigation_apps.users.pages.future_user_screen.main(page)
+            page.go("/future")
 
     check_address_data = ft.AlertDialog(
         modal=True,

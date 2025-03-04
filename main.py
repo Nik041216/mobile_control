@@ -6,6 +6,7 @@ from scr.navigation_apps.users.pages import (
     user_setting_screen
 )
 from scr.navigation_apps.users.doing_work import chose_meters
+from scr import verifications
 import scr.toggle_user_sessions
 import scr.BD.bd_users.local.update_bd
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -16,6 +17,8 @@ scheduler.start()
 
 
 def main(page: ft.Page):
+    page.window_width = 362.4
+    page.window_height = 800
     page.theme_mode = 'light'
     page.bgcolor = ft.Colors.BLUE_50
     page.title = "Мобильный контроллер"
@@ -30,7 +33,8 @@ def main(page: ft.Page):
                 route="/",
                 controls=[main_users_screen.get_content(page)],
                 appbar=main_users_screen.get_appbar(page),
-                navigation_bar=get_navigation_bar(0)
+                navigation_bar=get_navigation_bar(0),
+                bgcolor=ft.Colors.BLUE_50
             )
         )
 
@@ -40,7 +44,8 @@ def main(page: ft.Page):
                     route="/future",
                     controls=[future_user_screen.get_content(page)],
                     appbar=future_user_screen.get_appbar(page),
-                    navigation_bar=get_navigation_bar(1)
+                    navigation_bar=get_navigation_bar(1),
+                    bgcolor=ft.Colors.BLUE_50
                 )
             )
 
@@ -50,7 +55,8 @@ def main(page: ft.Page):
                     route="/rating",
                     controls=[ratyng_user_screen.get_content(page)],
                     appbar=ratyng_user_screen.get_appbar(page),
-                    navigation_bar=get_navigation_bar(2)
+                    navigation_bar=get_navigation_bar(2),
+                    bgcolor=ft.Colors.BLUE_50
                 )
             )
 
@@ -60,7 +66,8 @@ def main(page: ft.Page):
                     route="/settings",
                     controls=[user_setting_screen.get_content(page)],
                     appbar=user_setting_screen.get_appbar(page),
-                    navigation_bar=get_navigation_bar(3)
+                    navigation_bar=get_navigation_bar(3),
+                    bgcolor=ft.Colors.BLUE_50
                 )
             )
         if page.route.startswith("/choise_meters/"):
@@ -72,6 +79,19 @@ def main(page: ft.Page):
                 ft.View(
                     route=page.route,
                     controls=[chose_meters.get_content(page, id_task, where)],
+                    appbar=chose_meters.get_appbar(page),
+                    bgcolor=ft.Colors.BLUE_50
+                )
+            )
+
+        if page.route == "/authentication":
+            page.views.append(
+                ft.View(
+                    route="/authentication",
+                    controls=[verifications.get_content(page)],
+                    appbar=None,
+                    navigation_bar=None,
+                    bgcolor=ft.Colors.BLUE_50
                 )
             )
 

@@ -3,7 +3,13 @@ import scr.BD.auth
 import scr.func
 
 
-def authentication(page):
+def get_content(page):
+    container = ft.Container()
+    authentication(page, container)
+    return container
+
+
+def authentication(page, container):
     screen_width = page.width
     screen_height = page.height
 
@@ -20,7 +26,7 @@ def authentication(page):
         else:
             scr.func.show_snack_bar(page, "Неправильный логин или пароль.")
 
-    return ft.Column(
+    content = ft.Column(
         [
             ft.Row(
                 [
@@ -37,3 +43,5 @@ def authentication(page):
             )
         ]
     )
+    container.content = content
+    return container
