@@ -8,6 +8,7 @@ import scr.navigation_apps.users.pages.future_user_screen
 import scr.navigation_apps.users.doing_work.update_data_meters
 import scr.navigation_apps.users.doing_work.sealing_meter
 import scr.navigation_apps.users.doing_work.create_new_meters as new_meters
+import scr.navigation_apps.users.doing_work.alert_check_data as check_alert
 
 
 def call_show_meters_data(page, id_task, where, container):
@@ -51,7 +52,7 @@ def show_meters_data(page: ft.Page, id_task, where, container1: ft.Container):
     def onclick_floating_button(e):
         new_meters.create_meter(page, id_task, where)
 
-    floating_action_button = None
+    floating_action_button = ft.Text
     if purpose == "Замена/Поверка ИПУ":
         floating_action_button = ft.FloatingActionButton(icon=ft.icons.ADD,
                                                          on_click=onclick_floating_button)
@@ -206,7 +207,6 @@ def show_meters_data(page: ft.Page, id_task, where, container1: ft.Container):
             [
                 title,
                 content_dialog,
-                floating_action_button,
                 row_button
             ],
             scroll=ft.ScrollMode.AUTO, expand=True, horizontal_alignment=ft.CrossAxisAlignment.CENTER

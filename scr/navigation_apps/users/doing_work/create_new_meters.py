@@ -62,11 +62,11 @@ def create_meter(page, id_task, where):
                 seal_number.value, remark.value, meter_type.value, seal_type_radio.value
             )
             page.close(create_meter_alert)
-            scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where)
+            page.go(f"/choise_meters/{id_task}/{where}")
 
     def on_click_back(e):
         page.close(create_meter_alert)
-        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where)
+        page.go(f"/choise_meters/{id_task}/{where}")
 
     meter_id = ft.TextField(label="Серийный номер счетчика", value=None)
     meter_marka = ft.TextField(label="Марка счетчика", value=None)

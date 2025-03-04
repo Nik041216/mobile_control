@@ -138,7 +138,7 @@ def update_results(filter_statuses, page, search_value):
 
     def click_conteiner(e, id_task):
         where = "task"
-        check_alert.func_check_address_data(page, id_task, where="task")
+        print(id_task)
         page.go(f"/choise_meters/{id_task}/{where}")
 
     def create_task_container(result):

@@ -7,6 +7,7 @@ from scr.navigation_apps.users.pages import (
 )
 from scr.navigation_apps.users.doing_work import chose_meters
 from scr import verifications
+import scr.navigation_apps.users.doing_work.alert_check_data as check_alert
 import scr.toggle_user_sessions
 import scr.BD.bd_users.local.update_bd
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -74,26 +75,21 @@ def main(page: ft.Page):
             parts = page.route.split("/")
             id_task = parts[2]
             where = parts[3]
+            if where == "task":
+                navigation_bar = get_navigation_bar(0)
+            else:
+                navigation_bar = get_navigation_bar(1)
 
             page.views.append(
                 ft.View(
                     route=page.route,
                     controls=[chose_meters.get_content(page, id_task, where)],
                     appbar=chose_meters.get_appbar(page),
+                    navigation_bar=navigation_bar,
                     bgcolor=ft.Colors.BLUE_50
                 )
             )
-
-        if page.route == "/authentication":
-            page.views.append(
-                ft.View(
-                    route="/authentication",
-                    controls=[verifications.get_content(page)],
-                    appbar=None,
-                    navigation_bar=None,
-                    bgcolor=ft.Colors.BLUE_50
-                )
-            )
+            check_alert.func_check_address_data(page, id_task, where)
 
         page.update()
 
