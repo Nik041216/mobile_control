@@ -22,8 +22,8 @@ def handle_user_sessions(page):
                     scr.navigation_apps.navigations.role_definition(privileges, page)
                     scr.func.show_snack_bar(page, "Успешный вход в систему.")
                 else:
-                    scr.verifications.authentication(page)
+                    page.go("/authentication")
         else:
-            scr.verifications.authentication(page)
+            page.go("/authentication")
     else:
-        scr.verifications.authentication(page)
+        page.go("/authentication")

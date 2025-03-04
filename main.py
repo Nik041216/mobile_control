@@ -23,7 +23,6 @@ def main(page: ft.Page):
     page.theme_mode = 'light'
     page.bgcolor = ft.Colors.BLUE_50
     page.title = "Мобильный контроллер"
-    scr.toggle_user_sessions.handle_user_sessions(page)
 
     def route_change(e):
         page.views.clear()
@@ -57,7 +56,8 @@ def main(page: ft.Page):
                     controls=[ratyng_user_screen.get_content(page)],
                     appbar=ratyng_user_screen.get_appbar(page),
                     navigation_bar=get_navigation_bar(2),
-                    bgcolor=ft.Colors.BLUE_50
+                    bgcolor=ft.Colors.BLUE_50,
+                    vertical_alignment=ft.MainAxisAlignment.CENTER
                 )
             )
 
@@ -91,6 +91,16 @@ def main(page: ft.Page):
             )
             check_alert.func_check_address_data(page, id_task, where)
 
+        if page.route == "/authentication":
+            page.views.append(
+                ft.View(
+                    route="/authentication",
+                    controls=[verifications.get_content(page)],
+                    bgcolor=ft.Colors.BLUE_50,
+                    vertical_alignment=ft.MainAxisAlignment.CENTER
+                )
+            )
+
         page.update()
 
     def view_pop(e):
@@ -100,6 +110,7 @@ def main(page: ft.Page):
 
     page.on_route_change = route_change
     page.on_view_pop = view_pop
+    scr.toggle_user_sessions.handle_user_sessions(page)
 
     def get_navigation_bar(selected_index=0):
         return ft.NavigationBar(
@@ -129,8 +140,6 @@ def main(page: ft.Page):
             bgcolor=ft.Colors.BLUE_100,
             height=50
         )
-
-    page.go("/")
 
 
 ft.app(target=main)
