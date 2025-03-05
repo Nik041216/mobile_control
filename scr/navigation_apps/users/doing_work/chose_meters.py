@@ -10,8 +10,8 @@ import scr.navigation_apps.users.doing_work.sealing_meter
 import scr.navigation_apps.users.doing_work.create_new_meters as new_meters
 
 
-def call_show_meters_data(page, id_task, where, container):
-    show_meters_data(page, id_task, where, container)
+def call_show_meters_data(page, id_task, where):
+    page.go(f"/choise_meters/{id_task}/{where}")
 
 
 def get_appbar(page):
@@ -33,7 +33,7 @@ def get_content(page, id_task, where):
     return container
 
 
-def show_meters_data(page: ft.Page, id_task, where, container1: ft.Container):
+def show_meters_data(page, id_task, where, container1: ft.Container):
     screen_width = page.width
     screen_height = page.height
     page.controls.clear()

@@ -1,11 +1,8 @@
 import datetime
 import flet as ft
-import scr.BD.bd_users.local.update_bd
-import scr.BD.bd_users.local.delete_bd
 import scr.BD.bd_users.local.insert_bd as insert
 import scr.BD.bd_users.bd_server_user
-import scr.func
-import scr.navigation_apps.users.doing_work.chose_meters
+import scr.constants as const
 
 
 def create_meter(page, id_task, where):
@@ -33,6 +30,7 @@ def create_meter(page, id_task, where):
         page.open(bottom_sheet)
 
     def on_click_save(e):
+        pass
         if (meter_id.value is None or meter_id.value == ""
                 or meter_marka.value is None or meter_marka.value == ""
                 or meter_reading.value is None or meter_reading.value == ""
@@ -63,6 +61,7 @@ def create_meter(page, id_task, where):
             )
             page.close(create_meter_alert)
             page.go(f"/choise_meters/{id_task}/{where}")
+            page.update()
 
     def on_click_back(e):
         page.close(create_meter_alert)
@@ -89,7 +88,14 @@ def create_meter(page, id_task, where):
         ])
     )
 
-    meter_type = ft.TextField(label="Тип услуги счетчика", value=None)
+    def get_options():
+        options = []
+        for type in const.type_water:
+            options.append(ft.DropdownOption(type))
+        return options
+
+    meter_type = ft.Dropdown(label="Тип услуги счетчика", enable_filter=True, max_menu_height=200, editable=True,
+                             width=200, options=get_options())
     photo_button = ft.ElevatedButton("Выбрать фотографию")
 
     content = ft.Column(

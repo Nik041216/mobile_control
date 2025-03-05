@@ -2,8 +2,6 @@ import flet as ft
 import scr.BD.bd_users.local.select_bd as select_bd
 import scr.BD.bd_users.bd_server_user as bd_server_user
 import scr.constants as const
-import scr.navigation_apps.users.doing_work.chose_meters as chose_meters
-import scr.navigation_apps.users.doing_work.alert_check_data as check_alert
 import scr.BD.bd_users.bd_server_user
 from scr.components.search_field import SearchField
 from scr.func import create_filter_button
