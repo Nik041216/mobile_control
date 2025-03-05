@@ -5,6 +5,7 @@ import scr.BD.bd_users.local.select_bd
 import scr.func
 import scr.navigation_apps.navigations
 import scr.verifications
+import scr.BD.bd_users.local.update_bd
 
 
 def handle_user_sessions(page):
@@ -21,6 +22,7 @@ def handle_user_sessions(page):
                 if login != "" and password != "":
                     scr.navigation_apps.navigations.role_definition(privileges, page)
                     scr.func.show_snack_bar(page, "Успешный вход в систему.")
+                    scr.BD.bd_users.local.update_bd.update_status_task()
                 else:
                     page.go("/authentication")
         else:
