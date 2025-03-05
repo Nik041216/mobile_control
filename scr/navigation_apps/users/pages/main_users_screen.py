@@ -125,7 +125,7 @@ def get_appbar(page):
 
 
 def get_content(page):
-    container = ft.Container()
+    container = ft.Container(expand=True)
     user_main(page, container)
     return container
 
@@ -138,7 +138,6 @@ def update_results(filter_statuses, page, search_value):
 
     def click_conteiner(e, id_task):
         where = "task"
-        print(id_task)
         page.go(f"/choise_meters/{id_task}/{where}")
 
     def create_task_container(result):

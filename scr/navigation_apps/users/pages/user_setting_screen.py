@@ -18,7 +18,7 @@ def get_appbar(page):
 
 
 def get_content(page):
-    container = ft.Container()
+    container = ft.Container(expand=True)
     setting(page, container)
     return container
 

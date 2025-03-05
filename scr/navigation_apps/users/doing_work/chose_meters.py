@@ -28,7 +28,7 @@ def get_floating_action_button(page):
 
 
 def get_content(page, id_task, where):
-    container = ft.Container()
+    container = ft.Container(expand=True)
     show_meters_data(page, id_task, where, container)
     return container
 
