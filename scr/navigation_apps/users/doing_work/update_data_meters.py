@@ -324,14 +324,16 @@ def update_data(page, meter_id, id_task, where):
             for id_page, file in selected_images.items():
                 save_photos.controls.append(
                     ft.Container(
-                        content=ft.Row(
+                        content=ft.ResponsiveRow(
                             [
-                                ft.Text(file),
+                                ft.Text(file, col=1.6),
                                 ft.IconButton(
                                     icon=ft.icons.DELETE,
-                                    on_click=lambda e, id_p=id_page: on_click_delete_photo(e, id_p, meter_id, id_task)
+                                    on_click=lambda e, id_p=id_page: on_click_delete_photo(e, id_p, meter_id, id_task),
+                                    col=0.4
                                 )
-                            ]
+                            ],
+                            columns=2
                         )
                     )
                 )
