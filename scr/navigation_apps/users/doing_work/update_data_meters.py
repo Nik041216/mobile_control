@@ -9,10 +9,10 @@ import scr.BD.bd_users.bd_server_user
 import scr.toggle_user_sessions
 import scr.func
 import scr.navigation_apps.users.doing_work.chose_meters
+import base64
 
 
 def update_data(page, meter_id, id_task, where):
-
     def bottom_sheet_yes(e):
         page.close(bottom_sheet)
         page.close(dlg_modal)
@@ -303,7 +303,7 @@ def update_data(page, meter_id, id_task, where):
     pick_files_dialog = ft.FilePicker(on_result=pick_files_result)
     page.overlay.append(pick_files_dialog)
     selected_images = {}
-    save_photos = ft.Column(scroll=ft.ScrollMode.AUTO, expand=True, )
+    save_photos = ft.Row(scroll=ft.ScrollMode.AUTO, expand=True, )
 
     def on_click_delete_photo(e, id_p, meter_id, id_task):
         scr.BD.bd_users.local.delete_bd.delete_photo_db(id_p)
@@ -318,23 +318,24 @@ def update_data(page, meter_id, id_task, where):
             selected_images.clear()
             for result in images:
                 id_photo, value_photo, file_name1, task_id, meter_id = result
-                selected_images[id_photo] = file_name1  # Добавляем фото в словарь
+                selected_images[id_photo] = value_photo  # Добавляем фото в словарь
         save_photos.controls.clear()
         if selected_images:
             for id_page, file in selected_images.items():
+                image_base64 = base64.b64encode(file).decode('utf-8')
                 save_photos.controls.append(
                     ft.Container(
-                        content=ft.ResponsiveRow(
-                            [
-                                ft.Text(file, col=1.6),
-                                ft.IconButton(
-                                    icon=ft.icons.DELETE,
-                                    on_click=lambda e, id_p=id_page: on_click_delete_photo(e, id_p, meter_id, id_task),
-                                    col=0.4
-                                )
-                            ],
-                            columns=2
-                        )
+                        content=ft.Container(
+                            content=ft.IconButton(
+                                icon=ft.Icons.DELETE,
+                                icon_color=ft.Colors.RED,
+                                on_click=lambda e, id_p=id_page: on_click_delete_photo(e, id_p, meter_id, id_task),
+                            ),
+                            image=ft.DecorationImage(src_base64=image_base64),
+                            width=100,
+                            height=100,
+                            alignment=ft.Alignment(1.0, -1.0)
+                        ),
                     )
                 )
         page.update()
