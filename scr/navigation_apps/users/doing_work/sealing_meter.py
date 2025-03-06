@@ -9,7 +9,7 @@ import scr.func
 import scr.navigation_apps.users.doing_work.chose_meters
 
 
-def sealing(page, id_task, meter_id, where):
+def sealing(page, id_task, meter_id, where, container1):
     screen_width = page.width
     results_meters_data_v2 = scr.BD.bd_users.local.select_bd.select_meters_data_new_for_one(id_task, meter_id)
     if results_meters_data_v2:
@@ -138,7 +138,7 @@ def sealing(page, id_task, meter_id, where):
 
     def button_no(e):
         page.close(check_meters_data)
-        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where)
+        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where, container1)
 
     check_meters_data = ft.AlertDialog(
         modal=True,
@@ -166,7 +166,7 @@ def sealing(page, id_task, meter_id, where):
 
     def not_installed(e):
         page.close(seal_al)
-        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where)
+        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where, container1)
 
     seal_al = ft.AlertDialog(
         modal=True,
@@ -270,12 +270,12 @@ def sealing(page, id_task, meter_id, where):
             scr.BD.bd_users.local.update_bd.update_seal(
                 seal_number_new.value, meter_id, id_task, remark.value, meter_reading.value, seal_type_radio.value
             )
-            scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where)
+            scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where, container1)
             page.close(alert)
 
     def on_click_back(e):
         page.close(alert)
-        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where)
+        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where, container1)
 
     alert = ft.AlertDialog(
         modal=True,

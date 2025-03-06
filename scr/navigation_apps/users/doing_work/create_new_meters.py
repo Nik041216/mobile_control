@@ -7,7 +7,7 @@ import os
 import base64
 
 
-def create_meter(page, id_task, where):
+def create_meter(page, id_task, where, container1):
     def create_bottom_sheet(text):
         def bottom_sheet_yes(e):
             page.close(bottom_sheet)
@@ -62,13 +62,13 @@ def create_meter(page, id_task, where):
                 seal_number.value, remark.value, meter_type.value, seal_type_radio.value
             )
             page.close(create_meter_alert)
-            page.go(f"/choise_meters/{id_task}/{where}")
+            scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where, container1)
             page.update()
 
     def on_click_back(e):
         page.close(create_meter_alert)
         scr.BD.bd_users.local.delete_bd.delete_photo_cancel_meters(meter_id.value)
-        page.go(f"/choise_meters/{id_task}/{where}")
+        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where, container1)
 
     meter_id = ft.TextField(label="Серийный номер счетчика", value=None)
     meter_marka = ft.TextField(label="Марка счетчика", value=None)

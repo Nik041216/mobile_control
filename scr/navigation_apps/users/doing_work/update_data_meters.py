@@ -12,7 +12,7 @@ import scr.navigation_apps.users.doing_work.chose_meters
 import base64
 
 
-def update_data(page, meter_id, id_task, where):
+def update_data(page, meter_id, id_task, where, container1):
     def bottom_sheet_yes(e):
         page.close(bottom_sheet)
         page.close(dlg_modal)
@@ -67,7 +67,7 @@ def update_data(page, meter_id, id_task, where):
         scr.BD.bd_users.local.update_bd.update_local_tasks(
             str(today), id_task, reading_value.value, remark.value, meter_id)
         page.close(dlg_modal)
-        page.go(f"/choise_meters/{id_task}/{where}")
+        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where, container1)
 
     # Обработка нажатия кнопки сохранения
     def on_click_time_task(e):
@@ -207,7 +207,7 @@ def update_data(page, meter_id, id_task, where):
 
     def button_no(e):
         page.close(check_meters_data)
-        page.go(f"/chose_meters/{id_task}/{where}")
+        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where, container1)
 
     check_meters_data = ft.AlertDialog(
         modal=True,

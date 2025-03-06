@@ -49,7 +49,7 @@ def show_meters_data(page, id_task, where, container1: ft.Container):
             standarts, area, saldo, type_address = result
 
     def onclick_floating_button(e):
-        new_meters.create_meter(page, id_task, where)
+        new_meters.create_meter(page, id_task, where, container1)
 
     floating_action_button = ft.Text("")
     if purpose == "Замена/Поверка ИПУ":
@@ -69,7 +69,7 @@ def show_meters_data(page, id_task, where, container1: ft.Container):
         scr.BD.bd_users.local.update_bd.update_dop_data_address(
             remark_textfield.value, registered_residing_textfield.value, standarts_textfield.value,
             area_textfield.value, id_address, id_task)
-        call_show_meters_data(page, id_task, where)
+        show_meters_data(page, id_task, where, container1)
         page.update()
 
     button_back = ft.ElevatedButton("Назад", on_click=on_click_back, bgcolor=ft.colors.RED_200)
@@ -107,9 +107,13 @@ def show_meters_data(page, id_task, where, container1: ft.Container):
         def create_on_click(id_task, id_meters):
             def on_click(e):
                 if purpose == "Контрольный съем с ИПУ" or purpose == "Замена/Поверка ИПУ":
-                    scr.navigation_apps.users.doing_work.update_data_meters.update_data(page, id_meters, id_task, where)
+                    scr.navigation_apps.users.doing_work.update_data_meters.update_data(
+                        page, id_meters, id_task, where, container1
+                    )
                 elif purpose == "Повторная опломбировка ИПУ":
-                    scr.navigation_apps.users.doing_work.sealing_meter.sealing(page, id_task, id_meters, where)
+                    scr.navigation_apps.users.doing_work.sealing_meter.sealing(
+                        page, id_task, id_meters, where, container1
+                    )
 
             return on_click
 
