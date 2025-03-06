@@ -77,7 +77,7 @@ def show_meters_data(page, id_task, where, container1: ft.Container):
     button_save_v2 = ft.ElevatedButton("Сохранить", on_click=on_click_save, bgcolor=ft.colors.BLUE_200,
                                        visible=False)
     filtered_results_meters = [result for result in results_meters_data]
-    column = ft.Column(scroll=ft.ScrollMode.AUTO, horizontal_alignment=ft.CrossAxisAlignment.CENTER)
+    column = ft.Column(scroll=ft.ScrollMode.AUTO, horizontal_alignment=ft.CrossAxisAlignment.CENTER, expand=True)
     color = ft.colors.GREY
     column.controls.clear()
 
@@ -183,6 +183,7 @@ def show_meters_data(page, id_task, where, container1: ft.Container):
         border_radius=15,
     )
     column.controls.append(container)
+    column.controls.append(floating_action_button)
     content_dialog = column
     title = ft.Column(
         [
@@ -201,10 +202,8 @@ def show_meters_data(page, id_task, where, container1: ft.Container):
             [
                 title,
                 content_dialog,
-                floating_action_button,
                 row_button
-            ],
-            scroll=ft.ScrollMode.AUTO, expand=True, horizontal_alignment=ft.CrossAxisAlignment.CENTER
+            ], expand=True, horizontal_alignment=ft.CrossAxisAlignment.CENTER
         )
     ])
     container1.content = content1

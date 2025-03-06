@@ -15,6 +15,8 @@ import scr.BD.bd_users.local.update_bd
 def main(page: ft.Page):
     page.window_width = 362.4
     page.window_height = 800
+    page.window.width = 362.4
+    page.window.height = 800
     page.theme_mode = 'light'
     page.bgcolor = ft.Colors.BLUE_50
     page.title = "Мобильный контроллер"
