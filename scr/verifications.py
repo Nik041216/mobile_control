@@ -10,8 +10,8 @@ def get_content(page):
 
 
 def authentication(page, container):
-    screen_width = page.width
-    screen_height = page.height
+    screen_width = page.window_width
+    screen_height = page.window_height
 
     login = ft.TextField(label="Логин", width=screen_width * 0.90, value="control1", bgcolor=ft.colors.WHITE)
     password = ft.TextField(label="Пароль", password=True, can_reveal_password=True,

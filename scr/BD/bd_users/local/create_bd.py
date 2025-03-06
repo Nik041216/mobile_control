@@ -37,7 +37,11 @@ def local_user_db():
         table_picture = """ Create table if not exists picture(id Integer primary key autoincrement, value BLOB,
                 name_file Text, task_id Integer, meter_id integer) """
 
-        table_acts = """ Create table if not exists acts (id Integer primary key, task_id Integer, reason Text) """
+        table_acts = """ Create table if not exists acts (
+                id Integer primary key,
+                task_id Integer,
+                date Text,
+                reason Text) """
 
         cursor.execute(table_user)
         cursor.execute(table_meter_task)

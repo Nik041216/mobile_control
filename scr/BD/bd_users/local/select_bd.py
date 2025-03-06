@@ -2,12 +2,15 @@ import sqlite3 as sl
 
 
 def select_user_data():
-    with sl.connect('database_client.db') as db:
-        cursor = db.cursor()
-        query = """ Select id, login, password, privileges, last_name, first_name from user """
-        cursor.execute(query)
-        result = cursor.fetchall()
-        return result
+    try:
+        with sl.connect('database_client.db') as db:
+            cursor = db.cursor()
+            query = """ Select id, login, password, privileges, last_name, first_name from user """
+            cursor.execute(query)
+            result = cursor.fetchall()
+            return result
+    except Exception as ex:
+        return False
 
 
 def select_meters_data_new(id_task):
