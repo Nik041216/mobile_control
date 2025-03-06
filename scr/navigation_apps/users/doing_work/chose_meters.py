@@ -8,7 +8,6 @@ import scr.navigation_apps.users.pages.future_user_screen
 import scr.navigation_apps.users.doing_work.update_data_meters
 import scr.navigation_apps.users.doing_work.sealing_meter
 import scr.navigation_apps.users.doing_work.create_new_meters as new_meters
-import scr.navigation_apps.users.doing_work.alert_check_data as check_alert
 
 
 def call_show_meters_data(page, id_task, where):
@@ -207,5 +206,4 @@ def show_meters_data(page, id_task, where, container1: ft.Container):
         )
     ])
     container1.content = content1
-    check_alert.func_check_address_data(page, id_task, where)
     return container1

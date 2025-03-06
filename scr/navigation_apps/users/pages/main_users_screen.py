@@ -5,6 +5,7 @@ import scr.constants as const
 import scr.BD.bd_users.bd_server_user
 from scr.components.search_field import SearchField
 from scr.func import create_filter_button
+import scr.navigation_apps.users.doing_work.alert_check_data as check_alert
 
 statuses = ['не выполнен', 'выполнен', 'в исполнении', 'просрочен']
 sorting = "Адрес"
@@ -136,7 +137,7 @@ def update_results(filter_statuses, page, search_value):
 
     def click_conteiner(e, id_task):
         where = "task"
-        page.go(f"/choise_meters/{id_task}/{where}")
+        check_alert.func_check_address_data(page, id_task, where)
 
     def create_task_container(result):
         id_task, _, _, _, street, dom, apartment, phone, _, _, _, _, status, purpose, *_ = result

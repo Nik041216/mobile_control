@@ -189,6 +189,7 @@ def func_check_address_data(page, id_task, where):
         message_string = ""
         if not chect_list:
             page.close(check_address_data)
+            page.go(f"/choise_meters/{id_task}/{where}")
         else:
             for chect in chect_list:
                 if chect == "FIO":
@@ -199,7 +200,26 @@ def func_check_address_data(page, id_task, where):
                     message_string += "Включите в акт несоответствие с нормативами\n"
                 elif chect == "area" and type_address == "ЧС":
                     message_string += "Включите в акт несоответствие площади\n"
-            scr.func.show_alert_yn(page, message_string)
+
+            def on_button_yes(e):
+                page.close(bs)
+                page.go(f"/choise_meters/{id_task}/{where}")
+
+            def on_button_no(e):
+                page.close(bs)
+                page.go(f"/choise_meters/{id_task}/{where}")
+
+            bs = ft.AlertDialog(
+                modal=True,
+                title=ft.Text("Предупреждение"),
+                content=ft.Text(message_string),
+                actions=[
+                    ft.ElevatedButton("Да", on_click=on_button_yes),
+                    ft.ElevatedButton("Назад", on_click=on_button_no)
+                ],
+            )
+            page.open(bs)
+            page.update()
             page.close(check_address_data)
 
     def button_no(e):
