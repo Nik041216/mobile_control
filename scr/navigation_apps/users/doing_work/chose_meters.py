@@ -135,17 +135,11 @@ def show_meters_data(page, id_task, where, container1: ft.Container):
     remark_textfield = ft.TextField(label="Примечание", value=remark_task, on_change=on_change_dop_data)
     registered_residing_textfield = ft.TextField(label="Прописанно", value=registered_residing,
                                                  on_change=on_change_dop_data)
-    for i in const.norma_water_supply:
-        if i == standarts:
-            standarts = i
-    standarts_textfield = ft.Dropdown(
+    standarts_textfield = ft.TextField(
         on_change=on_change_dop_data,
         label="Нормативы",
         value=standarts,
-        options=[
-            ft.dropdown.Option(value) for value in const.norma_water_supply
-        ],
-    )
+        read_only=True)
     area_textfield = ft.TextField(label="Площадь", value=area, on_change=on_change_dop_data)
 
     dop_buttons_redact = ft.Row(
@@ -213,4 +207,4 @@ def show_meters_data(page, id_task, where, container1: ft.Container):
         )
     ])
     container1.content = content1
-    return container
+    return container1
