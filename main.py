@@ -11,6 +11,13 @@ def main(page: ft.Page):
     page.theme_mode = 'light'
     page.bgcolor = ft.Colors.BLUE_50
     page.title = "Мобильный контроллер"
+    page.locale_configuration = ft.LocaleConfiguration(
+        supported_locales=[
+            ft.Locale("es", "ES"),
+            ft.Locale("ru", "RU"),
+        ],
+        current_locale=ft.Locale("ru", "RU")
+    )
     scr.toggle_user_sessions.handle_user_sessions(page)
 
 
