@@ -1,8 +1,10 @@
-import datetime
 import flet as ft
 import scr.BD.bd_users.local.insert_bd as insert
+import scr.BD.bd_users.local.delete_bd
 import scr.BD.bd_users.bd_server_user
 import scr.constants as const
+import os
+import base64
 
 
 def create_meter(page, id_task, where):
@@ -65,6 +67,7 @@ def create_meter(page, id_task, where):
 
     def on_click_back(e):
         page.close(create_meter_alert)
+        scr.BD.bd_users.local.delete_bd.delete_photo_cancel_meters(meter_id.value)
         page.go(f"/choise_meters/{id_task}/{where}")
 
     meter_id = ft.TextField(label="Серийный номер счетчика", value=None)
@@ -96,7 +99,70 @@ def create_meter(page, id_task, where):
 
     meter_type = ft.Dropdown(label="Тип услуги счетчика", enable_filter=True, max_menu_height=200, editable=True,
                              width=200, options=get_options())
-    photo_button = ft.ElevatedButton("Выбрать фотографию")
+
+    def save_image_to_db(file_path):
+        with open(file_path, 'rb') as file:
+            file_data = file.read()
+
+        file_name = os.path.basename(file_path)
+        scr.BD.bd_users.local.insert_bd.insert_photo(file_name, file_data, id_task, meter_id.value)
+
+    def pick_files_result(e: ft.FilePickerResultEvent):
+        if e.files:
+            for file in e.files:
+                save_image_to_db(file.path)  # Сохраняем изображение в базу данных
+                update_saving_data(meter_id.value, id_task)
+
+    pick_files_dialog = ft.FilePicker(on_result=pick_files_result)
+    page.overlay.append(pick_files_dialog)
+    selected_images = {}
+    save_photos = ft.Row(scroll=ft.ScrollMode.AUTO, expand=True, )
+
+    def on_click_delete_photo(e, id_p, meter_id, id_task):
+        scr.BD.bd_users.local.delete_bd.delete_photo_db(id_p)
+        if id_p in selected_images:
+            del selected_images[id_p]
+        update_saving_data(meter_id, id_task)
+        page.update()
+
+    def update_saving_data(meter_id, id_task):
+        images = scr.BD.bd_users.local.select_bd.select_photo_data(meter_id, id_task)
+        if images:
+            selected_images.clear()
+            for result in images:
+                id_photo, value_photo, file_name1, task_id, meter_id = result
+                selected_images[id_photo] = value_photo  # Добавляем фото в словарь
+        save_photos.controls.clear()
+        if selected_images:
+            for id_page, file in selected_images.items():
+                image_base64 = base64.b64encode(file).decode('utf-8')
+                save_photos.controls.append(
+                    ft.Container(
+                        content=ft.Container(
+                            content=ft.IconButton(
+                                icon=ft.Icons.DELETE,
+                                icon_color=ft.Colors.RED,
+                                on_click=lambda e, id_p=id_page: on_click_delete_photo(e, id_p, meter_id, id_task),
+                            ),
+                            image=ft.DecorationImage(src_base64=image_base64),
+                            width=100,
+                            height=100,
+                            alignment=ft.Alignment(1.0, -1.0)
+                        ),
+                    )
+                )
+        page.update()
+
+    update_saving_data(meter_id, id_task)
+
+    def zagr(e):
+        if meter_id.value is None or meter_id.value == "":
+            meter_id.error_text = "* Введите серийный номер"
+            meter_id.update()
+        else:
+            pick_files_dialog.pick_files(allow_multiple=True, allowed_extensions=["jpeg", "gif", "png", "webp"])
+
+    photo_button = ft.ElevatedButton("Выбрать фотографию", on_click=zagr)
 
     content = ft.Column(
         [
@@ -110,6 +176,7 @@ def create_meter(page, id_task, where):
             ft.Text("Тип пломбы", weight=ft.FontWeight.BOLD),
             seal_type_radio,
             remark,
+            save_photos,
             photo_button
         ],
         expand=True,

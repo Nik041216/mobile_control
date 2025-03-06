@@ -25,3 +25,10 @@ def delete_photo_db(id_photo):
         cursor = db.cursor()
         delete_photo = f""" Delete from picture where id = {id_photo}"""
         cursor.execute(delete_photo)
+
+
+def delete_photo_cancel_meters(id_meters):
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        delete_photo = f""" Delete from picture where meter_id = {id_meters}"""
+        cursor.execute(delete_photo)
