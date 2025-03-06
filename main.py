@@ -10,7 +10,6 @@ from scr import verifications
 import scr.navigation_apps.users.doing_work.alert_check_data as check_alert
 import scr.toggle_user_sessions
 import scr.BD.bd_users.local.update_bd
-import time
 
 
 def main(page: ft.Page):
@@ -85,8 +84,6 @@ def main(page: ft.Page):
                     bgcolor=ft.Colors.BLUE_50
                 )
             )
-            time.sleep(0.50)
-            check_alert.func_check_address_data(page, id_task, where)
 
         if page.route == "/authentication":
             page.views.append(
