@@ -120,21 +120,29 @@ def sealing(page, id_task, meter_id, where, container1):
     def button_yes(e):
         chect_list = [name for name, is_checked in dict_checkboxes.items() if not is_checked]
         message_string = ""
+        act_string = ""
         if not chect_list:
             page.close(check_meters_data)
         for chect in chect_list:
             if chect == "marka":
                 message_string += "Включите в акт несоответствие Марки счетчика\n"
+                act_string += "Несоответствие Марки счетчика,"
             elif chect == "serial_number":
                 message_string += "Включите в акт несоответствие Заводского номера\n"
+                act_string += "Несоответствие Заводского номера,"
             elif chect == "installation":
                 message_string += "Включите в акт информацию о неправильной установки прибора учета\n"
+                act_string += "Неправильной установки прибора учета,"
             elif chect == "star":
                 message_string += "Включите в акт информацию о некоректной работе звездочки\n"
+                act_string += "Некоректная работа звездочки,"
         page.close(check_meters_data)
         page.open(alert)
         page.open(seal_al)
-        scr.func.show_alert_yn(page, message_string)
+        if bool(message_string):
+            scr.func.show_alert_yn(page, message_string)
+        if bool(act_string):
+            scr.BD.bd_users.local.update_bd.update_acts_insert_meters(id_task, act_string)
 
     def button_no(e):
         page.close(check_meters_data)
