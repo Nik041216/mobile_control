@@ -1,5 +1,6 @@
 import flet as ft
 import scr.BD.bd_users.local.select_bd
+import scr.BD.bd_users.local.insert_bd
 import scr.func
 
 
@@ -191,15 +192,22 @@ def func_check_address_data(page, id_task, where):
             page.close(check_address_data)
             page.go(f"/choise_meters/{id_task}/{where}")
         else:
+            act_string = ""
             for chect in chect_list:
                 if chect == "FIO":
                     message_string += "Включите в акт пердписание о несоответствии ФИО\n"
+                    act_string += "Несоотвествие ФИО,"
                 elif chect == "registered_residing":
                     message_string += "Включите в акт несоответствие количества прописанных\n"
+                    act_string += "Несоответствие количества прописанных,"
                 elif chect == "standarts":
                     message_string += "Включите в акт несоответствие с нормативами\n"
+                    act_string += "Несоответствие с нормативами,"
                 elif chect == "area" and type_address == "ЧС":
                     message_string += "Включите в акт несоответствие площади\n"
+                    act_string += "Несоответствие площади"
+            if act_string != "":
+                scr.BD.bd_users.local.insert_bd.insert_acts(id_task, act_string)
 
             def on_button_yes(e):
                 page.close(bs)

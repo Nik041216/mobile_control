@@ -254,6 +254,24 @@ def update_date(id_task, date):
         db.commit()
 
 
+def update_acts_insert_meters(id_task, string):
+    with sl.connect('database_client.db') as db:
+        today = datetime.datetime.now().strftime("%Y-%m-%d")
+        cursor = db.cursor()
+        query = f""" select reason from acts where task_id = {id_task} """
+        result = cursor.execute(query)
+        if result:
+            reason = result
+            reason += string
+            query = f""" update acts set reason = {reason} """
+        else:
+            query = f""" INSERT INTO acts 
+                                 (task_id, date, reason) 
+                                 VALUES ({id_task}, '{today}', '{string}')"""
+        cursor.execute(query)
+        db.commit()
+
+
 def update_status_task():
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()

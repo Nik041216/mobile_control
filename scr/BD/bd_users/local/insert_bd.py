@@ -139,3 +139,14 @@ def insert_new_meters(id_task, meter_id, meter_marka, meter_reading, meter_prote
                           """
         cursor.execute(query)
         db.commit()
+
+
+def insert_acts(id_task, string):
+    with sl.connect('database_client.db') as db:
+        today = datetime.datetime.now().strftime("%Y-%m-%d")
+        cursor = db.cursor()
+        query = f""" INSERT INTO acts 
+                     (task_id, date, reason) 
+                     VALUES ({id_task}, '{today}', '{string}')"""
+        cursor.execute(query)
+        db.commit()

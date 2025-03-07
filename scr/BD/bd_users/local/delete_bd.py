@@ -11,6 +11,7 @@ def delete_data_db():
         delete_meter_task = """ Delete from meter_task """
         delete_meter_reading = """ Delete from meter_reading """
         delete_photo = """ Delete from picture """
+        delete_acts = """ Delete from acts """
         cursor.execute(delete_user)
         cursor.execute(delete_meters)
         cursor.execute(delete_meter_task)
@@ -18,6 +19,7 @@ def delete_data_db():
         cursor.execute(delete_task)
         cursor.execute(delete_address)
         cursor.execute(delete_photo)
+        cursor.execute(delete_acts)
 
 
 def delete_photo_db(id_photo):
