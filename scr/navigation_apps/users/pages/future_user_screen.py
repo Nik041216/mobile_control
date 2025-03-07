@@ -171,7 +171,7 @@ def update_results(filter_statuses, page, search_value):
                 margin=5,
                 border_radius=15,
                 alignment=ft.alignment.bottom_left,
-                on_click=lambda e: create_on_click(e, id_task)
+                on_click=on_click_container
             ),
             elevation=2
         )
@@ -331,8 +331,7 @@ def update_results(filter_statuses, page, search_value):
         def create_on_click(id_task, date):
             def on_click(e):
                 page.close(chose_action)
-                check_alert.func_check_address_data(page, id_task, where="task")
-                scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where="fff")
+                check_alert.func_check_address_data(page, id_task, where="future")
 
             chose_action = ft.AlertDialog(
                 title=ft.Text("Вы хотите просмотреть данные или выполнить задание?"),
