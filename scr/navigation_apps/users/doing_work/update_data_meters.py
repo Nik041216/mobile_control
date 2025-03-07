@@ -68,6 +68,7 @@ def update_data(page, meter_id, id_task, where, container1):
             str(today), id_task, reading_value.value, remark.value, meter_id)
         page.close(dlg_modal)
         scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where, container1)
+        page.update()
 
     # Обработка нажатия кнопки сохранения
     def on_click_time_task(e):
