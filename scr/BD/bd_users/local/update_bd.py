@@ -259,11 +259,10 @@ def update_acts_insert_meters(id_task, string):
         today = datetime.datetime.now().strftime("%Y-%m-%d")
         cursor = db.cursor()
         query = f""" select reason from acts where task_id = {id_task} """
-        result = cursor.execute(query)
+        result = cursor.execute(query).fetchone()
         if result:
-            reason = result
-            reason += string
-            query = f""" update acts set reason = {reason} """
+            new_reason = result[0] + string
+            query = f""" update acts set reason = '{new_reason}' where task_id = {id_task}"""
         else:
             query = f""" INSERT INTO acts 
                                  (task_id, date, reason) 

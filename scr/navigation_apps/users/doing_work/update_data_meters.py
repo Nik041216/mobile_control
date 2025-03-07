@@ -186,6 +186,7 @@ def update_data(page, meter_id, id_task, where, container1):
     def button_yes(e):
         chect_list = [name for name, is_checked in dict_checkboxes.items() if not is_checked]
         message_string = ""
+        act_string = ""
         today = datetime.datetime.now()
         date = datetime.datetime.strptime(date_of_death, "%Y-%m-%d")
         total_months = (today.year - date.year) * 12 + (today.month - date.month)
@@ -194,15 +195,21 @@ def update_data(page, meter_id, id_task, where, container1):
         for chect in chect_list:
             if chect == "marka":
                 message_string += "Включите в акт несоответствие Марки счетчика\n"
+                act_string += "Несоответствие Марки счетчика,"
             elif chect == "serial_number":
                 message_string += "Включите в акт несоответствие Заводского номера\n"
+                act_string += "Несоответствие Заводского номера,"
             elif chect == "seal":
                 message_string += "Включите в акт несоответствие Номера пломбы\n"
+                act_string += "Несоответствие Номера пломбы,"
         if total_months >= 6:
             message_string += "Включите в акт предписание о скором выходе МПИ\n"
+            act_string += "Предписание о скором выходе МПИ,"
         page.open(dlg_modal)
         if bool(message_string):
             scr.func.show_alert_yn(page, message_string)
+        if bool(act_string):
+            scr.BD.bd_users.local.update_bd.update_acts_insert_meters(id_task, act_string)
         page.close(check_meters_data)
 
     def button_no(e):
