@@ -8,6 +8,7 @@ import base64
 
 
 def create_meter(page, id_task, where, container1):
+    screen_width = page.width
     def create_bottom_sheet(text):
         def bottom_sheet_yes(e):
             page.close(bottom_sheet)
@@ -194,6 +195,7 @@ def create_meter(page, id_task, where, container1):
                 ], alignment=ft.MainAxisAlignment.CENTER
             )
         ],
+        inset_padding=screen_width * 0.10
     )
 
     page.open(create_meter_alert)
