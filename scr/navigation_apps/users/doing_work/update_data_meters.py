@@ -126,9 +126,9 @@ def update_data(page, meter_id, id_task, where, container1):
     serial_number_checkbox = ft.Ref[ft.Checkbox]()
     seal_number_checkbox = ft.Ref[ft.Checkbox]()
 
-    dict_checkboxes["marka"] = False
-    dict_checkboxes["serial_number"] = False
-    dict_checkboxes["seal"] = False
+    dict_checkboxes["marka"] = True
+    dict_checkboxes["serial_number"] = True
+    dict_checkboxes["seal"] = True
 
     content = ft.Column(
         [
@@ -137,7 +137,7 @@ def update_data(page, meter_id, id_task, where, container1):
                     [
                         ft.Row([
                             ft.Checkbox(on_change=lambda e, name="marka": on_checkbox_change(e.control, name),
-                                        ref=marka_checkbox),
+                                        ref=marka_checkbox, value=True),
                             ft.Text("Марка счетчика совпадает с "),
                         ]),
                         ft.Row([
@@ -153,7 +153,7 @@ def update_data(page, meter_id, id_task, where, container1):
                     [
                         ft.Row([
                             ft.Checkbox(on_change=lambda e, name="serial_number": on_checkbox_change(e.control, name),
-                                        ref=serial_number_checkbox),
+                                        ref=serial_number_checkbox, value=True),
                             ft.Text("Заводской номер счетчика"),
                         ]),
                         ft.Row([
@@ -170,7 +170,7 @@ def update_data(page, meter_id, id_task, where, container1):
                     [
                         ft.Row([
                             ft.Checkbox(on_change=lambda e, name="seal": on_checkbox_change(e.control, name),
-                                        ref=seal_number_checkbox),
+                                        ref=seal_number_checkbox, value=True),
                             ft.Text("Номер пломбы совпадает с "),
                         ]),
                         ft.Row([

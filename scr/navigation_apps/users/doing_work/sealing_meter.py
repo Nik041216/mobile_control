@@ -42,10 +42,10 @@ def sealing(page, id_task, meter_id, where, container1):
     installation_checkbox = ft.Ref[ft.Checkbox]()
     star_checkbox = ft.Ref[ft.Checkbox]()
 
-    dict_checkboxes["marka"] = False
-    dict_checkboxes["serial_number"] = False
-    dict_checkboxes["installation"] = False
-    dict_checkboxes["star"] = False
+    dict_checkboxes["marka"] = True
+    dict_checkboxes["serial_number"] = True
+    dict_checkboxes["installation"] = True
+    dict_checkboxes["star"] = True
 
     content_question = ft.Column(
         [
@@ -54,7 +54,7 @@ def sealing(page, id_task, meter_id, where, container1):
                     [
                         ft.Row([
                             ft.Checkbox(on_change=lambda e, name="marka": on_checkbox_change(e.control, name),
-                                        ref=marka_checkbox),
+                                        ref=marka_checkbox, value=True),
                             ft.Text("Марка счетчика совпадает с "),
                         ]),
                         ft.Row([
@@ -71,7 +71,7 @@ def sealing(page, id_task, meter_id, where, container1):
                         ft.Row([
                             ft.Checkbox(
                                 on_change=lambda e, name="serial_number": on_checkbox_change(e.control, name),
-                                ref=serial_number_checkbox),
+                                ref=serial_number_checkbox, value=True),
                             ft.Text("Заводской номер счетчика"),
                         ]),
                         ft.Row([
@@ -89,7 +89,7 @@ def sealing(page, id_task, meter_id, where, container1):
                         ft.Row([
                             ft.Checkbox(
                                 on_change=lambda e, name="installation": on_checkbox_change(e.control, name),
-                                ref=installation_checkbox),
+                                ref=installation_checkbox, value=True),
                             ft.Text("Прибор учета устрановлен"),
                         ]),
                         ft.Row([
@@ -104,7 +104,7 @@ def sealing(page, id_task, meter_id, where, container1):
                     [
                         ft.Row([
                             ft.Checkbox(on_change=lambda e, name="star": on_checkbox_change(e.control, name),
-                                        ref=star_checkbox),
+                                        ref=star_checkbox, value=True),
                             ft.Text("Сигнальная звезочка"),
                         ]),
                         ft.Row([
