@@ -23,8 +23,22 @@ def get_appbar(page):
     )
 
 
-def get_floating_action_button(page):
-    pass
+def get_floating_action_button(page,  id_task, where, container1):
+    def onclick_floating_button(e):
+        new_meters.create_meter(page, id_task, where, container1)
+
+    results_address_data = scr.BD.bd_users.local.select_bd.select_tasks_data_for_one(id_task)
+    filtered_results = [
+        result_address_data_v2 for result_address_data_v2 in results_address_data
+    ]
+
+    for result in filtered_results:
+        _, _, _, _, _, _, _, _, _, _, _, _, purpose, *_ = result
+    if purpose == "Замена/Поверка ИПУ":
+        floating_action_button = ft.FloatingActionButton(icon=ft.icons.ADD, on_click=onclick_floating_button)
+    else:
+        floating_action_button = None
+    return floating_action_button
 
 
 def get_content(page, id_task, where):
@@ -33,7 +47,7 @@ def get_content(page, id_task, where):
     return container
 
 
-def show_meters_data(page, id_task, where, container1: ft.Container):
+def show_meters_data(page, id_task, where, container_chose_meters: ft.Container):
     screen_width = page.width
     screen_height = page.height
     page.controls.clear()
@@ -48,14 +62,6 @@ def show_meters_data(page, id_task, where, container1: ft.Container):
             personal_account, date, date_end, remark_task, status, purpose, registered_residing, \
             standarts, area, saldo, type_address = result
 
-    def onclick_floating_button(e):
-        new_meters.create_meter(page, id_task, where, container1)
-
-    floating_action_button = ft.Text("")
-    if purpose == "Замена/Поверка ИПУ":
-        floating_action_button = ft.FloatingActionButton(icon=ft.icons.ADD,
-                                                         on_click=onclick_floating_button)
-        page.update()
     result_info_address = f"Адрес: ул.{street} д.{dom} кв.{apartment}"
     result_info_person = f"ФИО владельца: {person_name}"
 
@@ -69,7 +75,7 @@ def show_meters_data(page, id_task, where, container1: ft.Container):
         scr.BD.bd_users.local.update_bd.update_dop_data_address(
             remark_textfield.value, registered_residing_textfield.value, standarts_textfield.value,
             area_textfield.value, id_address, id_task)
-        show_meters_data(page, id_task, where, container1)
+        show_meters_data(page, id_task, where, container_chose_meters)
         page.update()
 
     button_back = ft.ElevatedButton("Назад", on_click=on_click_back, bgcolor=ft.colors.RED_200)
@@ -108,11 +114,11 @@ def show_meters_data(page, id_task, where, container1: ft.Container):
             def on_click(e):
                 if purpose == "Контрольный съем с ИПУ" or purpose == "Замена/Поверка ИПУ":
                     scr.navigation_apps.users.doing_work.update_data_meters.update_data(
-                        page, id_meters, id_task, where, container1
+                        page, id_meters, id_task, where, container_chose_meters
                     )
                 elif purpose == "Повторная опломбировка ИПУ":
                     scr.navigation_apps.users.doing_work.sealing_meter.sealing(
-                        page, id_task, id_meters, where, container1
+                        page, id_task, id_meters, where, container_chose_meters
                     )
 
             return on_click
@@ -121,7 +127,7 @@ def show_meters_data(page, id_task, where, container1: ft.Container):
 
         container = ft.Container(
             content=row_to_container,
-            padding=ft.padding.only(top=20, left=50, right=50, bottom=20),
+            padding=ft.padding.only(top=10, left=25, right=25, bottom=10),
             margin=5,
             border_radius=15,
             bgcolor=color,
@@ -186,7 +192,6 @@ def show_meters_data(page, id_task, where, container1: ft.Container):
         border_radius=15,
     )
     column.controls.append(container)
-    column.controls.append(floating_action_button)
     content_dialog = column
     title = ft.Column(
         [
@@ -209,5 +214,5 @@ def show_meters_data(page, id_task, where, container1: ft.Container):
             ], expand=True, horizontal_alignment=ft.CrossAxisAlignment.CENTER
         )
     ])
-    container1.content = content1
-    return container1
+    container_chose_meters.content = content1
+    return container_chose_meters
