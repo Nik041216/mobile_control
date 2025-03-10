@@ -31,9 +31,9 @@ def func_check_address_data(page, id_task, where):
     area_checkbox = ft.Ref[ft.Checkbox]()
 
     if type_address == "МКД":
-        dict_checkboxes["FIO"] = False
-        dict_checkboxes["registered_residing"] = False
-        dict_checkboxes["standarts"] = False
+        dict_checkboxes["FIO"] = True
+        dict_checkboxes["registered_residing"] = True
+        dict_checkboxes["standarts"] = True
 
         content = ft.Column(
             [
@@ -42,7 +42,7 @@ def func_check_address_data(page, id_task, where):
                         [
                             ft.Row([
                                 ft.Checkbox(on_change=lambda e, name="FIO": on_checkbox_change(e.control, name),
-                                            ref=fio_checkbox),
+                                            ref=fio_checkbox, value=True),
                                 ft.Text("ФИО совпадает с "),
                             ]),
                             ft.Row([
@@ -59,7 +59,7 @@ def func_check_address_data(page, id_task, where):
                             ft.Row([
                                 ft.Checkbox(
                                     on_change=lambda e, name="registered_residing": on_checkbox_change(e.control, name),
-                                    ref=residing_checkbox),
+                                    ref=residing_checkbox, value=True),
                                 ft.Text("Количество прописанных "),
                             ]),
                             ft.Row([
@@ -76,7 +76,7 @@ def func_check_address_data(page, id_task, where):
                         [
                             ft.Row([
                                 ft.Checkbox(on_change=lambda e, name="standarts": on_checkbox_change(e.control, name),
-                                            ref=standarts_checkbox),
+                                            ref=standarts_checkbox, value=True),
                                 ft.Text("Нормативы совпадают с "),
                             ]),
                             ft.Row([
@@ -90,10 +90,10 @@ def func_check_address_data(page, id_task, where):
             ]
         )
     elif type_address == "ЧС":
-        dict_checkboxes["FIO"] = False
-        dict_checkboxes["registered_residing"] = False
-        dict_checkboxes["standarts"] = False
-        dict_checkboxes["area"] = False
+        dict_checkboxes["FIO"] = True
+        dict_checkboxes["registered_residing"] = True
+        dict_checkboxes["standarts"] = True
+        dict_checkboxes["area"] = True
         content = ft.Column(
             [
                 ft.Container(
@@ -101,7 +101,7 @@ def func_check_address_data(page, id_task, where):
                         [
                             ft.Row([
                                 ft.Checkbox(on_change=lambda e, name="FIO": on_checkbox_change(e.control, name),
-                                            ref=fio_checkbox),
+                                            ref=fio_checkbox, value=True),
                                 ft.Text("ФИО совпадает с "),
                             ]),
                             ft.Row([
@@ -118,7 +118,7 @@ def func_check_address_data(page, id_task, where):
                             ft.Row([
                                 ft.Checkbox(
                                     on_change=lambda e, name="registered_residing": on_checkbox_change(e.control, name),
-                                    ref=residing_checkbox),
+                                    ref=residing_checkbox, value=True),
                                 ft.Text("Количество прописанных "),
                             ]),
                             ft.Row([
@@ -135,7 +135,7 @@ def func_check_address_data(page, id_task, where):
                         [
                             ft.Row([
                                 ft.Checkbox(on_change=lambda e, name="standarts": on_checkbox_change(e.control, name),
-                                            ref=standarts_checkbox),
+                                            ref=standarts_checkbox, value=True),
                                 ft.Text("Нормативы совпадают с "),
                             ]),
                             ft.Row([
@@ -152,7 +152,7 @@ def func_check_address_data(page, id_task, where):
                         [
                             ft.Row([
                                 ft.Checkbox(on_change=lambda e, name="area": on_checkbox_change(e.control, name),
-                                            ref=area_checkbox),
+                                            ref=area_checkbox, value=True),
                                 ft.Text("Площадь без построек "),
 
                             ]),
