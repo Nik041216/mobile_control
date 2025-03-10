@@ -121,7 +121,7 @@ def insert_new_meters(id_task, meter_id, meter_marka, meter_reading, meter_prote
 
         query = f""" update tasks set 
                                    unloading_time = '{str(today)}',  
-                                   status = 'в_исполнении'
+                                   status = 'в исполнении'
                                    where id = {id_task}"""
         cursor.execute(query)
         db.commit()
@@ -129,13 +129,29 @@ def insert_new_meters(id_task, meter_id, meter_marka, meter_reading, meter_prote
         query = f""" update tasks set 
                                     unloading_time = '{str(today)}',  
                                     status = 'выполнен'
-                                    where id = {id_task} and id IN (
-                                      SELECT DISTINCT t.id
-                                      FROM tasks t
-                                      JOIN meter_task mt ON t.id = mt.task_id
-                                      JOIN meters m ON mt.meter_id = m.meter_number
-                                      WHERE m.status_filling = 'выполнен'
-                                    );
+                                    WHERE id = {id_task} AND id IN (
+                                    SELECT DISTINCT t.id
+                                    FROM tasks t
+                                    JOIN address a ON t.id_address = a.id
+                                    JOIN meter_task mt ON t.id = mt.task_id
+                                    JOIN meters m ON mt.meter_id = m.meter_number
+                                    WHERE NOT EXISTS (
+                                        SELECT 1
+                                        FROM meters m2
+                                        JOIN meter_task mt2 ON m2.meter_number = mt2.meter_id
+                                        WHERE m2.meter_number IN (
+                                            SELECT meter_id 
+                                            FROM meter_task 
+                                            WHERE task_id = t.id
+                                        )
+                                        AND NOT EXISTS (
+                                            SELECT 1
+                                            FROM meter_reading mr
+                                            WHERE mr.meter_id = m2.meter_number
+                                            AND mr.new_reading_value IS NOT NULL
+                                        )
+                                    )
+                                );
                           """
         cursor.execute(query)
         db.commit()
