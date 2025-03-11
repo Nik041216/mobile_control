@@ -236,7 +236,7 @@ def sealing(page, id_task, meter_id, where, container1):
             ),
             remark,
             photo_button
-        ]
+        ], scroll=ft.ScrollMode.AUTO, expand=True
     )
 
     def create_bottom_sheet(text):
