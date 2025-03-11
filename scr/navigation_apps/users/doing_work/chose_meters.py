@@ -10,13 +10,50 @@ import scr.navigation_apps.users.doing_work.sealing_meter
 import scr.navigation_apps.users.doing_work.create_new_meters as new_meters
 
 
-def get_appbar(page):
+def get_appbar(page, id_task):
+    screen_width = page.width
+    results_address_data = scr.BD.bd_users.local.select_bd.select_tasks_data_for_one(id_task)
+    filtered_results = [
+        result_address_data_v2 for result_address_data_v2 in results_address_data
+    ]
+
+    for result in filtered_results:
+        id_address, id_task, person_name, street, dom, apartment, phone_number, \
+            personal_account, date, date_end, remark_task, status, purpose, registered_residing, \
+            standarts, area, saldo, type_address = result
+
+    save_button = ft.ElevatedButton("Сохранить")
+    back_button = ft.ElevatedButton("Назад", on_click=lambda e: page.close(show_details_alert))
+    show_details_alert = ft.AlertDialog(
+        modal=True,
+        title=ft.Text(f"Все данные по заявке {id_task}"),
+        content=ft.Column(
+            [
+                ft.Text(f"Адрес: {street} {dom} {apartment} "),
+                ft.Text(f"ФИО владельца: {person_name}"),
+                ft.Text(f"Номер телефона: {phone_number}"),
+                ft.Text(f"Кол-во прописаных: {registered_residing}"),
+                ft.Text(f"Нормативы: {standarts}"),
+                ft.Text(f"Площадь огорода: {area}"),
+                ft.TextField(label="Примечание", value=remark_task, max_lines=3)
+            ],
+            width=screen_width * 0.95
+        ),
+        inset_padding=screen_width * 0.05,
+        actions=[
+            ft.Row([
+                save_button,
+                back_button
+            ], alignment=ft.MainAxisAlignment.CENTER)
+        ]
+    )
+
     return ft.AppBar(
         title=ft.Text("Выбор счетчика"),
         center_title=True,
         toolbar_height=50,
         bgcolor=ft.colors.BLUE_100,
-        actions=[ft.IconButton(icon=ft.Icons.DESCRIPTION_OUTLINED)]
+        actions=[ft.IconButton(icon=ft.Icons.DESCRIPTION_OUTLINED, on_click=lambda e:page.open(show_details_alert))]
     )
 
 
