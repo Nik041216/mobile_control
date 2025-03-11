@@ -3,6 +3,7 @@ import scr.BD.bd_users.local.insert_bd as insert
 import scr.BD.bd_users.local.delete_bd
 import scr.BD.bd_users.bd_server_user
 import scr.constants as const
+import scr.navigation_apps.users.doing_work.chose_meters
 import os
 import base64
 
@@ -68,8 +69,12 @@ def create_meter(page, id_task, where, container1):
 
     def on_click_back(e):
         page.close(create_meter_alert)
-        scr.BD.bd_users.local.delete_bd.delete_photo_cancel_meters(meter_id.value)
         scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where, container1)
+        try:
+            scr.BD.bd_users.local.delete_bd.delete_photo_cancel_meters(meter_id.value)
+        except:
+            pass
+        page.update()
 
     meter_id = ft.TextField(label="Серийный номер счетчика", value=None)
     meter_marka = ft.TextField(label="Марка счетчика", value=None)

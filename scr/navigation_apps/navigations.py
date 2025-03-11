@@ -110,7 +110,7 @@ def create_route(page):
             page.views.append(
                 ft.View(
                     route=page.route,
-                    controls=[chose_meters.get_content(page, id_task, where)],
+                    controls=[content],
                     appbar=chose_meters.get_appbar(page),
                     navigation_bar=navigation_bar,
                     bgcolor=ft.Colors.BLUE_50,

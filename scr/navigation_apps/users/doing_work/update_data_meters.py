@@ -13,6 +13,7 @@ import base64
 
 
 def update_data(page, meter_id, id_task, where, container1):
+
     def bottom_sheet_yes(e):
         page.close(bottom_sheet)
         page.close(dlg_modal)
