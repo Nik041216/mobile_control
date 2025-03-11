@@ -114,7 +114,8 @@ def sealing(page, id_task, meter_id, where, container1):
                 ),
                 on_click=lambda e, name="seal": toggle_checkbox(e, star_checkbox.current, name)
             )
-        ]
+        ],
+        width=screen_width * 0.95
     )
 
     def button_yes(e):
@@ -166,6 +167,7 @@ def sealing(page, id_task, meter_id, where, container1):
                 ], alignment=ft.MainAxisAlignment.CENTER
             )
         ],
+        inset_padding=screen_width * 0.05
     )
 
     def close(e):
@@ -236,7 +238,8 @@ def sealing(page, id_task, meter_id, where, container1):
             ),
             remark,
             photo_button
-        ], scroll=ft.ScrollMode.AUTO, expand=True
+        ], scroll=ft.ScrollMode.AUTO, expand=True,
+        width=screen_width * 0.95
     )
 
     def create_bottom_sheet(text):
@@ -296,7 +299,8 @@ def sealing(page, id_task, meter_id, where, container1):
                     ft.ElevatedButton("Назад", on_click=on_click_back)
                 ]
             )
-        ]
+        ],
+        inset_padding=screen_width * 0.05
     )
     page.open(check_meters_data)
 

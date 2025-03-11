@@ -234,7 +234,7 @@ def user_main(page: ft.Page, container: ft.Container):
                                 on_change=lambda e: globals().update(sorting=e.control.value) or update_results(
                                     statuses, page, search_bar.value),
                                 value=sorting,
-                                width=100,
+                                expand=True,
                                 label="Сортировка",
                                 options=[ft.dropdown.Option("Адрес"), ft.dropdown.Option("Статус")],
                                 col=1.6,

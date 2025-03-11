@@ -434,7 +434,7 @@ def user_main(page: ft.Page, container: ft.Container):
                                 width=100,
                                 label="Сортировка",
                                 options=[ft.dropdown.Option("Адрес"), ft.dropdown.Option("Статус")],
-                                col=1.6,
+                                col=1.8,
                                 bgcolor=ft.colors.WHITE
                             )
                         ],

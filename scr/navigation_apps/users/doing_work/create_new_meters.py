@@ -104,7 +104,7 @@ def create_meter(page, id_task, where, container1):
         return options
 
     meter_type = ft.Dropdown(label="Тип услуги счетчика", enable_filter=True, max_menu_height=200, editable=True,
-                             width=200, options=get_options())
+                             width=1000, options=get_options())
 
     def save_image_to_db(file_path):
         with open(file_path, 'rb') as file:
@@ -186,7 +186,8 @@ def create_meter(page, id_task, where, container1):
             photo_button
         ],
         expand=True,
-        scroll=ft.ScrollMode.AUTO
+        scroll=ft.ScrollMode.AUTO,
+        width=screen_width * 0.95
     )
     create_meter_alert = ft.AlertDialog(
         modal=True,
@@ -200,7 +201,7 @@ def create_meter(page, id_task, where, container1):
                 ], alignment=ft.MainAxisAlignment.CENTER
             )
         ],
-        inset_padding=screen_width * 0.10
+        inset_padding=screen_width * 0.05
     )
 
     page.open(create_meter_alert)

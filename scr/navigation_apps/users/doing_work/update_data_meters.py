@@ -13,6 +13,7 @@ import base64
 
 
 def update_data(page, meter_id, id_task, where, container1):
+    screen_width = page.width
 
     def bottom_sheet_yes(e):
         page.close(bottom_sheet)
@@ -182,7 +183,8 @@ def update_data(page, meter_id, id_task, where, container1):
                 ),
                 on_click=lambda e, name="seal": toggle_checkbox(e, seal_number_checkbox.current, name)
             )
-        ]
+        ],
+        width=screen_width * 0.95
     )
 
     def button_yes(e):
@@ -230,6 +232,7 @@ def update_data(page, meter_id, id_task, where, container1):
                 ], alignment=ft.MainAxisAlignment.CENTER
             )
         ],
+        inset_padding=screen_width * 0.05
     )
 
     last_reading_date = "Неизвестно"
@@ -370,7 +373,8 @@ def update_data(page, meter_id, id_task, where, container1):
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER
                 )
             ], scroll=ft.ScrollMode.AUTO,
-        )
+        ),
+        width=screen_width * 0.95
     )
 
     # Модальное окно с данными счетчика
@@ -386,6 +390,7 @@ def update_data(page, meter_id, id_task, where, container1):
                 ], alignment=ft.MainAxisAlignment.CENTER
             )
         ],
+        inset_padding=screen_width * 0.05
     )
 
     # Очищаем и обновляем контент страницы

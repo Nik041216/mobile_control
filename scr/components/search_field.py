@@ -52,7 +52,7 @@ class SearchField:
             on_tap=handle_tap,
             value="",
             controls=create_search_list(),
-            col=3.4,
+            col=3.2,
             bar_bgcolor=ft.colors.WHITE
         )
 

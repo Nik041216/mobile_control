@@ -10,16 +10,13 @@ import scr.navigation_apps.users.doing_work.sealing_meter
 import scr.navigation_apps.users.doing_work.create_new_meters as new_meters
 
 
-def call_show_meters_data(page, id_task, where):
-    page.go(f"/choise_meters/{id_task}/{where}")
-
-
 def get_appbar(page):
     return ft.AppBar(
         title=ft.Text("Выбор счетчика"),
         center_title=True,
         toolbar_height=50,
         bgcolor=ft.colors.BLUE_100,
+        actions=[ft.IconButton(icon=ft.Icons.DESCRIPTION_OUTLINED)]
     )
 
 
@@ -198,10 +195,9 @@ def show_meters_data(page, id_task, where, container_chose_meters):
     title = ft.Column(
         [
             ft.Text(result_info_address, size=17, ),
-            ft.Text(result_info_person, size=17, ),
-            ft.Text(f"Номер телефона владельца {phone_number}", size=17, ),
-            ft.Text(f"Примечание по адрессу: {remark_task}", size=17, ),
-        ]
+            ft.Text(purpose, size=17, ),
+            ft.Text(f"Примечание: {remark_task}", size=17)
+        ],
     )
     row_button = ft.Row(alignment=ft.MainAxisAlignment.CENTER)
     row_button.controls.append(button_save_v2)

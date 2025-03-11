@@ -87,7 +87,8 @@ def func_check_address_data(page, id_task, where):
                     ),
                     on_click=lambda e, name="standarts": toggle_checkbox(e, standarts_checkbox.current, name)
                 )
-            ]
+            ],
+            width=screen_width * 0.95
         )
     elif type_address == "ЧС":
         dict_checkboxes["FIO"] = True
@@ -166,23 +167,25 @@ def func_check_address_data(page, id_task, where):
 
                     on_click=lambda e, name="area": toggle_checkbox(e, area_checkbox.current, name)
                 ),
-            ]
+            ],
+            width=screen_width * 0.95
         )
     else:
-        dict_checkboxes["FIO"] = False
+        dict_checkboxes["FIO"] = True
         content = ft.Column(
             [
                 ft.Container(
                     content=ft.Row([
                         ft.Checkbox(on_change=lambda e, name="FIO": on_checkbox_change(e.control, name),
-                                    ref=fio_checkbox),
+                                    ref=fio_checkbox, value=True),
                         ft.Text("ФИО совпадает с "),
                         ft.Text(f"{person_name}", weight=ft.FontWeight.BOLD),
                         ft.Text("?")
                     ]),
-                    on_click=lambda e, name="FIO": toggle_checkbox(e, fio_checkbox.current, name)
+                    on_click=lambda e, name="FIO": toggle_checkbox(e, fio_checkbox.current, name),
                 )
-            ]
+            ],
+            width=screen_width * 0.95
         )
 
     def button_yes(e):
@@ -249,7 +252,7 @@ def func_check_address_data(page, id_task, where):
                 ], alignment=ft.MainAxisAlignment.CENTER
             )
         ],
-        inset_padding=screen_width * 0.10
+        inset_padding=screen_width * 0.05
     )
     page.open(check_address_data)
 
