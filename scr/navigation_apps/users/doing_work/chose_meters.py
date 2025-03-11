@@ -47,7 +47,7 @@ def get_content(page, id_task, where):
     return container
 
 
-def show_meters_data(page, id_task, where, container_chose_meters: ft.Container):
+def show_meters_data(page, id_task, where, container_chose_meters):
     screen_width = page.width
     screen_height = page.height
     page.controls.clear()

@@ -9,6 +9,7 @@ import base64
 
 def create_meter(page, id_task, where, container1):
     screen_width = page.width
+
     def create_bottom_sheet(text):
         def bottom_sheet_yes(e):
             page.close(bottom_sheet)
@@ -33,7 +34,6 @@ def create_meter(page, id_task, where, container1):
         page.open(bottom_sheet)
 
     def on_click_save(e):
-        pass
         if (meter_id.value is None or meter_id.value == ""
                 or meter_marka.value is None or meter_marka.value == ""
                 or meter_reading.value is None or meter_reading.value == ""
