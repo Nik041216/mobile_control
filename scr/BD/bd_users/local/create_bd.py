@@ -35,7 +35,7 @@ def local_user_db():
                 CONSTRAINT meter_task_pk PRIMARY KEY (id)) """
 
         table_picture = """ Create table if not exists picture(id Integer primary key autoincrement, value BLOB,
-                name_file Text, task_id Integer, meter_id integer) """
+                name_file Text, task_id Integer, meter_id Text) """
 
         table_acts = """ Create table if not exists acts (
                 id Integer primary key,
@@ -51,3 +51,12 @@ def local_user_db():
         cursor.execute(table_picture)
         cursor.execute(table_address)
         cursor.execute(table_acts)
+
+
+def create_temp_photo_table():
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        table_picture = """ Create table if not exists picture_temp (id Integer primary key autoincrement, value BLOB,
+                        name_file Text, task_id Integer, meter_id integer) """
+        cursor.execute(table_picture)
+        db.commit()

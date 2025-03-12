@@ -92,6 +92,16 @@ def insert_photo(name_file, value, task_id, meter_id):
         db.commit()
 
 
+def insert_photo_temp(name_file, value, task_id, meter_id):
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = """INSERT INTO picture_temp 
+                   (name_file, value, task_id, meter_id) 
+                   VALUES (?, ?, ?, ?)"""
+        cursor.execute(query, (name_file, value, task_id, meter_id))
+        db.commit()
+
+
 def insert_new_meters(id_task, meter_id, meter_marka, meter_reading, meter_protection, seal_id, remark, meter_type,
                       seal_type):
     """ seal_type здесь заготовка на будующее обновновление сервера"""
@@ -154,6 +164,13 @@ def insert_new_meters(id_task, meter_id, meter_marka, meter_reading, meter_prote
                                 );
                           """
         cursor.execute(query)
+        db.commit()
+        query = f""" insert into picture (value, name_file, task_id, meter_id)
+                     select value, name_file, task_id, meter_id from picture_temp
+                        """
+        cursor.execute(query)
+        delete_photo = f""" DROP TABLE picture_temp """
+        cursor.execute(delete_photo)
         db.commit()
 
 

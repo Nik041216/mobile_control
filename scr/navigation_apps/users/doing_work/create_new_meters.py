@@ -1,5 +1,8 @@
 import flet as ft
 import scr.BD.bd_users.local.insert_bd as insert
+import scr.BD.bd_users.local.update_bd as update
+import scr.BD.bd_users.local.create_bd as create
+import scr.BD.bd_users.local.delete_bd as delete
 import scr.BD.bd_users.local.delete_bd
 import scr.BD.bd_users.bd_server_user
 import scr.constants as const
@@ -10,6 +13,7 @@ import base64
 
 def create_meter(page, id_task, where, container1):
     screen_width = page.window_width
+    create.create_temp_photo_table()
 
     def create_bottom_sheet(text):
         def bottom_sheet_yes(e):
@@ -70,13 +74,20 @@ def create_meter(page, id_task, where, container1):
     def on_click_back(e):
         page.close(create_meter_alert)
         scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where, container1)
-        try:
-            scr.BD.bd_users.local.delete_bd.delete_photo_cancel_meters(meter_id.value)
-        except:
-            pass
+        delete.delete_photo_temp()
         page.update()
 
-    meter_id = ft.TextField(label="Серийный номер счетчика", value=None)
+    old_value = ""
+
+    def on_change_meter_id(e):
+        nonlocal old_value
+        try:
+            update.update_photo_meter(old_value, e.control.value)
+        except Exception as ex:
+            print(ex)
+        old_value = e.control.value
+
+    meter_id = ft.TextField(label="Серийный номер счетчика", value=None, on_change=on_change_meter_id)
     meter_marka = ft.TextField(label="Марка счетчика", value=None)
     meter_reading = ft.TextField(label="Показания счетчика", value=None)
     seal_number = ft.TextField(label="Номер пломбы", value=None)
@@ -111,7 +122,7 @@ def create_meter(page, id_task, where, container1):
             file_data = file.read()
 
         file_name = os.path.basename(file_path)
-        scr.BD.bd_users.local.insert_bd.insert_photo(file_name, file_data, id_task, meter_id.value)
+        scr.BD.bd_users.local.insert_bd.insert_photo_temp(file_name, file_data, id_task, meter_id.value)
 
     def pick_files_result(e: ft.FilePickerResultEvent):
         if e.files:
@@ -132,7 +143,7 @@ def create_meter(page, id_task, where, container1):
         page.update()
 
     def update_saving_data(meter_id, id_task):
-        images = scr.BD.bd_users.local.select_bd.select_photo_data(meter_id, id_task)
+        images = scr.BD.bd_users.local.select_bd.select_photo_data_temp(meter_id, id_task)
         if images:
             selected_images.clear()
             for result in images:
@@ -159,7 +170,7 @@ def create_meter(page, id_task, where, container1):
                 )
         page.update()
 
-    update_saving_data(meter_id, id_task)
+    update_saving_data(meter_id.value, id_task)
 
     def zagr(e):
         if meter_id.value is None or meter_id.value == "":

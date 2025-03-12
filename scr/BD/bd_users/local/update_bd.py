@@ -298,6 +298,16 @@ def update_acts_insert_meters(id_task, string):
         db.commit()
 
 
+def update_photo_meter(last_meter_id, new_meter_id):
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" update picture_temp 
+                        set meter_id = '{new_meter_id}'
+                        where meter_id = '{last_meter_id}' """
+        cursor.execute(query)
+        db.commit()
+
+
 def update_status_task():
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
