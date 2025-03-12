@@ -76,8 +76,6 @@ def update_dop_data_address(remark, registered_residing, standarts, area, addres
 
 def update_remark_task(remark, task_id):
     with sl.connect('database_client.db') as db:
-        print(remark)
-        print(task_id)
         cursor = db.cursor()
         query = f""" update tasks set 
             remark_task = '{remark}'

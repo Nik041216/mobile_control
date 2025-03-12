@@ -25,6 +25,7 @@ def get_appbar(page, id_task, where, container1):
     def on_click_save(e):
         scr.BD.bd_users.local.update_bd.update_remark_task(remark_textfield.value, id_task)
         show_meters_data(page, id_task, where, container1)
+        save_button.visible = False
         page.update()
 
     def on_change_dop_data(e):
