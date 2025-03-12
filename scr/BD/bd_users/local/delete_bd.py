@@ -27,8 +27,12 @@ def delete_photo_db(id_photo):
         cursor = db.cursor()
         delete_photo = f""" Delete from picture where id = {id_photo}"""
         cursor.execute(delete_photo)
-        delete_photo_temp_ = f""" Delete from picture_temp where id = {id_photo}"""
-        cursor.execute(delete_photo_temp_)
+        db.commit()
+        try:
+            delete_photo_temp_ = f""" Delete from picture_temp where id = {id_photo}"""
+            cursor.execute(delete_photo_temp_)
+        except:
+            pass
 
 
 def delete_photo_temp():
