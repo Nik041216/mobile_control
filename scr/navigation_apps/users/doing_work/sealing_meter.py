@@ -161,11 +161,11 @@ def sealing(page, id_task, meter_id, where, container1):
                     ft.ElevatedButton("Ввод прибора учета",
                                       on_click=button_yes,
                                       bgcolor=ft.colors.BLUE_200,
-                                      width=screen_width * 0.30
+
                                       ),
                     ft.ElevatedButton("Назад",
                                       on_click=button_no,
-                                      bgcolor=ft.colors.BLUE_200),
+                                      bgcolor=ft.colors.RED_200),
                 ], alignment=ft.MainAxisAlignment.CENTER
             )
         ],
@@ -187,7 +187,7 @@ def sealing(page, id_task, meter_id, where, container1):
             ft.Row(
                 [
                     ft.ElevatedButton("Установлена", on_click=close, bgcolor=ft.colors.BLUE_200),
-                    ft.ElevatedButton("Назад", on_click=not_installed, bgcolor=ft.colors.BLUE_200),
+                    ft.ElevatedButton("Назад", on_click=not_installed, bgcolor=ft.colors.RED_200),
                 ], alignment=ft.MainAxisAlignment.CENTER
             )
         ],
@@ -213,7 +213,7 @@ def sealing(page, id_task, meter_id, where, container1):
     # Добавление кнопок выбора типа защиты счетчика
     protection_type_radio = ft.RadioGroup(
         content=ft.Row([
-            ft.Radio(value="вывы", label="Да"),  # белеберда чисто для приведения в bool
+            ft.Radio(value="белеберда чисто для приведения в bool", label="Да"),
             ft.Radio(value="", label="Нет"),
         ])
     )
@@ -278,7 +278,7 @@ def sealing(page, id_task, meter_id, where, container1):
         pick_files_dialog.pick_files(allow_multiple=True, allowed_extensions=["jpeg", "gif", "png", "webp"])
 
     # Добавление кнопки для выбора фотографии
-    photo_button = ft.ElevatedButton("Выбрать фотографию", on_click=zagr)  # они пока что чисто затычки
+    photo_button = ft.ElevatedButton("Добавить фотографии", on_click=zagr)  # они пока что чисто затычки
 
     content = ft.Column(
         [
@@ -356,9 +356,10 @@ def sealing(page, id_task, meter_id, where, container1):
         actions=[
             ft.Row(
                 [
-                    ft.ElevatedButton("Сохранить", on_click=on_click_save),
-                    ft.ElevatedButton("Назад", on_click=on_click_back)
-                ]
+                    ft.ElevatedButton("Сохранить", on_click=on_click_save, bgcolor=ft.colors.BLUE_200),
+                    ft.ElevatedButton("Назад", on_click=on_click_back, bgcolor=ft.colors.RED_200)
+                ],
+                alignment=ft.MainAxisAlignment.CENTER
             )
         ],
         inset_padding=screen_width * 0.05

@@ -248,7 +248,7 @@ def func_check_address_data(page, id_task, where):
             ft.Row(
                 [
                     ft.ElevatedButton("Да", on_click=button_yes, bgcolor=ft.colors.BLUE_200),
-                    ft.ElevatedButton("Назад", on_click=button_no, bgcolor=ft.colors.BLUE_200),
+                    ft.ElevatedButton("Назад", on_click=button_no, bgcolor=ft.colors.RED_200),
                 ], alignment=ft.MainAxisAlignment.CENTER
             )
         ],
