@@ -74,6 +74,18 @@ def update_dop_data_address(remark, registered_residing, standarts, area, addres
         db.commit()
 
 
+def update_remark_task(remark, task_id):
+    with sl.connect('database_client.db') as db:
+        print(remark)
+        print(task_id)
+        cursor = db.cursor()
+        query = f""" update tasks set 
+            remark_task = '{remark}'
+            where id = {task_id} """
+        cursor.execute(query)
+        db.commit()
+
+
 def update_tasks_data_from_server(task_id, name, address_id, city, district, hamlet, street, dom, apartment,
                                   entrance, phone_number, personal_account, date_task, date_end, task_remark,
                                   status_task, purpose, registered_residing, standarts, area, saldo, type_address):

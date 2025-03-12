@@ -10,7 +10,7 @@ import scr.navigation_apps.users.doing_work.sealing_meter
 import scr.navigation_apps.users.doing_work.create_new_meters as new_meters
 
 
-def get_appbar(page, id_task):
+def get_appbar(page, id_task, where, container1):
     screen_width = page.width
     results_address_data = scr.BD.bd_users.local.select_bd.select_tasks_data_for_one(id_task)
     filtered_results = [
@@ -22,21 +22,35 @@ def get_appbar(page, id_task):
             personal_account, date, date_end, remark_task, status, purpose, registered_residing, \
             standarts, area, saldo, type_address = result
 
-    save_button = ft.ElevatedButton("Сохранить")
+    def on_click_save(e):
+        scr.BD.bd_users.local.update_bd.update_remark_task(remark_textfield.value, id_task)
+        show_meters_data(page, id_task, where, container1)
+        page.update()
+
+    def on_change_dop_data(e):
+        save_button.visible = True
+        page.update()
+
+    remark_textfield = ft.TextField(
+        label="Примечание", value=remark_task, on_change=on_change_dop_data, multiline=True, min_lines=3, max_lines=3
+    )
+    save_button = ft.ElevatedButton("Сохранить", visible=False, on_click=on_click_save)
     back_button = ft.ElevatedButton("Назад", on_click=lambda e: page.close(show_details_alert))
     show_details_alert = ft.AlertDialog(
         modal=True,
         title=ft.Text(f"Все данные по заявке {id_task}"),
         content=ft.Column(
             [
-                ft.Text(f"Адрес: {street} {dom} {apartment} "),
+                ft.Text(f"Адрес: {street} {dom} {apartment}"),
                 ft.Text(f"ФИО владельца: {person_name}"),
                 ft.Text(f"Номер телефона: {phone_number}"),
                 ft.Text(f"Кол-во прописаных: {registered_residing}"),
                 ft.Text(f"Нормативы: {standarts}"),
                 ft.Text(f"Площадь огорода: {area}"),
-                ft.TextField(label="Примечание", value=remark_task, max_lines=3)
+                remark_textfield
             ],
+            scroll=ft.ScrollMode.AUTO,
+            expand=True,
             width=screen_width * 0.95
         ),
         inset_padding=screen_width * 0.05,
@@ -53,11 +67,11 @@ def get_appbar(page, id_task):
         center_title=True,
         toolbar_height=50,
         bgcolor=ft.colors.BLUE_100,
-        actions=[ft.IconButton(icon=ft.Icons.DESCRIPTION_OUTLINED, on_click=lambda e:page.open(show_details_alert))]
+        actions=[ft.IconButton(icon=ft.Icons.DESCRIPTION_OUTLINED, on_click=lambda e: page.open(show_details_alert))]
     )
 
 
-def get_floating_action_button(page,  id_task, where, container1):
+def get_floating_action_button(page, id_task, where, container1):
     def onclick_floating_button(e):
         new_meters.create_meter(page, id_task, where, container1)
 
@@ -97,7 +111,6 @@ def show_meters_data(page, id_task, where, container_chose_meters):
             standarts, area, saldo, type_address = result
 
     result_info_address = f"Адрес: ул.{street} д.{dom} кв.{apartment}"
-    result_info_person = f"ФИО владельца: {person_name}"
 
     def on_click_back(e):
         if where == "task":
@@ -105,24 +118,11 @@ def show_meters_data(page, id_task, where, container_chose_meters):
         else:
             page.go("/future")
 
-    def on_click_save(e):
-        scr.BD.bd_users.local.update_bd.update_dop_data_address(
-            remark_textfield.value, registered_residing_textfield.value, standarts_textfield.value,
-            area_textfield.value, id_address, id_task)
-        show_meters_data(page, id_task, where, container_chose_meters)
-        page.update()
-
     button_back = ft.ElevatedButton("Назад", on_click=on_click_back, bgcolor=ft.colors.RED_200)
-    button_save_v2 = ft.ElevatedButton("Сохранить", on_click=on_click_save, bgcolor=ft.colors.BLUE_200,
-                                       visible=False)
     filtered_results_meters = [result for result in results_meters_data]
     column = ft.Column(scroll=ft.ScrollMode.AUTO, horizontal_alignment=ft.CrossAxisAlignment.CENTER, expand=True)
     color = ft.colors.GREY
     column.controls.clear()
-
-    def on_change_dop_data(e):
-        button_save_v2.visible = True
-        page.update()
 
     for result in filtered_results_meters:
         id_meters, seal_number, instalation_day, meter_type, marka_id, marka, date_meter_end, \
@@ -135,12 +135,13 @@ def show_meters_data(page, id_task, where, container_chose_meters):
         else:
             color = const.tasks_pending_color
 
-        result_info_meters = f"Марка: {marka}\nЗаводской номер: {id_meters}\nТип: {meter_type}"
-
         row_to_container = ft.Column(
             [
-                ft.Text(result_info_meters, size=17, ),
+                ft.Text(f"Марка {marka}", size=17),
+                ft.Text(f"Заводской номер: {id_meters}", size=17),
+                ft.Text(f"Тип: {meter_type}", size=17)
             ],
+            spacing=0
         )
 
         # Используем замыкание для передачи правильного apartment
@@ -173,61 +174,11 @@ def show_meters_data(page, id_task, where, container_chose_meters):
                 blur_radius=10,
                 color=ft.colors.BLACK38
             ),
-            alignment=ft.alignment.center,
+            alignment=ft.alignment.bottom_left,
             on_click=on_click_container
         )
         column.controls.append(container)
 
-    remark_textfield = ft.TextField(label="Примечание", value=remark_task, on_change=on_change_dop_data)
-    registered_residing_textfield = ft.TextField(label="Прописанно", value=registered_residing,
-                                                 on_change=on_change_dop_data)
-    standarts_textfield = ft.TextField(
-        on_change=on_change_dop_data,
-        label="Нормативы",
-        value=standarts,
-        read_only=True)
-    area_textfield = ft.TextField(label="Площадь", value=area, on_change=on_change_dop_data)
-
-    dop_buttons_redact = ft.Row(
-        [
-            ft.Column(
-                [
-                    remark_textfield,
-                    registered_residing_textfield,
-                    standarts_textfield,
-                    area_textfield
-
-                ]
-            )
-        ]
-    )
-    panels = [
-        ft.ExpansionPanel(
-            header=ft.Row(
-                [
-                    ft.Text("Редактирование данных адреса")
-                ],
-                alignment=ft.MainAxisAlignment.CENTER,
-                expand=True
-            ),
-            can_tap_header=True,
-            content=dop_buttons_redact,
-            expanded=False,
-            aspect_ratio=100,
-            bgcolor=ft.colors.BLUE_100,
-        ),
-    ]
-    panel_list = ft.ExpansionPanelList(
-        elevation=25,
-        controls=panels,
-        expanded_header_padding=3
-    )
-    container = ft.Container(
-        content=panel_list,
-        width=screen_width * 0.9,
-        border_radius=15,
-    )
-    column.controls.append(container)
     content_dialog = column
     title = ft.Column(
         [
@@ -237,16 +188,16 @@ def show_meters_data(page, id_task, where, container_chose_meters):
         ],
     )
     row_button = ft.Row(alignment=ft.MainAxisAlignment.CENTER)
-    row_button.controls.append(button_save_v2)
     row_button.controls.append(button_back)
 
     content1 = ft.Column([
         ft.Column(
             [
                 title,
+                ft.Divider(color=ft.Colors.BLACK),
                 content_dialog,
                 row_button
-            ], expand=True, horizontal_alignment=ft.CrossAxisAlignment.CENTER
+            ], expand=True, horizontal_alignment=ft.CrossAxisAlignment.CENTER, spacing=0,
         )
     ])
     container_chose_meters.content = content1

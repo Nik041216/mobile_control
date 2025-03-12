@@ -111,7 +111,7 @@ def create_route(page):
                 ft.View(
                     route=page.route,
                     controls=[content],
-                    appbar=chose_meters.get_appbar(page, id_task),
+                    appbar=chose_meters.get_appbar(page, id_task, where, content),
                     navigation_bar=navigation_bar,
                     bgcolor=ft.Colors.BLUE_50,
                     floating_action_button=chose_meters.get_floating_action_button(page, id_task, where, content)

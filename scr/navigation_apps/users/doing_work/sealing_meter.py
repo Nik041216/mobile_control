@@ -10,7 +10,7 @@ import scr.navigation_apps.users.doing_work.chose_meters
 
 
 def sealing(page, id_task, meter_id, where, container1):
-    screen_width = page.width
+    screen_width = page.window_width
     results_meters_data_v2 = scr.BD.bd_users.local.select_bd.select_meters_data_new_for_one(id_task, meter_id)
     if results_meters_data_v2:
         for result in results_meters_data_v2:

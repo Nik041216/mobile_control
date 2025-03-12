@@ -9,7 +9,7 @@ import base64
 
 
 def create_meter(page, id_task, where, container1):
-    screen_width = page.width
+    screen_width = page.window_width
 
     def create_bottom_sheet(text):
         def bottom_sheet_yes(e):

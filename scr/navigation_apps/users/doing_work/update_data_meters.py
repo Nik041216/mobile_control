@@ -13,7 +13,7 @@ import base64
 
 
 def update_data(page, meter_id, id_task, where, container1):
-    screen_width = page.width
+    screen_width = page.window_width
 
     def bottom_sheet_yes(e):
         page.close(bottom_sheet)
