@@ -5,7 +5,7 @@ import scr.func
 
 
 def func_check_address_data(page, id_task, where):
-    screen_width = page.width
+    screen_width = page.window_width
     results_address_data = scr.BD.bd_users.local.select_bd.select_tasks_data_for_one(id_task)
     filtered_results = [
         result_address_data_v2 for result_address_data_v2 in results_address_data

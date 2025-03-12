@@ -11,7 +11,7 @@ import scr.navigation_apps.users.doing_work.create_new_meters as new_meters
 
 
 def get_appbar(page, id_task, where, container1):
-    screen_width = page.width
+    screen_width = page.window_width
     results_address_data = scr.BD.bd_users.local.select_bd.select_tasks_data_for_one(id_task)
     filtered_results = [
         result_address_data_v2 for result_address_data_v2 in results_address_data
