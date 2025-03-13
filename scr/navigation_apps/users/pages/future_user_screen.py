@@ -132,6 +132,7 @@ def get_content(page):
 
 
 def update_results(filter_statuses, page, search_value):
+    screen_width = page.window_width
     completed_icon = ft.Icon(ft.icons.CHECK_CIRCLE_OUTLINE)
     failed_icon = ft.Icon(ft.icons.ERROR_OUTLINE)
     pending_icon = ft.Icon(ft.icons.HOURGLASS_EMPTY)
@@ -186,7 +187,7 @@ def update_results(filter_statuses, page, search_value):
                                 field_hint_text="дд.мм.гггг",
                                 field_label_text="Введите дату",
                                 help_text="Выберете дату",
-                                last_date=datetime.datetime(year=2300, month=1, day=1),
+                                last_date=datetime.date(year=2300, month=1, day=1),
                                 on_change=date_change_picker)
     new_date = ft.TextField(
         label="Новая дата",
@@ -270,7 +271,8 @@ def update_results(filter_statuses, page, search_value):
                         ft.Text(f"Количество прописанных: {registered_residing}"),
                         ft.Text(f"Нормативы: {standarts}"),
                         ft.Text(f"Площадь: {area}"),
-                    ]
+                    ],
+                    width=screen_width * 0.95
                 ),
                 actions=[
                     ft.Row(
@@ -279,6 +281,7 @@ def update_results(filter_statuses, page, search_value):
                         ], alignment=ft.MainAxisAlignment.CENTER
                     )
                 ],
+                inset_padding=screen_width * 0.05
             )
             page.open(view)
 
@@ -286,7 +289,7 @@ def update_results(filter_statuses, page, search_value):
 
             def on_click(e):
                 current_date = datetime.datetime.now().strftime('%Y-%m-%d')
-                if date_picker.value.date() <= datetime.datetime.strptime(current_date, '%Y-%m-%d').date():
+                if date_picker.value and date_picker.value.date() <= datetime.datetime.strptime(current_date, '%Y-%m-%d').date():
                     new_date.error_text = "Задание не может быть перенесено на сегодня"
                 elif date_picker.value.date() > datetime.datetime.strptime(date_end, '%Y-%m-%d').date():
                     new_date.error_text = "Обговорите такой перенос с мастером"
@@ -306,7 +309,9 @@ def update_results(filter_statuses, page, search_value):
                     [
                         ft.Text(f"Старая дата: {date}"),
                         new_date
-                    ]
+                    ],
+                    width=screen_width * 0.95,
+                    expand=True
                 ),
                 actions=[
                     ft.Row(
@@ -321,7 +326,8 @@ def update_results(filter_statuses, page, search_value):
                                               width=page.window_width * 0.30)
                         ], alignment=ft.MainAxisAlignment.CENTER
                     )
-                ]
+                ],
+                inset_padding=screen_width * 0.05
             )
 
             page.open(change_date)
@@ -335,6 +341,7 @@ def update_results(filter_statuses, page, search_value):
 
             chose_action = ft.AlertDialog(
                 title=ft.Text("Вы хотите просмотреть данные или выполнить задание?"),
+                content=ft.Row(width=screen_width * 0.95),
                 actions=[
                     ft.Row(
                         [
@@ -358,7 +365,8 @@ def update_results(filter_statuses, page, search_value):
                         ],
                         alignment=ft.MainAxisAlignment.CENTER
                     )
-                ]
+                ],
+                inset_padding=screen_width * 0.05
             )
 
             def show(e):
