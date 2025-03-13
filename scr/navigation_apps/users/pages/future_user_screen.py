@@ -290,12 +290,14 @@ def update_results(filter_statuses, page, search_value):
             def on_click(e):
                 current_date = datetime.datetime.now().strftime('%Y-%m-%d')
                 if date_picker.value and date_picker.value.date() <= datetime.datetime.strptime(current_date, '%Y-%m-%d').date():
-                    new_date.error_text = "Задание не может быть перенесено на сегодня"
+                    new_date.error_text = "Задание не может быть перенесено\n на сегодня"
                 elif date_picker.value.date() > datetime.datetime.strptime(date_end, '%Y-%m-%d').date():
                     new_date.error_text = "Обговорите такой перенос с мастером"
                 else:
                     new_date.value = date_picker.value.date()
                     scr.BD.bd_users.local.update_bd.update_date(id_task, new_date.value)
+                    update_results(filter_statuses, page, search_value)
+                    page.close(change_date)
                 page.update()
                 new_date.update()
 
