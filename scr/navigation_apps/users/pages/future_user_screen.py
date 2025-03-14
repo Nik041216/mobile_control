@@ -345,28 +345,29 @@ def update_results(filter_statuses, page, search_value):
                 title=ft.Text("Вы хотите просмотреть данные или выполнить задание?"),
                 content=ft.Row(width=screen_width * 0.95),
                 actions=[
-                    ft.Row(
-                        [
-                            ft.ElevatedButton("Просмотреть",
-                                              on_click=lambda e: viewing(e, id_task),
-                                              bgcolor=ft.colors.BLUE_200,
-                                              width=page.window_width * 0.35),
-                            ft.ElevatedButton("Выполнить",
-                                              on_click=on_click,
-                                              bgcolor=ft.colors.BLUE_200,
-                                              width=page.window_width * 0.30)
-                        ], alignment=ft.MainAxisAlignment.CENTER
-                    ),
-                    ft.Row(),
-                    ft.Row(
-                        [
-                            ft.ElevatedButton("Перенос задания",
-                                              on_click=lambda e: reschedule_to_another_date(e, id_task,
-                                                                                            date),
-                                              bgcolor=ft.colors.BLUE_200),
-                        ],
-                        alignment=ft.MainAxisAlignment.CENTER
-                    )
+                    ft.Column([
+                        ft.Row(
+                            [
+                                ft.ElevatedButton("Просмотреть",
+                                                  on_click=lambda e: viewing(e, id_task),
+                                                  bgcolor=ft.colors.BLUE_200,
+                                                  width=page.window_width * 0.35),
+                                ft.ElevatedButton("Выполнить",
+                                                  on_click=on_click,
+                                                  bgcolor=ft.colors.BLUE_200,
+                                                  width=page.window_width * 0.30)
+                            ], alignment=ft.MainAxisAlignment.CENTER
+                        ),
+                        ft.Row(
+                            [
+                                ft.ElevatedButton("Перенос задания",
+                                                  on_click=lambda e: reschedule_to_another_date(e, id_task,
+                                                                                                date),
+                                                  bgcolor=ft.colors.BLUE_200),
+                            ],
+                            alignment=ft.MainAxisAlignment.CENTER
+                        )
+                    ])
                 ],
                 inset_padding=screen_width * 0.05
             )
