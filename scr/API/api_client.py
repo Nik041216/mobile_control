@@ -1,5 +1,8 @@
 import json
 import requests
+import websockets
+import asyncio
+import platform
 from typing import List, Dict, Any
 
 
@@ -9,6 +12,42 @@ class WaterUtilityAPIClient:
         self.username = username
         self.password = password
         self.session = requests.Session()
+        self.websocket_task = None
+        self.running = False
+
+    async def connect_websocket(self, employee_id: int):
+        """Асинхронное подключение к WebSocket с переподключением"""
+        ws_url = f"ws://{self.base_url.replace('http://', '').replace('https://', '')}/ws/{employee_id}"
+        self.running = True
+        print(f"🔌 Подключение к WebSocket: {ws_url}")
+
+        while self.running:
+            try:
+                async with websockets.connect(ws_url) as websocket:
+                    print(f"✅ Подключено к WebSocket для сотрудника {employee_id}")
+
+                    while self.running:
+                        message = await websocket.recv()
+                        data = json.loads(message)
+                        print(f"🔔 Уведомление: {data['message']}")
+                        print(f"📋 Назначенные задачи: {data['task_ids']}")
+
+            except websockets.exceptions.ConnectionClosed:
+                print("⚠️ Соединение с WebSocket закрыто. Переподключение...")
+                await asyncio.sleep(5)
+            except Exception as e:
+                print(f"⚠️ Ошибка WebSocket: {e}")
+                await asyncio.sleep(5)
+
+    async def start_websocket(self, employee_id: int):
+        """Запуск WebSocket через новый event loop (для ПК и мобильных устройств)"""
+        self.websocket_task = asyncio.create_task(self.connect_websocket(employee_id))
+
+    def stop_websocket(self):
+        """Остановка WebSocket"""
+        self.running = False
+        if self.websocket_task:
+            self.websocket_task.cancel()
 
     def _make_request(self, method: str, endpoint: str,
                       data: Dict[str, Any] = None, params: Dict[str, Any] = None) -> Dict[str, Any]:

@@ -22,6 +22,12 @@ def check_user(login: str, password: str) -> Optional[Dict[str, Any]]:
         return None
 
 
+async def start_websocket(login: str, password: str, employee_id: int):
+    """Запуск WebSocket для получения уведомлений"""
+    api_client = create_api_client(login, password)
+    await api_client.start_websocket(employee_id)
+
+
 def get_meter_task(login: str, password: str, user_id: int) -> Optional[List[Dict[str, Any]]]:
     api_client = create_api_client(login, password)
     try:
