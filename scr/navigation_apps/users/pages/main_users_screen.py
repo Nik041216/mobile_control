@@ -104,7 +104,7 @@ def get_appbar(page):
         if scr.func.check_internet():
             statuses.clear()
             statuses = ['не выполнен', 'выполнен', 'в исполнении', 'просрочен']
-            scr.BD.bd_users.bd_server_user.select_task_data_for_update(page)
+            scr.BD.bd_users.bd_server_user.select_task_data_for_update()
             get_content(page)
         else:
             scr.func.show_alert_yn(page, "Нет доступа к сети, проверьте интернет соединение")
