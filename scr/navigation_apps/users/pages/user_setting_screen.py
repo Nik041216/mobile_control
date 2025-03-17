@@ -4,6 +4,7 @@ import scr.toggle_user_sessions
 import scr.func
 import scr.BD.bd_users.local.delete_bd
 import scr.BD.bd_users.local.select_bd
+import scr.BD.bd_users.api_user
 import scr.navigation_apps.navigations
 import scr.constants as const
 
@@ -33,9 +34,10 @@ def setting(page: ft.Page, conteiner: ft.Container):
         bgcolor=ft.colors.BLUE_100,
     )
 
-    def on_click_exit(e):
+    async def on_click_exit(e):
         scr.BD.bd_users.local.delete_bd.delete_data_db()
-        scr.toggle_user_sessions.handle_user_sessions(page)
+        await scr.toggle_user_sessions.handle_user_sessions(page)
+        await scr.BD.bd_users.api_user.stop_websocket(login_user, password_user)
 
     result = scr.BD.bd_users.local.select_bd.select_user_data()
 

@@ -4,6 +4,7 @@ import websockets
 import asyncio
 import platform
 from typing import List, Dict, Any
+import scr.BD.bd_users.bd_server_user as bd_update
 
 
 class WaterUtilityAPIClient:
@@ -14,6 +15,7 @@ class WaterUtilityAPIClient:
         self.session = requests.Session()
         self.websocket_task = None
         self.running = False
+        self.websocket = None  # Добавляем атрибут для хранения WebSocket-соединения
 
     async def connect_websocket(self, employee_id: int):
         """Асинхронное подключение к WebSocket с переподключением"""
@@ -24,6 +26,7 @@ class WaterUtilityAPIClient:
         while self.running:
             try:
                 async with websockets.connect(ws_url) as websocket:
+                    self.websocket = websocket  # Сохраняем соединение
                     print(f"✅ Подключено к WebSocket для сотрудника {employee_id}")
 
                     while self.running:
@@ -31,6 +34,8 @@ class WaterUtilityAPIClient:
                         data = json.loads(message)
                         print(f"🔔 Уведомление: {data['message']}")
                         print(f"📋 Назначенные задачи: {data['task_ids']}")
+                        if data:
+                            bd_update.select_task_data_for_update()
 
             except websockets.exceptions.ConnectionClosed:
                 print("⚠️ Соединение с WebSocket закрыто. Переподключение...")
@@ -43,11 +48,31 @@ class WaterUtilityAPIClient:
         """Запуск WebSocket через новый event loop (для ПК и мобильных устройств)"""
         self.websocket_task = asyncio.create_task(self.connect_websocket(employee_id))
 
-    def stop_websocket(self):
+    async def stop_websocket(self):
         """Остановка WebSocket"""
-        self.running = False
+        print("Закрываем WebSocket-соединение...")
+        self.running = False  # Останавливаем цикл переподключения
+
+        # Закрываем соединение, если оно открыто
+        if self.websocket and not self.websocket.closed:
+            try:
+                await self.websocket.close()
+                print("WebSocket соединение закрыто.")
+            except Exception as e:
+                print(f"Ошибка при закрытии WebSocket: {e}")
+
+        # Отменяем задачу, если она существует
         if self.websocket_task:
             self.websocket_task.cancel()
+            try:
+                await self.websocket_task  # Ждем завершения задачи
+            except asyncio.CancelledError:
+                print("WebSocket задача отменена.")
+            except Exception as e:
+                print(f"Ошибка при отмене задачи: {e}")
+            self.websocket_task = None
+
+        print("WebSocket полностью остановлен.")
 
     def _make_request(self, method: str, endpoint: str,
                       data: Dict[str, Any] = None, params: Dict[str, Any] = None) -> Dict[str, Any]:

@@ -3,7 +3,7 @@ import scr.toggle_user_sessions
 import scr.BD.bd_users.local.update_bd
 
 
-def main(page: ft.Page):
+async def main(page: ft.Page):
     page.window_width = 362.4
     page.window_height = 800
     page.window.width = 362.4
@@ -18,7 +18,7 @@ def main(page: ft.Page):
         ],
         current_locale=ft.Locale("ru", "RU")
     )
-    scr.toggle_user_sessions.handle_user_sessions(page)
+    await scr.toggle_user_sessions.handle_user_sessions(page)
 
 
 ft.app(target=main)

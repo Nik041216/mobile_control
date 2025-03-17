@@ -28,6 +28,11 @@ async def start_websocket(login: str, password: str, employee_id: int):
     await api_client.start_websocket(employee_id)
 
 
+async def stop_websocket(login: str, password: str):
+    api_client = create_api_client(login, password)
+    await api_client.stop_websocket()
+
+
 def get_meter_task(login: str, password: str, user_id: int) -> Optional[List[Dict[str, Any]]]:
     api_client = create_api_client(login, password)
     try:

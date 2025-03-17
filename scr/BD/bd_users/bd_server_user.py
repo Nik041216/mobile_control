@@ -53,7 +53,7 @@ def select_task_data(id_user):
             )
 
 
-def select_task_data_for_update(page):
+def select_task_data_for_update():
     res = scr.BD.bd_users.local.select_bd.select_user_data()
     if res:
         for record in res:
@@ -93,7 +93,6 @@ def select_task_data_for_update(page):
             scr.BD.bd_users.local.update_bd.update_meter_reading_data_from_server(
                 record['id'], record['meter_id'], record['reading_date'], record['reading_value']
             )
-    scr.func.show_alert_yn(page, "Данные успешно обновлены")
 
 
 def upload_task_data(login: str, password: str, task_updates: List[Dict[str, Any]]) -> bool:
