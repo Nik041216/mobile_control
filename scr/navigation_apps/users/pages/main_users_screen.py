@@ -59,6 +59,12 @@ def get_appbar(page):
         on_click=lambda _: toggle_drawer(page)
     )
 
+    def on_click_upload(e):
+        if scr.func.check_internet():
+            bd_server_user.upload_data_to_server(page)
+        else:
+            scr.func.show_alert_yn(page, "Нет доступа к сети, проверьте интернет соединение")
+
     menu_container = ft.Container(
         visible=False,
         width=250,
@@ -89,7 +95,7 @@ def get_appbar(page):
             ft.Row(
                 [ft.ElevatedButton(
                     text="Отгрузить все данные",
-                    on_click=lambda _: bd_server_user.upload_data_to_server(page),
+                    on_click=on_click_upload,
                     icon="BACKUP_ROUNDED",
                     bgcolor=ft.colors.BLUE_400,
                     color=ft.colors.WHITE
