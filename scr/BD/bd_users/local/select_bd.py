@@ -13,6 +13,16 @@ def select_user_data():
         return False
 
 
+def select_task_ids():
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" Select id from tasks """
+        cursor.execute(query)
+        result = cursor.fetchall()
+        task_ids = [item[0] for item in result]
+        return task_ids
+
+
 def select_meters_data_new(id_task):
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()

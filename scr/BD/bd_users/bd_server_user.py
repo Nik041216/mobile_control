@@ -12,47 +12,6 @@ import scr.navigation_apps.navigations
 import scr.BD.bd_users.api_user as api
 
 
-def select_task_data(id_user):
-    res = scr.BD.bd_users.local.select_bd.select_user_data()
-    if res:
-        for record in res:
-            user_id, login, password, privileges, first_name, last_name = record
-
-    task_data = api.get_task(login, password, id_user)
-    if task_data:
-        for record in task_data:
-            scr.BD.bd_users.local.update_bd.update_tasks_data_from_server(
-                record['task_id'], record['customer_name'], record['address_id'], record['city'], record['district'],
-                record['hamlet'], record['street'], record['house'], record['apartment'], record['entrance'],
-                record['phone_number'], record['personal_account'], record['task_date'], record['date_end'],
-                record['remark'], record['task_status'], record['purpose'], record['registered_residing'],
-                record['standards'], record['area'], record['saldo'], record['type_address']
-            )
-
-    meter_task_data = api.get_meter_task(login, password, id_user)
-    if meter_task_data:
-        for record in meter_task_data:
-            scr.BD.bd_users.local.insert_bd.insert_bd_meter_task(
-                record['id'], record['task_id'], record['meter_id'], record['meter_remark']
-            )
-
-    meter_data = api.get_meters(login, password, id_user)
-    if meter_data:
-        for record in meter_data:
-            scr.BD.bd_users.local.insert_bd.insert_bd_meters(
-                record['meter_number'], record['installation_date'], record['type_service'], record['marka_id'],
-                record['marka_name'], record['seal_number'], record['date_next_verification'],
-                record['location'], record['antimagnetic_protection'],  record['average_consumption']
-            )
-
-    meter_reading_data = api.get_latest_readings(login, password, id_user)
-    if meter_reading_data:
-        for record in meter_reading_data:
-            scr.BD.bd_users.local.insert_bd.insert_bd_meter_reading(
-                record['id'], record['meter_id'], record['reading_date'], record['reading_value']
-            )
-
-
 def select_task_data_for_update():
     res = scr.BD.bd_users.local.select_bd.select_user_data()
     if res:
@@ -93,6 +52,8 @@ def select_task_data_for_update():
             scr.BD.bd_users.local.update_bd.update_meter_reading_data_from_server(
                 record['id'], record['meter_id'], record['reading_date'], record['reading_value']
             )
+    task_ids = scr.BD.bd_users.local.select_bd.select_task_ids()
+    api.change_flag_notification(login, password, task_ids)
 
 
 def upload_task_data(login: str, password: str, task_updates: List[Dict[str, Any]]) -> bool:

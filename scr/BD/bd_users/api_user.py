@@ -33,6 +33,11 @@ async def stop_websocket(login: str, password: str):
     await api_client.stop_websocket()
 
 
+def change_flag_notification(login: str, password: str, task_ids: List[int]):
+    api_client = create_api_client(login, password)
+    api_client.change_flag_notification(task_ids)
+
+
 def get_meter_task(login: str, password: str, user_id: int) -> Optional[List[Dict[str, Any]]]:
     api_client = create_api_client(login, password)
     try:
@@ -66,47 +71,6 @@ def get_task(login: str, password: str, user_id: int) -> Optional[List[Dict[str,
         return api_client.get_task_data_new(user_id)
     except Exception as e:
         print(f"Ошибка при получении задач: {e}")
-        return None
-
-
-def update_dop_data(login: str, password: str, address_id: int, registered: int, area: float,
-                    standarts: float, task_id: int, task_remark: str) -> Optional[Dict[str, Any]]:
-    api_client = create_api_client(login, password)
-    try:
-        return api_client.update_address_task_data(
-            address_id, registered, area, standarts, task_id, task_remark
-        )
-    except Exception as e:
-        print(f"Ошибка при обновлении дополнительных данных: {e}")
-        return None
-
-
-def update_meter_reading(login: str, password: str, task_id: int, unloading_date: str,
-                         to_server: str, task_remark: str, status: str, meter_id: str,
-                         last_reading_date: str, last_reading_value: int, meter_remark: str) -> Optional[
-    Dict[str, Any]]:
-    api_client = create_api_client(login, password)
-    try:
-        return api_client.update_task_meter_data(
-            task_id, unloading_date, to_server, task_remark, status,
-            meter_id, last_reading_date, last_reading_value, meter_remark
-        )
-    except Exception as e:
-        print(f"Ошибка при обновлении показаний счетчика: {e}")
-        return None
-
-
-def update_meter_seal(login: str, password: str, task_id: int, unloading_date: str,
-                      to_server: str, task_remark: str, status: str, meter_id: str,
-                      seal_id: str, date_installation: str, meter_remark: str) -> Optional[Dict[str, Any]]:
-    api_client = create_api_client(login, password)
-    try:
-        return api_client.update_task_meter_seal(
-            task_id, unloading_date, to_server, task_remark, status,
-            meter_id, seal_id, date_installation, meter_remark
-        )
-    except Exception as e:
-        print(f"Ошибка при обновлении пломбы счетчика: {e}")
         return None
 
 
