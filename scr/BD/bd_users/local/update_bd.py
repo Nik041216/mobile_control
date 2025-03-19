@@ -58,22 +58,6 @@ def update_local_tasks(unloading_time, task_id, reading_value, remark, meter_id)
         db.commit()
 
 
-def update_dop_data_address(remark, registered_residing, standarts, area, address_id, task_id):
-    with sl.connect('database_client.db') as db:
-        cursor = db.cursor()
-        query = f""" update tasks set 
-            remark_task = '{remark}'
-            where id = {task_id} """
-        cursor.execute(query)
-        query1 = f""" update address set  
-            registered_residing = '{registered_residing}',
-            standarts = {standarts},
-            area = {area}
-            where id = {address_id} """
-        cursor.execute(query1)
-        db.commit()
-
-
 def update_remark_task(remark, task_id):
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
@@ -119,7 +103,6 @@ def update_tasks_data_from_server(task_id, name, address_id, city, district, ham
             date = excluded.date,
             date_end = excluded.date_end,
             remark_task = excluded.remark_task,
-            status = excluded.status,
             purpose = excluded.purpose,
             saldo = excluded.saldo
         """
