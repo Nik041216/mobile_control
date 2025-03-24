@@ -4,33 +4,30 @@ import scr.BD.bd_users.bd_server_user as bd_server_user
 import scr.constants as const
 import scr.BD.bd_users.bd_server_user
 from scr.components.search_field import SearchField
-from scr.func import create_filter_button
+import scr.func
 import scr.navigation_apps.users.doing_work.alert_check_data as check_alert
 
 statuses = ['не выполнен', 'выполнен', 'в исполнении', 'просрочен']
+status_icons = {
+    'не выполнен': (ft.icons.HOURGLASS_EMPTY, ft.colors.BLUE),
+    'в исполнении': (ft.icons.BUILD_OUTLINED, '#ffc107'),
+    'выполнен': (ft.icons.CHECK_CIRCLE_OUTLINE, ft.colors.GREEN),
+    'просрочен': (ft.icons.ERROR_OUTLINE, ft.colors.RED),
+}
 sorting = "Адрес"
 menu_visible = False
 column = ft.Column(scroll=ft.ScrollMode.AUTO, expand=True)
 
 
 def get_appbar(page):
-    checkboxes = []
-    global column
+    checkboxes = {}
 
     def reset_filters(e):
         global statuses
-        statuses = ['не выполнен', 'выполнен', 'в исполнении', 'просрочен']
-        for checkbox in checkboxes:
-            checkbox.value = True
+        statuses = list(status_icons.keys())  # Восстанавливаем все статусы
+        update_checkboxes()
         get_content(page)
         page.update()
-
-    def create_checkbox_with_icon(label, icon, status_text, color):
-        checkbox = ft.Checkbox(label=label,
-                               on_change=lambda e: filtration_check(e, status_text), value=True)
-        row = ft.Row([ft.Icon(icon, size=25, color=color), checkbox], alignment=ft.MainAxisAlignment.START)
-        checkboxes.append(checkbox)
-        return row
 
     def filtration_check(e, text):
         global statuses
@@ -40,9 +37,26 @@ def get_appbar(page):
         else:
             if text in statuses:
                 statuses.remove(text)
-
         update_results(statuses, page, search_value="")
         page.update()
+
+    def update_checkboxes():
+        """Обновляет состояние чекбоксов в зависимости от массива `statuses`."""
+        for text, checkbox in checkboxes.items():
+            checkbox.value = text in statuses  # Устанавливаем значение из массива статусов
+        page.update()
+
+    def create_checkboxes():
+        """Создаёт чекбоксы, привязывая их к массиву `statuses`."""
+        rows = []
+        for status, (icon, color) in status_icons.items():
+            checkbox = ft.Checkbox(label=status.capitalize(),
+                                   value=status in statuses,
+                                   on_change=lambda e, s=status: filtration_check(e, s))
+            checkboxes[status] = checkbox
+            rows.append(ft.Row([ft.Icon(icon, size=25, color=color), checkbox],
+                               alignment=ft.MainAxisAlignment.START))
+        return rows
 
     def toggle_drawer(page):
         global menu_visible
@@ -74,43 +88,27 @@ def get_appbar(page):
         animate=ft.animation.Animation(400, ft.AnimationCurve.DECELERATE),
         content=ft.Column([
             ft.Text("Фильтры", size=20, weight=ft.FontWeight.BOLD),
-            create_checkbox_with_icon("Не выполненные", ft.icons.HOURGLASS_EMPTY, 'не выполнен',
-                                      color=ft.colors.BLUE),
-            create_checkbox_with_icon("В работе", ft.icons.BUILD_OUTLINED, 'в исполнении',
-                                      color='#ffc107'),
-            create_checkbox_with_icon("Выполненные", ft.icons.CHECK_CIRCLE_OUTLINE, 'выполнен',
-                                      color=ft.colors.GREEN),
-            create_checkbox_with_icon("Просроченные", ft.icons.ERROR_OUTLINE, 'просрочен',
-                                      color=ft.colors.RED),
+            *create_checkboxes(),
             ft.Container(expand=True),
-
             ft.Row([ft.ElevatedButton("Сбросить фильтры",
                                       on_click=reset_filters,
                                       bgcolor=ft.colors.RED_400,
                                       icon=ft.icons.FILTER_ALT_OFF,
-                                      color=ft.colors.WHITE),
-                    ],
-                   alignment=ft.MainAxisAlignment.CENTER
-                   ),
-            ft.Row(
-                [ft.ElevatedButton(
-                    text="Отгрузить все данные",
-                    on_click=on_click_upload,
-                    icon="BACKUP_ROUNDED",
-                    bgcolor=ft.colors.BLUE_400,
-                    color=ft.colors.WHITE
-                )],
-                alignment=ft.MainAxisAlignment.CENTER
-            )
+                                      color=ft.colors.WHITE)]),
+            ft.Row([ft.ElevatedButton("Отгрузить все данные",
+                                      on_click=on_click_upload,
+                                      icon="BACKUP_ROUNDED",
+                                      bgcolor=ft.colors.BLUE_400,
+                                      color=ft.colors.WHITE)]),
         ], expand=True),
     )
 
     def on_click_update(page):
         global statuses
         if scr.func.check_internet():
-            statuses.clear()
-            statuses = ['не выполнен', 'выполнен', 'в исполнении', 'просрочен']
+            statuses = list(status_icons.keys())  # Восстанавливаем все статусы
             scr.BD.bd_users.bd_server_user.select_task_data_for_update()
+            update_checkboxes()
             get_content(page)
         else:
             scr.func.show_alert_yn(page, "Нет доступа к сети, проверьте интернет соединение")

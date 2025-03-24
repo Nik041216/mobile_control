@@ -145,7 +145,6 @@ def show_meters_data(page, id_task, where, container_chose_meters):
             spacing=0
         )
 
-        # Используем замыкание для передачи правильного apartment
         def create_on_click(id_task, id_meters):
             def on_click(e):
                 if purpose == "Контрольный съем с ИПУ" or purpose == "Замена/Поверка ИПУ":

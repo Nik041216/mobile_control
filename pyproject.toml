@@ -1,0 +1,34 @@
+[project]
+name = "Mobile Control"
+version = "0.12.1"
+description = "Мобильное приложения для выполнения заданий контроллеров водоснабжения предриятия МП Трест Водоканал МО г.Магнитогорск"
+authors = [
+    { name = "Бобровников Никита Дмитриевич", email = "diobrando1234567890987654321@gmail.com" }
+]
+readme = "README.md"
+requires-python = "^3.10"
+dependencies = [
+    "flet==0.27.6",
+    "requests==2.32.3",
+    "python-dotenv==1.0.1",
+    "websockets==13.0.1"
+]
+
+[project.scripts]
+mobile_control = "main:main"
+
+[tool.setuptools.package-data]
+mobile_control = [
+    "assets/*",
+    "storage/data/*",
+    "storage/temp/*"
+]
+
+[tool.setuptools.data-files]
+assets = [
+    "assets/icon.png",
+    "assets/splash_android.png"
+]
+
+[tool.flet]
+app_name = "Мобильный Контролёр"
