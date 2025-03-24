@@ -56,7 +56,7 @@ def create_filter_button(icon, color, status, on_click):
 def check_internet():
     try:
         # Проверяем доступность DNS-сервера Google
-        socket.create_connection(("8.8.8.8", 53), timeout=5)
+        socket.create_connection(("8.8.8.8", 53), timeout=2)
         return True
     except OSError:
         return False

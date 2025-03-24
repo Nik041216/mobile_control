@@ -23,7 +23,7 @@ async def handle_user_sessions(page):
                 if login != "" and password != "":
                     scr.navigation_apps.navigations.create_route(page)
                     scr.navigation_apps.navigations.role_definition(privileges, page)
-                    await scr.BD.bd_users.api_user.start_websocket(login, password, record[0])
+                    await scr.API.api_user.start_websocket(login, password, record[0])
                     scr.func.show_snack_bar(page, "Успешный вход в систему.")
                     scr.BD.bd_users.local.update_bd.update_status_task()
                 else:
