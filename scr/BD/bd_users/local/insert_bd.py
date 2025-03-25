@@ -2,6 +2,8 @@ import os
 import sqlite3 as sl
 import scr.navigation_apps.navigations
 import datetime
+import scr.BD.bd_users.local.update_bd
+import scr.BD.bd_users.bd_server_user
 
 
 def insert_bd_user(id_user, login, password, privileges, first_name, last_name, page):
@@ -22,6 +24,7 @@ def insert_photo(name_file, value, task_id, meter_id):
                    VALUES (?, ?, ?, ?)"""
         cursor.execute(query, (name_file, value, task_id, meter_id))
         db.commit()
+        scr.BD.bd_users.local.update_bd.update_upload_status_false(task_id)
 
 
 def insert_photo_temp(name_file, value, task_id, meter_id):
@@ -63,7 +66,8 @@ def insert_new_meters(id_task, meter_id, meter_marka, meter_reading, meter_prote
 
         query = f""" update tasks set 
                                    unloading_time = '{str(today)}',  
-                                   status = 'в исполнении'
+                                   status = 'в исполнении',
+                                   unloaded = false
                                    where id = {id_task}"""
         cursor.execute(query)
         db.commit()
@@ -104,6 +108,7 @@ def insert_new_meters(id_task, meter_id, meter_marka, meter_reading, meter_prote
         delete_photo = f""" DROP TABLE picture_temp """
         cursor.execute(delete_photo)
         db.commit()
+        scr.BD.bd_users.bd_server_user.unload_task(id_task)
 
 
 def insert_acts(id_task, string):

@@ -60,7 +60,7 @@ def upload_task_data(login: str, password: str, task_updates: List[Dict[str, Any
     """Отправка данных по задачам"""
     try:
         if task_updates:
-            print(f"Отправка данных адресов: {json.dumps(task_updates, indent=2, ensure_ascii=False)}")
+            print(f"Отправка данных заданий: {json.dumps(task_updates, indent=2, ensure_ascii=False)}")
             result = api.batch_update_tasks(login, password, task_updates)
             return bool(result)
         return True
@@ -162,3 +162,53 @@ def upload_data_to_server(page):
     except Exception as ex:
         print(f"Ошибка при выгрузке данных: {ex}")
         scr.func.show_snack_bar(page, f"Ошибка при выгрузке данных: {str(ex)}")
+
+
+def unload_task(id_task):
+    try:
+        # Получаем данные пользователя
+        res = scr.BD.bd_users.local.select_bd.select_user_data()
+        if not res:
+            raise ValueError("Данные пользователя не найдены")
+
+        user_id, login, password, privileges, first_name, last_name = res[0]
+        time_to_server = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        # Получаем данные для выгрузки задач (может быть пустым)
+        task_updates = []
+        try:
+            result = scr.BD.bd_users.local.select_bd.get_one_task_for_upload(id_task)
+            if result:
+                for record in result:
+                    task_id, unloading_time, last_reading_value, last_reading_date, task_remark, \
+                        status, meter_id, meter_remark, purpose, seal_number, meter_marka, \
+                        antimagnetic_protection, type_water, id_address = record
+
+                    if antimagnetic_protection == 1:
+                        antimagnetic_protection = True
+                    else:
+                        antimagnetic_protection = False
+
+                    update_data = {
+                        "task_id": task_id,
+                        "unloading_time": unloading_time,
+                        "time_to_server": time_to_server,
+                        "remark": task_remark or "",
+                        "status": status,
+                        "meter_id": meter_id,
+                        "purpose": purpose,
+                        "last_reading_date": last_reading_date or "",
+                        "last_reading_value": last_reading_value or "",
+                        "meter_remark": meter_remark or "",
+                        "seal_number": seal_number,
+                        "meter_marka": meter_marka,
+                        "antimagnetic_protection": antimagnetic_protection,
+                        "type_water": type_water,
+                        "id_address": id_address
+                    }
+                    task_updates.append(update_data)
+        except Exception as ex:
+            print(f"Ошибка при получении данных задач: {ex}")
+        tasks_success = upload_task_data(login, password, task_updates)
+    except Exception as ex:
+        print(f"Ошибка при выгрузке данных: {ex}")

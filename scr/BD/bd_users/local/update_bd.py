@@ -1,5 +1,6 @@
 import sqlite3 as sl
 import datetime
+import scr.BD.bd_users.bd_server_user
 
 
 def update_local_tasks(unloading_time, task_id, reading_value, remark, meter_id):
@@ -23,7 +24,8 @@ def update_local_tasks(unloading_time, task_id, reading_value, remark, meter_id)
 
         query = f""" update tasks set 
                    unloading_time = '{unloading_time}',  
-                   status = 'в исполнении'
+                   status = 'в исполнении',
+                   unloaded = false
                    where id = {task_id}"""
         cursor.execute(query)
         db.commit()
@@ -56,16 +58,19 @@ def update_local_tasks(unloading_time, task_id, reading_value, remark, meter_id)
                     ); """
         cursor.execute(query)
         db.commit()
+        scr.BD.bd_users.bd_server_user.unload_task(task_id)
 
 
 def update_remark_task(remark, task_id):
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
         query = f""" update tasks set 
-            remark_task = '{remark}'
+            remark_task = '{remark}',
+            unloaded = false
             where id = {task_id} """
         cursor.execute(query)
         db.commit()
+        scr.BD.bd_users.bd_server_user.unload_task(task_id)
 
 
 def update_tasks_data_from_server(task_id, name, address_id, city, district, hamlet, street, dom, apartment,
@@ -218,7 +223,8 @@ def update_seal(seal_number, meter_id, task_id, remark, meter_reading, seal_type
 
         query = f""" update tasks set 
                            unloading_time = '{str(today)}',  
-                           status = 'в исполнении'
+                           status = 'в исполнении',
+                           unloaded = false
                            where id = {task_id}"""
         cursor.execute(query)
         db.commit()
@@ -252,6 +258,7 @@ def update_seal(seal_number, meter_id, task_id, remark, meter_reading, seal_type
                   """
         cursor.execute(query)
         db.commit()
+        scr.BD.bd_users.bd_server_user.unload_task(task_id)
 
 
 def update_date(id_task, date):
@@ -300,4 +307,23 @@ def update_status_task():
         cursor.execute(query)
         db.commit()
 
+
+def update_upload_status_false(id_task):
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" update tasks set
+                            uploaded = false
+                            where id = {id_task}"""
+        cursor.execute(query)
+        db.commit()
+
+
+def update_upload_status_true(id_task):
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" update tasks set
+                            uploaded = true
+                            where id = {id_task}"""
+        cursor.execute(query)
+        db.commit()
 

@@ -120,6 +120,24 @@ def get_data_to_upload():
         return result
 
 
+def get_one_task_for_upload(id_task):
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" 
+        SELECT 
+            t.id, t.unloading_time, mr.new_reading_value, mr.new_reading_date, t.remark_task, t.status, mt.meter_id, 
+            mt.remark_meter, t.purpose, m.seal_number, m.marka_name, m.antimagnetic_protection,
+            m.type_service, t.id_address
+        FROM tasks AS t
+        JOIN meter_task AS mt ON mt.task_id = t.id
+        JOIN meters AS m ON mt.meter_id = m.meter_number
+        left JOIN meter_reading AS mr ON mr.meter_id = mt.meter_id
+        where t.id = {id_task}"""
+        cursor.execute(query)
+        result = cursor.fetchall()
+        return result
+
+
 def select_photo_data(meter_id, task_id):
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
