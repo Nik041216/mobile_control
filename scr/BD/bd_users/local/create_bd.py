@@ -14,7 +14,7 @@ def local_user_db():
 
         table_task = """ Create table if not exists tasks(id Integer, id_address integer, phone_number Text, 
                 personal_account Text, fio Text, date Text, date_end text, remark_task Text, status Text, 
-                unloading_time Text, purpose Text, saldo Text, unloaded bool DEFAULT false,
+                unloading_time Text, purpose Text, saldo Text, unloaded bool,
                 CONSTRAINT task_pk PRIMARY KEY (id)) """
 
         table_meters = """ Create table if not exists meters(
