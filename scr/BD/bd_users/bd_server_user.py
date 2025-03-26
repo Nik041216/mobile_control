@@ -165,6 +165,7 @@ def upload_data_to_server(page):
 
 
 def unload_task(id_task):
+    print(id_task)
     try:
         # Получаем данные пользователя
         res = scr.BD.bd_users.local.select_bd.select_user_data()
@@ -177,7 +178,7 @@ def unload_task(id_task):
         # Получаем данные для выгрузки задач (может быть пустым)
         task_updates = []
         try:
-            result = scr.BD.bd_users.local.select_bd.get_one_task_for_upload(id_task)
+            result = scr.BD.bd_users.local.select_bd.get_task_for_upload(id_task if isinstance(id_task, list) else [id_task])
             if result:
                 for record in result:
                     task_id, unloading_time, last_reading_value, last_reading_date, task_remark, \
@@ -210,5 +211,7 @@ def unload_task(id_task):
         except Exception as ex:
             print(f"Ошибка при получении данных задач: {ex}")
         tasks_success = upload_task_data(login, password, task_updates)
+        if tasks_success:
+            scr.BD.bd_users.local.update_bd.update_upload_status_true(id_task if isinstance(id_task, list) else [id_task])
     except Exception as ex:
         print(f"Ошибка при выгрузке данных: {ex}")

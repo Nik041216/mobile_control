@@ -120,7 +120,8 @@ def get_data_to_upload():
         return result
 
 
-def get_one_task_for_upload(id_task):
+def get_task_for_upload(id_task):
+    id_task = [int(i) for i in id_task]
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
         query = f""" 
@@ -132,8 +133,8 @@ def get_one_task_for_upload(id_task):
         JOIN meter_task AS mt ON mt.task_id = t.id
         JOIN meters AS m ON mt.meter_id = m.meter_number
         left JOIN meter_reading AS mr ON mr.meter_id = mt.meter_id
-        where t.id = {id_task}"""
-        cursor.execute(query)
+        where t.id in ({','.join(['?'] * len(id_task))})"""
+        cursor.execute(query, id_task)
         result = cursor.fetchall()
         return result
 
@@ -165,3 +166,12 @@ def get_dop_data_to_upload():
         result = cursor.fetchall()
         return result
 
+
+def select_task_id():
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" Select id from tasks where unloaded = 0 """
+        cursor.execute(query)
+        result = cursor.fetchall()
+        task_ids = [item[0] for item in result]
+        return task_ids

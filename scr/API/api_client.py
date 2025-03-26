@@ -5,6 +5,7 @@ import asyncio
 import platform
 from typing import List, Dict, Any
 import scr.BD.bd_users.bd_server_user as bd_update
+import scr.BD.bd_users.local.select_bd as select
 
 
 class WaterUtilityAPIClient:
@@ -28,7 +29,9 @@ class WaterUtilityAPIClient:
                 async with websockets.connect(ws_url) as websocket:
                     self.websocket = websocket  # Сохраняем соединение
                     print(f"✅ Подключено к WebSocket для сотрудника {employee_id}")
-
+                    result = select.select_task_id()
+                    if result:
+                        bd_update.unload_task(result)
                     while self.running:
                         message = await websocket.recv()
                         data = json.loads(message)

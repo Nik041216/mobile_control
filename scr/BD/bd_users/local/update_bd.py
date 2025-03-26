@@ -1,6 +1,7 @@
 import sqlite3 as sl
 import datetime
 import scr.BD.bd_users.bd_server_user
+import scr.func
 
 
 def update_local_tasks(unloading_time, task_id, reading_value, remark, meter_id):
@@ -58,7 +59,8 @@ def update_local_tasks(unloading_time, task_id, reading_value, remark, meter_id)
                     ); """
         cursor.execute(query)
         db.commit()
-        scr.BD.bd_users.bd_server_user.unload_task(task_id)
+        if scr.func.check_internet():
+            scr.BD.bd_users.bd_server_user.unload_task(task_id if isinstance(task_id, list) else [task_id])
 
 
 def update_remark_task(remark, task_id):
@@ -70,7 +72,8 @@ def update_remark_task(remark, task_id):
             where id = {task_id} """
         cursor.execute(query)
         db.commit()
-        scr.BD.bd_users.bd_server_user.unload_task(task_id)
+        if scr.func.check_internet():
+            scr.BD.bd_users.bd_server_user.unload_task(task_id if isinstance(task_id, list) else [task_id])
 
 
 def update_tasks_data_from_server(task_id, name, address_id, city, district, hamlet, street, dom, apartment,
@@ -258,7 +261,8 @@ def update_seal(seal_number, meter_id, task_id, remark, meter_reading, seal_type
                   """
         cursor.execute(query)
         db.commit()
-        scr.BD.bd_users.bd_server_user.unload_task(task_id)
+        if scr.func.check_internet():
+            scr.BD.bd_users.bd_server_user.unload_task(task_id if isinstance(task_id, list) else [task_id])
 
 
 def update_date(id_task, date):
@@ -319,11 +323,12 @@ def update_upload_status_false(id_task):
 
 
 def update_upload_status_true(id_task):
+    id_task = [int(i) for i in id_task]
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
         query = f""" update tasks set
-                            uploaded = true
-                            where id = {id_task}"""
-        cursor.execute(query)
+                            unloaded = true
+                            where id in ({','.join(['?'] * len(id_task))})"""
+        cursor.execute(query, id_task)
         db.commit()
 
