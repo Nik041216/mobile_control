@@ -19,7 +19,7 @@ menu_visible = False
 column = ft.Column(scroll=ft.ScrollMode.AUTO, expand=True)
 
 
-def get_appbar(page, content):
+def get_appbar(page):
     checkboxes = {}
 
     def reset_filters(e):
@@ -105,7 +105,9 @@ def get_appbar(page, content):
 
     def on_click_update(page):
         global statuses
-        user_main(page, content)
+        statuses = list(status_icons.keys())  # Восстанавливаем все статусы
+        update_checkboxes()
+        get_content(page)
         page.update()
 
     page.overlay.append(overlay_container)

@@ -50,12 +50,11 @@ def create_route(page):
         page.views.clear()
 
         # Основные маршруты
-        content = main_users_screen.get_content(page)
         page.views.append(
             ft.View(
                 route="/",
-                controls=[content],
-                appbar=main_users_screen.get_appbar(page, content),
+                controls=[main_users_screen.get_content(page)],
+                appbar=main_users_screen.get_appbar(page),
                 navigation_bar=get_navigation_bar(0),
                 bgcolor=ft.Colors.BLUE_50
             )
