@@ -165,7 +165,6 @@ def upload_data_to_server(page):
 
 
 def unload_task(id_task):
-    print(id_task)
     try:
         # Получаем данные пользователя
         res = scr.BD.bd_users.local.select_bd.select_user_data()

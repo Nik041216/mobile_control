@@ -68,7 +68,8 @@ def get_appbar(page, id_task, where, container1):
         center_title=True,
         toolbar_height=50,
         bgcolor=ft.colors.BLUE_100,
-        actions=[ft.IconButton(icon=ft.Icons.DESCRIPTION_OUTLINED, on_click=lambda e: page.open(show_details_alert))]
+        actions=[ft.IconButton(icon=ft.Icons.DESCRIPTION_OUTLINED, on_click=lambda e: page.open(show_details_alert),
+                               tooltip="Полная информация об адресе")]
     )
 
 
@@ -84,7 +85,8 @@ def get_floating_action_button(page, id_task, where, container1):
     for result in filtered_results:
         _, _, _, _, _, _, _, _, _, _, _, _, purpose, *_ = result
     if purpose == "Замена/Поверка ИПУ":
-        floating_action_button = ft.FloatingActionButton(icon=ft.icons.ADD, on_click=onclick_floating_button)
+        floating_action_button = ft.FloatingActionButton(icon=ft.icons.ADD, on_click=onclick_floating_button,
+                                                         tooltip="Добавление нового счетчика")
     else:
         floating_action_button = None
     return floating_action_button

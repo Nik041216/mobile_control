@@ -19,7 +19,7 @@ menu_visible = False
 column = ft.Column(scroll=ft.ScrollMode.AUTO, expand=True)
 
 
-def get_appbar(page):
+def get_appbar(page, content):
     checkboxes = {}
 
     def reset_filters(e):
@@ -105,13 +105,7 @@ def get_appbar(page):
 
     def on_click_update(page):
         global statuses
-        if scr.func.check_internet():
-            statuses = list(status_icons.keys())  # Восстанавливаем все статусы
-            scr.BD.bd_users.bd_server_user.select_task_data_for_update()
-            update_checkboxes()
-            get_content(page)
-        else:
-            scr.func.show_alert_yn(page, "Нет доступа к сети, проверьте интернет соединение")
+        user_main(page, content)
         page.update()
 
     page.overlay.append(overlay_container)
@@ -121,9 +115,10 @@ def get_appbar(page):
         title=ft.Text("Задачи"),
         center_title=True,
         toolbar_height=50,
-        leading=ft.IconButton(icon=ft.icons.MENU, on_click=lambda _: toggle_drawer(page)),
+        leading=ft.IconButton(icon=ft.icons.MENU, on_click=lambda _: toggle_drawer(page), tooltip="Меню фильтров"),
         bgcolor=ft.colors.BLUE_100,
-        actions=[ft.IconButton(icon=ft.icons.AUTORENEW, on_click=lambda _: on_click_update(page))]
+        actions=[ft.IconButton(icon=ft.icons.AUTORENEW, on_click=lambda _: on_click_update(page),
+                               tooltip="Обновить список заданий")]
     )
 
 
