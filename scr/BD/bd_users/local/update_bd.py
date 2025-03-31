@@ -316,8 +316,18 @@ def update_upload_status_false(id_task):
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
         query = f""" update tasks set
-                            uploaded = false
+                            unloaded = false
                             where id = {id_task}"""
+        cursor.execute(query)
+        db.commit()
+
+
+def update_server_id_photo(id_photo, server_id):
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" UPDATE picture 
+                SET server_id = {server_id} 
+                WHERE id = {id_photo} """
         cursor.execute(query)
         db.commit()
 

@@ -83,6 +83,24 @@ def batch_update_tasks(login: str, password: str, task_updates: List[Dict[str, A
         return None
 
 
+def batch_photo(login: str, password: str, photo_update: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+    api_client = create_api_client(login, password)
+    try:
+        return api_client.batch_photo(photo_update)
+    except Exception as e:
+        print(f"Ошибка при пакетной отгрузке фотографий: {e}")
+        return None
+
+
+def delete_photo(login: str, password: str, photo_delete: List[int]):
+    api_client = create_api_client(login, password)
+    try:
+        return api_client.delete_photo(photo_delete)
+    except Exception as e:
+        print(f"Ошибка при пакетной отгрузке фотографий: {e}")
+        return None
+
+
 def batch_update_address(login: str, password: str, address_updates: List[Dict[str, Any]]) -> Optional[Dict[str, Any]]:
     api_client = create_api_client(login, password)
     try:

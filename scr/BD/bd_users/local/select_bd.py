@@ -175,3 +175,34 @@ def select_task_id():
         result = cursor.fetchall()
         task_ids = [item[0] for item in result]
         return task_ids
+
+
+def select_photo_id():
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" Select id from picture where server_id is Null """
+        cursor.execute(query)
+        result = cursor.fetchall()
+        photo_ids = [item[0] for item in result]
+        return photo_ids
+
+
+def select_deleted_photo_id():
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" Select server_id from delete_picture"""
+        cursor.execute(query)
+        result = cursor.fetchall()
+        photo_ids = [item[0] for item in result]
+        return photo_ids
+
+
+def select_photo_to_unload(id_photo):
+    print(id_photo)
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" Select id, value, name_file, task_id, meter_id from picture where server_id is Null
+                   and id in ({','.join(['?'] * len(id_photo))}) """
+        cursor.execute(query, id_photo)
+        result = cursor.fetchall()
+        return result

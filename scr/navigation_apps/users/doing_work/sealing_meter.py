@@ -224,7 +224,9 @@ def sealing(page, id_task, meter_id, where, container1):
             file_data = file.read()
 
         file_name = os.path.basename(file_path)
-        scr.BD.bd_users.local.insert_bd.insert_photo(file_name, file_data, id_task, meter_id)
+        photo_id = scr.BD.bd_users.local.insert_bd.insert_photo(file_name, file_data, id_task, meter_id)
+        if scr.func.check_internet():
+            scr.BD.bd_users.bd_server_user.unload_photo(photo_id if isinstance(photo_id, list) else [photo_id])
 
     def pick_files_result(e: ft.FilePickerResultEvent):
         if e.files:
@@ -237,7 +239,13 @@ def sealing(page, id_task, meter_id, where, container1):
     selected_images = {}
     save_photos = ft.Row(scroll=ft.ScrollMode.AUTO, expand=True, )
 
-    def on_click_delete_photo(e, id_p, meter_id, id_task):
+    def on_click_delete_photo(e, id_p, meter_id, id_task, server_id):
+        if scr.func.check_internet():
+            scr.BD.bd_users.bd_server_user.delete_photo([server_id])
+        try:
+            scr.BD.bd_users.local.insert_bd.insert_deleted_photo(server_id)
+        except:
+            pass
         scr.BD.bd_users.local.delete_bd.delete_photo_db(id_p)
         if id_p in selected_images:
             del selected_images[id_p]
@@ -249,7 +257,7 @@ def sealing(page, id_task, meter_id, where, container1):
         if images:
             selected_images.clear()
             for result in images:
-                id_photo, value_photo, file_name1, task_id, meter_id = result
+                id_photo, value_photo, file_name1, task_id, meter_id, server_id = result
                 selected_images[id_photo] = value_photo  # Добавляем фото в словарь
         save_photos.controls.clear()
         if selected_images:
@@ -261,7 +269,8 @@ def sealing(page, id_task, meter_id, where, container1):
                             content=ft.IconButton(
                                 icon=ft.Icons.DELETE,
                                 icon_color=ft.Colors.RED,
-                                on_click=lambda e, id_p=id_page: on_click_delete_photo(e, id_p, meter_id, id_task),
+                                on_click=lambda e, id_p=id_page: on_click_delete_photo(e, id_p, meter_id, id_task,
+                                                                                       server_id),
                             ),
                             image=ft.DecorationImage(src_base64=image_base64),
                             width=100,

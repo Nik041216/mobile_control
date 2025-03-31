@@ -32,6 +32,14 @@ class WaterUtilityAPIClient:
                     result = select.select_task_id()
                     if result:
                         bd_update.unload_task(result)
+                    result_new_photo = select.select_photo_id()
+                    if result_new_photo:
+                        bd_update.unload_photo(result_new_photo)
+                        print("Отгрузка фото")
+                    result_deleted_photo = select.select_deleted_photo_id()
+                    if result_deleted_photo:
+                        bd_update.delete_photo(result_deleted_photo)
+                        print("Удаление фото")
                     while self.running:
                         message = await websocket.recv()
                         data = json.loads(message)
@@ -88,6 +96,8 @@ class WaterUtilityAPIClient:
                 response = self.session.get(url, params=params)
             elif method == "POST":
                 response = self.session.post(url, json=data, params=params)
+            elif method == "DELETE":
+                response = self.session.delete(url, params=params, json=data)
             else:
                 raise ValueError(f"Unsupported HTTP method: {method}")
 
@@ -131,6 +141,13 @@ class WaterUtilityAPIClient:
     def batch_update_tasks(self, task_updates: List[Dict[str, Any]]) -> Dict[str, Any]:
         data = {"tasks": task_updates}
         return self._make_request("POST", "batch_update_tasks", data=data)
+
+    def batch_photo(self, photo_update: List[Dict[str, Any]]) -> Dict[str, Any]:
+        data = {"photos": photo_update}
+        return self._make_request("POST", "batch_photo", data=data)
+
+    def delete_photo(self, photo_del:List[int]):
+        return self._make_request("DELETE", "delete_photo", data=photo_del)
 
     def batch_update_address(self, address_updates: List[Dict[str, Any]]) -> Dict[str, Any]:
         data = {"tasks": address_updates}  # Изменено здесь

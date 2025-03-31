@@ -1,5 +1,5 @@
 import json
-
+import base64
 import datetime
 from typing import List, Dict, Any
 
@@ -66,6 +66,19 @@ def upload_task_data(login: str, password: str, task_updates: List[Dict[str, Any
         return True
     except Exception as ex:
         print(f"Ошибка при отправке данных задач: {ex}")
+        return False
+
+
+def upload_photo(login: str, password: str, photo_update: List[Dict[str, Any]]):
+    """Отправка данных по задачам"""
+    try:
+        if photo_update:
+            print(f"Отправка данных фотографий: {json.dumps(photo_update, indent=2, ensure_ascii=False)}")
+            result = api.batch_photo(login, password, photo_update)
+            return result
+        return True
+    except Exception as ex:
+        print(f"Ошибка при отправке данных фотографий: {ex}")
         return False
 
 
@@ -212,5 +225,53 @@ def unload_task(id_task):
         tasks_success = upload_task_data(login, password, task_updates)
         if tasks_success:
             scr.BD.bd_users.local.update_bd.update_upload_status_true(id_task if isinstance(id_task, list) else [id_task])
+    except Exception as ex:
+        print(f"Ошибка при выгрузке данных: {ex}")
+
+
+def unload_photo(id_photo):
+    try:
+        # Получаем данные пользователя
+        res = scr.BD.bd_users.local.select_bd.select_user_data()
+        if not res:
+            raise ValueError("Данные пользователя не найдены")
+
+        user_id, login, password, privileges, first_name, last_name = res[0]
+        photo_update = []
+        try:
+            result = scr.BD.bd_users.local.select_bd.select_photo_to_unload(id_photo if isinstance(id_photo, list) else [id_photo])
+            if result:
+                for record in result:
+                    photo_id, value, name_file, task_id, meter_id = record
+                    value_base64 = base64.b64encode(value).decode('utf-8') if value else None
+                    update_data = {
+                        "id_photo": photo_id,
+                        "value": value_base64,
+                        "name": name_file,
+                        "task_id": task_id,
+                        "meter_id": meter_id
+                    }
+                    photo_update.append(update_data)
+        except Exception as ex:
+            print(f"Ошибка при получении данных фотографий : {ex}")
+        photo_success = upload_photo(login, password, photo_update)
+        if photo_success:
+            photo_updates = photo_success["data"]
+            for update in photo_updates:
+                for local_id, server_id in update.items():
+                    scr.BD.bd_users.local.update_bd.update_server_id_photo(local_id, server_id)
+    except Exception as ex:
+        print(f"Ошибка при выгрузке данных: {ex}")
+
+
+def delete_photo(photo_ids):
+    try:
+        # Получаем данные пользователя
+        res = scr.BD.bd_users.local.select_bd.select_user_data()
+        if not res:
+            raise ValueError("Данные пользователя не найдены")
+
+        user_id, login, password, privileges, first_name, last_name = res[0]
+        photo_success = api.delete_photo(login, password, photo_ids)
     except Exception as ex:
         print(f"Ошибка при выгрузке данных: {ex}")

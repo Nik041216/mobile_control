@@ -25,7 +25,7 @@ def insert_photo(name_file, value, task_id, meter_id):
                    VALUES (?, ?, ?, ?)"""
         cursor.execute(query, (name_file, value, task_id, meter_id))
         db.commit()
-        scr.BD.bd_users.local.update_bd.update_upload_status_false(task_id)
+        return cursor.lastrowid
 
 
 def insert_photo_temp(name_file, value, task_id, meter_id):
@@ -120,5 +120,14 @@ def insert_acts(id_task, string):
         query = f""" INSERT INTO acts 
                      (task_id, date, reason) 
                      VALUES ({id_task}, '{today}', '{string}')"""
+        cursor.execute(query)
+        db.commit()
+
+
+def insert_deleted_photo(server_id):
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" INSERT INTO delete_picture (server_id) 
+                     VALUES ({server_id})"""
         cursor.execute(query)
         db.commit()
