@@ -113,30 +113,17 @@ class WaterUtilityAPIClient:
     def change_flag_notification(self, task_ids: List[int]):
         return self._make_request("POST", "change_flag_notification", data=task_ids)
 
-    def assign_tasks(self, task_ids: List[int], employee_id: int) -> Dict[str, Any]:
-        data = {"task_ids": task_ids, "employee_id": employee_id}
-        return self._make_request("POST", "assign_tasks", data=data)
-
     def get_active_meter_tasks(self, employee_id: int) -> List[Dict[str, Any]]:
         return self._make_request("GET", f"active_meter_tasks/{employee_id}")
 
     def get_latest_meter_readings(self, employee_id: int) -> List[Dict[str, Any]]:
         return self._make_request("GET", f"latest_meter_readings/{employee_id}")
 
-    def get_employers_for_assign_tasks(self) -> List[Dict[str, Any]]:
-        return self._make_request("GET", "employers_for_assign_tasks")
-
     def get_meters_from_active_tasks(self, employee_id: int) -> List[Dict[str, Any]]:
         return self._make_request("GET", f"meters_from_active_tasks/{employee_id}")
 
-    def get_task_data_all(self) -> List[Dict[str, Any]]:
-        return self._make_request("GET", "task_data_all")
-
     def get_task_data_new(self, employee_id: int) -> List[Dict[str, Any]]:
         return self._make_request("GET", f"task_data_new/{employee_id}")
-
-    def get_task_data_unassigned(self) -> List[Dict[str, Any]]:
-        return self._make_request("GET", "task_data_unassigned")
 
     def batch_update_tasks(self, task_updates: List[Dict[str, Any]]) -> Dict[str, Any]:
         data = {"tasks": task_updates}

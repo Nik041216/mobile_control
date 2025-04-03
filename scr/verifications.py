@@ -1,6 +1,7 @@
 import flet as ft
 import scr.BD.auth as auth
 import scr.func
+import scr.API.api_client
 
 
 def get_content(page):
@@ -24,7 +25,7 @@ def authentication(page, container):
         if validate(login.value, password.value):
             await auth.check_user_credentials(login.value, password.value, page)
         else:
-            scr.func.show_snack_bar(page, "Неправильный логин или пароль.")
+            scr.func.show_snack_bar(page, "Введите логин и пароль.")
 
     content = ft.Column(
         [

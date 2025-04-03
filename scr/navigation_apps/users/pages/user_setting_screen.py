@@ -1,5 +1,5 @@
 import flet as ft
-
+from scr.components.onesignal import onesignal
 import scr.toggle_user_sessions
 import scr.func
 import scr.BD.bd_users.local.delete_bd
@@ -39,6 +39,12 @@ def setting(page: ft.Page, conteiner: ft.Container):
         await scr.toggle_user_sessions.handle_user_sessions(page)
         await scr.API.api_user.stop_websocket(login_user, password_user)
 
+    def on_click(e):
+        result_ = onesignal.login(user_id)
+        if result_:
+            scr.func.show_alert_yn(page, "Успешно подключено")
+            scr.func.show_snack_bar(page, "Успешно подключено")
+
     result = scr.BD.bd_users.local.select_bd.select_user_data()
 
     bte = ft.Container(
@@ -70,7 +76,8 @@ def setting(page: ft.Page, conteiner: ft.Container):
             ft.Text(f"Сотрудник: {last_name} {first_name}"),
             ft.Text(f"Логин: {login_user}"),
             ft.Text(f"Пароль: {password_user}"),
-            bte
+            bte,
+            ft.ElevatedButton("Я хочу получать индивидуальные уведомления", on_click=on_click)
         ],
         horizontal_alignment=ft.CrossAxisAlignment.CENTER
     )

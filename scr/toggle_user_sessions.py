@@ -6,6 +6,7 @@ import scr.func
 import scr.navigation_apps.navigations
 import scr.verifications
 import scr.BD.bd_users.local.update_bd
+import scr.API.api_user
 
 
 async def handle_user_sessions(page):
