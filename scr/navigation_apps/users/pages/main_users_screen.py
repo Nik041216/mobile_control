@@ -155,7 +155,7 @@ def update_results(filter_statuses, page, search_value):
             color = ft.colors.BLUE
         elif status == 'просрочен':
             stat.controls.append(failed_icon)
-            color = const.tasks_failed_color
+            color = ft.Colors.RED
 
         result_info = ft.Column([
             ft.Text(f"ул.{street} д.{dom} кв.{apartment}", weight=ft.FontWeight.BOLD),
