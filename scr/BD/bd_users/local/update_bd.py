@@ -25,7 +25,10 @@ def update_local_tasks(unloading_time, task_id, reading_value, remark, meter_id)
 
         query = f""" update tasks set 
                    unloading_time = '{unloading_time}',  
-                   status = 'в исполнении',
+                   status = CASE 
+                        WHEN status = 'просрочен' THEN status 
+                         ELSE 'в исполнении' 
+                     END,
                    unloaded = false
                    where id = {task_id}"""
         cursor.execute(query)
@@ -33,7 +36,11 @@ def update_local_tasks(unloading_time, task_id, reading_value, remark, meter_id)
 
         query = f""" UPDATE tasks SET 
                     unloading_time = '{unloading_time}',  
-                    status = 'выполнен'
+                    status = CASE 
+                        WHEN status = 'просрочен' THEN status 
+                         ELSE 'выполнен' 
+                     END,
+                   unloaded = false
                     WHERE id = {task_id} AND id IN (
                         SELECT DISTINCT t.id
                         FROM tasks t
@@ -226,7 +233,10 @@ def update_seal(seal_number, meter_id, task_id, remark, meter_reading, seal_type
 
         query = f""" update tasks set 
                            unloading_time = '{str(today)}',  
-                           status = 'в исполнении',
+                           status = CASE 
+                                WHEN status = 'просрочен' THEN status 
+                                ELSE 'в исполнении' 
+                           END,
                            unloaded = false
                            where id = {task_id}"""
         cursor.execute(query)
@@ -234,7 +244,10 @@ def update_seal(seal_number, meter_id, task_id, remark, meter_reading, seal_type
 
         query = f""" update tasks set 
                             unloading_time = '{str(today)}',  
-                            status = 'выполнен'
+                            status = CASE 
+                                WHEN status = 'просрочен' THEN status 
+                                ELSE 'выполнен' 
+                            END,
                             WHERE id = {task_id} AND id IN (
                                 SELECT DISTINCT t.id
                                     FROM tasks t

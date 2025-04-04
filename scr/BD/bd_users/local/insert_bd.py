@@ -67,7 +67,10 @@ def insert_new_meters(id_task, meter_id, meter_marka, meter_reading, meter_prote
 
         query = f""" update tasks set 
                                    unloading_time = '{str(today)}',  
-                                   status = 'в исполнении',
+                                   status = CASE 
+                                        WHEN status = 'просрочен' THEN status 
+                                        ELSE 'в исполнении' 
+                                   END,
                                    unloaded = false
                                    where id = {id_task}"""
         cursor.execute(query)
@@ -75,7 +78,10 @@ def insert_new_meters(id_task, meter_id, meter_marka, meter_reading, meter_prote
 
         query = f""" update tasks set 
                                     unloading_time = '{str(today)}',  
-                                    status = 'выполнен'
+                                    status = CASE 
+                                        WHEN status = 'просрочен' THEN status 
+                                        ELSE 'выполнен' 
+                                    END,
                                     WHERE id = {id_task} AND id IN (
                                     SELECT DISTINCT t.id
                                     FROM tasks t
