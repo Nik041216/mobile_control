@@ -6,6 +6,7 @@ import platform
 from typing import List, Dict, Any
 import scr.BD.bd_users.bd_server_user as bd_update
 import scr.BD.bd_users.local.select_bd as select
+import scr.BD.bd_users.local.delete_bd as delete
 
 
 class WaterUtilityAPIClient:
@@ -45,8 +46,10 @@ class WaterUtilityAPIClient:
                         data = json.loads(message)
                         print(f"🔔 Уведомление: {data['message']}")
                         print(f"📋 Назначенные задачи: {data['task_ids']}")
-                        if data:
+                        if data['message'] == "Вам назначены новые задачи":
                             bd_update.select_task_data_for_update()
+                        if data['message'] == "С вас сняли задания":
+                            delete.delete_task(data['task_ids'])
 
             except websockets.exceptions.ConnectionClosed:
                 print("⚠️ Соединение с WebSocket закрыто. Переподключение...")

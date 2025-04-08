@@ -40,3 +40,12 @@ def delete_photo_temp():
         cursor = db.cursor()
         delete_photo = f""" DROP TABLE picture_temp """
         cursor.execute(delete_photo)
+
+
+def delete_task(task_ids):
+    id_task = [int(i) for i in task_ids]
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" delete from tasks where id not in ({','.join(['?'] * len(id_task))}) """
+        cursor.execute(query, id_task)
+        db.commit()
