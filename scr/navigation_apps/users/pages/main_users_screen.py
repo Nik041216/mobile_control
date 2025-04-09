@@ -163,7 +163,7 @@ def update_results(filter_statuses, page, search_value):
         result_info = ft.Column([
             ft.Text(f"ул.{street} д.{dom} кв.{apartment}", weight=ft.FontWeight.BOLD),
             stat,
-            ft.Text(f"Номер: {phone}"),
+            ft.Text(f"Номер: {phone}") if phone is not None and phone != "" else ft.Text(visible=False),
             ft.Text(f"Цель: {purpose}")
         ], col=4)
 
