@@ -49,10 +49,13 @@ def get_appbar(page):
     def create_checkboxes():
         """Создаёт чекбоксы, привязывая их к массиву `statuses`."""
         rows = []
+        count = select_bd.select_count_task("now")
         for status, (icon, color) in status_icons.items():
-            checkbox = ft.Checkbox(label=status.capitalize(),
+            checkbox = ft.Checkbox(label=f"{status.capitalize()} ({count[status]})",
                                    value=status in statuses,
-                                   on_change=lambda e, s=status: filtration_check(e, s))
+                                   on_change=lambda e, s=status: filtration_check(e, s),
+                                   label_style=ft.TextStyle(size=15,)
+                                   )
             checkboxes[status] = checkbox
             rows.append(ft.Row([ft.Icon(icon, size=25, color=color), checkbox],
                                alignment=ft.MainAxisAlignment.START))
@@ -162,13 +165,37 @@ def update_results(filter_statuses, page, search_value):
             stat,
             ft.Text(f"Номер: {phone}"),
             ft.Text(f"Цель: {purpose}")
-        ])
+        ], col=4)
+
+        def call_click(e):
+            page.launch_url(f"tel:{phone}")
+
+        call_ = ft.ResponsiveRow([
+                        result_info,
+                        ft.Container(
+                            content=ft.Row([
+                                ft.Icon(ft.icons.PHONE, color=ft.colors.WHITE),
+                            ],
+                                alignment=ft.MainAxisAlignment.CENTER,
+                            ),
+                            padding=ft.padding.only(top=40, bottom=40),
+                            bgcolor=const.tasks_completed_text_color,
+                            border_radius=ft.border_radius.all(25),
+                            shadow=ft.BoxShadow(
+                                offset=ft.Offset(5, 5),
+                                blur_radius=10,
+                                color=ft.colors.BLACK38
+                            ),
+                            ink=True,
+                            ink_color=ft.colors.RED_200, col=1, on_click=call_click)
+                    ], columns=5, expand=True, vertical_alignment=ft.CrossAxisAlignment.CENTER
+        )
 
         return ft.Card(
             content=ft.Container(
                 content=ft.Row([
                     ft.Container(width=10, height=105, bgcolor=color),
-                    result_info
+                    call_ if phone is not None and phone != "" else result_info
                 ]),
                 padding=10,
                 margin=5,

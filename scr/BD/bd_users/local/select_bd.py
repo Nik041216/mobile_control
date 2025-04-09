@@ -206,3 +206,37 @@ def select_photo_to_unload(id_photo):
         cursor.execute(query, id_photo)
         result = cursor.fetchall()
         return result
+
+
+def select_count_task(date):
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" SELECT 
+                        status,
+                        COUNT(*) as task_count
+                    FROM 
+                        tasks """
+        if date == "future":
+            query += f""" where date > current_date"""
+        else:
+            query += f""" where date <= current_date and current_date <= date_end or status = 'просрочен' """
+        query += """ 
+                    GROUP BY 
+                        status
+                    ORDER BY 
+                        CASE status
+                            WHEN 'не выполнен' THEN 1
+                            WHEN 'в исполнении' THEN 2
+                            WHEN 'выполнен' THEN 3
+                            WHEN 'просрочен' THEN 4
+                            ELSE 5
+                        END; """
+        cursor.execute(query)
+        result = cursor.fetchall()
+        status_counts = {status: count for status, count in result}
+
+        all_statuses = ['не выполнен', 'в исполнении', 'выполнен', 'просрочен']
+        for status in all_statuses:
+            if status not in status_counts:
+                status_counts[status] = 0
+        return status_counts
