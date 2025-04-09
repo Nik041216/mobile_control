@@ -49,3 +49,14 @@ def delete_task(task_ids):
         query = f""" delete from tasks where id not in ({','.join(['?'] * len(id_task))}) and status != 'выполнен' """
         cursor.execute(query, id_task)
         db.commit()
+
+
+def delete_task_completed():
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" delete from tasks where status = 'выполнен' and 
+                            datetime('now') > datetime (unloading_time, '+1 days') RETURNING id """
+        result = cursor.execute(query)
+        deleted_ids = [row[0] for row in result]
+        print(deleted_ids)
+        db.commit()

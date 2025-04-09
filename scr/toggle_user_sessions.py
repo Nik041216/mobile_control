@@ -6,6 +6,7 @@ import scr.func
 import scr.navigation_apps.navigations
 import scr.verifications
 import scr.BD.bd_users.local.update_bd
+import scr.BD.bd_users.local.delete_bd
 import scr.API.api_user
 
 
@@ -27,6 +28,7 @@ async def handle_user_sessions(page):
                     await scr.API.api_user.start_websocket(login, password, record[0])
                     scr.func.show_snack_bar(page, "Успешный вход в систему.")
                     scr.BD.bd_users.local.update_bd.update_status_task()
+                    scr.BD.bd_users.local.delete_bd.delete_task_completed()
                 else:
                     scr.navigation_apps.navigations.create_verification_route(page)
                     page.go("/authentication")
