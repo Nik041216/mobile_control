@@ -46,6 +46,6 @@ def delete_task(task_ids):
     id_task = [int(i) for i in task_ids]
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
-        query = f""" delete from tasks where id not in ({','.join(['?'] * len(id_task))}) """
+        query = f""" delete from tasks where id not in ({','.join(['?'] * len(id_task))}) and status != 'выполнен' """
         cursor.execute(query, id_task)
         db.commit()
