@@ -7,6 +7,7 @@ import scr.BD.bd_users.local.select_bd
 import scr.API.api_user
 import scr.navigation_apps.navigations
 import scr.constants as const
+import flet_permission_handler as fph
 
 
 def get_appbar(page):
@@ -25,6 +26,8 @@ def get_content(page):
 
 
 def setting(page: ft.Page, conteiner: ft.Container):
+    ph = fph.PermissionHandler()
+    page.overlay.append(ph)
     page.vertical_alignment = ft.MainAxisAlignment.START
     page.controls.clear()
     page.appbar = ft.AppBar(
@@ -34,18 +37,35 @@ def setting(page: ft.Page, conteiner: ft.Container):
         bgcolor=ft.colors.BLUE_100,
     )
 
+    def on_dialog_result_yes(e):
+        opened = ph.open_app_settings()
+        page.close(dialog)
+
     async def on_click_exit(e):
         scr.BD.bd_users.local.delete_bd.delete_data_db()
         await scr.toggle_user_sessions.handle_user_sessions(page)
         await scr.API.api_user.stop_websocket(login_user, password_user)
 
     def on_click(e):
-        result_ = onesignal.login(user_id)
-        if result_:
-            scr.func.show_alert_yn(page, "Успешно подключено")
-            scr.func.show_snack_bar(page, "Успешно подключено")
+        permission_status = ph.check_permission(fph.PermissionType.NOTIFICATION)
+        if permission_status == fph.PermissionStatus.GRANTED:
+            result_ = onesignal.login(user_id)
+            if result_:
+                scr.func.show_alert_yn(page, "Успешно подключено")
+        else:
+            page.open(dialog)
 
     result = scr.BD.bd_users.local.select_bd.select_user_data()
+
+    dialog = ft.AlertDialog(
+        modal=True,
+        title=ft.Text("Разрешить уведомления"),
+        content=ft.Text("Для работы уведомлений требуется разрешение. Хотите открыть настройки?"),
+        actions=[
+            ft.ElevatedButton("Да", on_click=on_dialog_result_yes),
+            ft.TextButton("Нет", on_click=lambda e: page.close(dialog)),
+        ],
+    )
 
     bte = ft.Container(
         content=ft.Row([
