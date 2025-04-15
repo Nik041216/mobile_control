@@ -25,7 +25,7 @@ def authentication(page, container):
 
     async def on_click(e):
         if validate(login.value, password.value):
-            await LoadingManager.show("Загружаю что-то важное...")
+            await LoadingManager.show("Проверка входа в систему")
             await auth.check_user_credentials(login.value, password.value, page)
             await LoadingManager.hide()
         else:

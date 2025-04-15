@@ -1,6 +1,6 @@
 [project]
 name = "Mobile Control"
-version = "1.4.0"
+version = "1.5.0"
 description = "Мобильное приложения для выполнения заданий контроллеров водоснабжения предриятия МП Трест Водоканал МО г.Магнитогорск"
 authors = [
     { name = "Бобровников Никита Дмитриевич", email = "diobrando1234567890987654321@gmail.com" }
@@ -35,3 +35,11 @@ assets = [
 [tool.flet]
 app_name = "Мобильный Контролёр"
 permissions = ["NOTIFICATIONS"]
+
+[tool.flet.app.boot_screen]
+show = true
+message = "\u041f\u043e\u0434\u0433\u043e\u0442\u043e\u0432\u043a\u0430 \u043a \u0437\u0430\u043f\u0443\u0441\u043a\u0443"
+
+[tool.flet.app.startup_screen]
+show = true
+message = "\u0417\u0430\u043f\u0443\u0441\u043a \u043f\u0440\u0438\u043b\u043e\u0436\u0435\u043d\u0438\u044f"
