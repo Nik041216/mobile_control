@@ -20,6 +20,8 @@ async def check_user_credentials(login, password, page):
                     employee['employee_id'], employee['login'], password,
                     employee['privileges'], employee['first_name'], employee['last_name'], page
                 )
+            else:
+                scr.func.show_snack_bar(page, "У пользователя нет прав на вход в приложение")  # Нормально написать
         else:
             scr.func.show_snack_bar(page, "Нет пользователя в базе данных")  # Нормально написать
             pass
