@@ -2,6 +2,7 @@ import flet as ft
 import scr.toggle_user_sessions
 import scr.BD.bd_users.local.update_bd
 from scr.components.onesignal import onesignal
+from scr.components.loading import LoadingManager
 
 
 async def main(page: ft.Page):
@@ -20,6 +21,7 @@ async def main(page: ft.Page):
         current_locale=ft.Locale("ru", "RU")
     )
     # page.overlay.append(onesignal)
+    LoadingManager.init(page)
     await scr.toggle_user_sessions.handle_user_sessions(page)
 
 

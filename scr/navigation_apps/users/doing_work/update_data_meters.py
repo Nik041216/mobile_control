@@ -10,6 +10,7 @@ import scr.toggle_user_sessions
 import scr.func
 import scr.navigation_apps.users.doing_work.chose_meters
 import base64
+from scr.components.loading import LoadingManager
 
 
 def update_data(page, meter_id, id_task, where, container1):
@@ -306,6 +307,8 @@ def update_data(page, meter_id, id_task, where, container1):
     def pick_files_result(e: ft.FilePickerResultEvent):
         if e.files:
             for file in e.files:
+                print(page.overlay)
+                LoadingManager.show_("Добавление фотографии")
                 save_image_to_db(file.path)  # Сохраняем изображение в базу данных
                 update_saving_data(meter_id, id_task)
                 scr.func.show_snack_bar(page, f"Изображение {file.name} сохранено в базу данных.")
@@ -358,6 +361,7 @@ def update_data(page, meter_id, id_task, where, container1):
                     )
                 )
         page.update()
+        LoadingManager.hide_()
 
     update_saving_data(meter_id, id_task)
 
@@ -366,22 +370,29 @@ def update_data(page, meter_id, id_task, where, container1):
 
     # Основной контент модального окна
     meters_data = ft.Container(
-        content=ft.Column(
-            [
-                ft.Text(f"Дата контрольных показаний: {last_reading_date}", size=17),
-                ft.Text(f"Контрольные показания: {last_reading_value}", size=17),
-                reading_value,
-                remark,
-                save_photos,
-                ft.ElevatedButton("Добавить фотографию", on_click=zagr),
+        content=ft.Stack(  # <-- Stack, чтобы наложить прогрузку поверх
+            controls=[
                 ft.Column(
                     [
-                        panel_list
-                    ], scroll=ft.ScrollMode.AUTO,
-                    expand=True,
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER
-                )
-            ], scroll=ft.ScrollMode.AUTO,
+                        ft.Text(f"Дата контрольных показаний: {last_reading_date}", size=17),
+                        ft.Text(f"Контрольные показания: {last_reading_value}", size=17),
+                        reading_value,
+                        remark,
+                        save_photos,
+                        ft.ElevatedButton("Добавить фотографию", on_click=zagr),
+                        ft.Column(
+                            [
+                                panel_list
+                            ],
+                            scroll=ft.ScrollMode.AUTO,
+                            expand=True,
+                            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+                        )
+                    ],
+                    scroll=ft.ScrollMode.AUTO,
+                ),
+                LoadingManager.overlay  # <-- теперь он внутри AlertDialog
+            ]
         ),
         width=screen_width * 0.95
     )

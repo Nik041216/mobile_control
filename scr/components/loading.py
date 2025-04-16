@@ -25,8 +25,11 @@ class LoadingManager:
             expand=True
         )
         cls.page = page
-        page.overlay.append(cls.overlay)
-        page.update()
+        print(page.overlay)
+        if cls.overlay in cls.page.overlay:
+            cls.page.overlay.remove(cls.overlay)
+        cls.page.overlay.append(cls.overlay)  # Добавляем в конец (поверх всех)
+        cls.page.update()
 
     @classmethod
     async def show(cls, message: str = "Загрузка..."):
@@ -37,7 +40,20 @@ class LoadingManager:
             await asyncio.sleep(0.1)
 
     @classmethod
+    def show_(cls, message: str = "Загрузка..."):
+        if cls.overlay and cls.text:
+            cls.text.value = message
+            cls.overlay.visible = True
+            cls.page.update()
+
+    @classmethod
     async def hide(cls):
+        if cls.overlay:
+            cls.overlay.visible = False
+            cls.page.update()
+
+    @classmethod
+    def hide_(cls):
         if cls.overlay:
             cls.overlay.visible = False
             cls.page.update()
