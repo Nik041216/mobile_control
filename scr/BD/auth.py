@@ -16,8 +16,7 @@ async def check_user_credentials(login, password, page):
             scr.BD.bd_users.local.create_bd.local_user_db()
             scr.navigation_apps.navigations.create_route(page)
             if employee['privileges'] == 2:
-                await scr.API.api_user.start_websocket(login, password, employee['employee_id'])
-                scr.BD.bd_users.local.insert_bd.insert_bd_user(
+                await scr.BD.bd_users.local.insert_bd.insert_bd_user(
                     employee['employee_id'], employee['login'], password,
                     employee['privileges'], employee['first_name'], employee['last_name'], page
                 )

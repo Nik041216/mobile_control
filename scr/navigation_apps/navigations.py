@@ -17,7 +17,7 @@ def role_definition(privileges, page):
     elif privileges == 2:
         page.go("/")
     else:
-        debugging()
+        debugging(page)
 
 
 def create_verification_route(page):
@@ -164,6 +164,6 @@ def create_route(page):
         )
 
 
-def debugging():
-    print('Тут можно добавить инфу по приложению, может быть обратную связь')
+def debugging(page):
+    scr.func.show_snack_bar(page, "Незвестный тип пользователя")
 

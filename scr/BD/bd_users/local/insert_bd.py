@@ -5,16 +5,17 @@ import datetime
 import scr.BD.bd_users.local.update_bd
 import scr.BD.bd_users.bd_server_user
 import scr.func
+import scr.toggle_user_sessions
 
 
-def insert_bd_user(id_user, login, password, privileges, first_name, last_name, page):
+async def insert_bd_user(id_user, login, password, privileges, first_name, last_name, page):
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
         query = f""" Insert into user values({id_user}, '{login}', '{password}', 
             {privileges}, '{first_name}','{last_name}' ) """
         cursor.execute(query)
     scr.BD.bd_users.bd_server_user.select_task_data_for_update()
-    scr.navigation_apps.navigations.role_definition(privileges, page)
+    await scr.toggle_user_sessions.handle_user_sessions(page)
 
 
 def insert_photo(name_file, value, task_id, meter_id):
