@@ -102,7 +102,8 @@ def update_data(page, meter_id, id_task, where, container1):
     # Инициализация переменных на случай, если данные не будут получены
     marka_name = "Неизвестно"
     meter_number = "Неизвестно"
-    instalation_date = "Неизвестно"
+    date_of_death = "Неизвестно"
+    date_of_death2 = "Неизвестно"
     type_service = "Неизвестно"
     seal_number = "Неизвестно"
     location = "Неизвестно"
@@ -113,7 +114,8 @@ def update_data(page, meter_id, id_task, where, container1):
         for result in results_meters_data:
             (meter_number, seal_number, instalation_date, type_service, marka_id, marka_name, date_of_death,
              location, status_filling, antimagnetic_protection, average_consumption, remark_meter) = result
-    result_info_meters = f"Счетчик: {meter_number} \nДата установки: {instalation_date} \nТип: {type_service}"
+            date_of_death2 = scr.func.reverse_date(date_of_death)
+    result_info_meters = f"Счетчик: {meter_number} \nДата ликвидации: {date_of_death2} \nТип: {type_service}"
 
     dict_checkboxes = {}
 
@@ -246,6 +248,7 @@ def update_data(page, meter_id, id_task, where, container1):
             id_meters, last_reading_date, last_reading_value, new_reading_date, new_reading_value = result
             if new_reading_value is None:
                 new_reading_value = ""
+            last_reading_date = scr.func.reverse_date(last_reading_date)
 
     reading_value = ft.TextField(label="Показания счетчика", value=new_reading_value)
     remark = ft.TextField(label="Примечания по счетчику", value=remark_meter, multiline=True, min_lines=1,

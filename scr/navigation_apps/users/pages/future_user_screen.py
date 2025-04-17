@@ -50,10 +50,13 @@ def get_appbar(page):
     def create_checkboxes():
         """Создаёт чекбоксы, привязывая их к массиву `statuses`."""
         rows = []
+        count = select_bd.select_count_task("now")
         for status, (icon, color) in status_icons.items():
-            checkbox = ft.Checkbox(label=status.capitalize(),
+            checkbox = ft.Checkbox(label=f"{status.capitalize()} ({count[status]})",
                                    value=status in statuses,
-                                   on_change=lambda e, s=status: filtration_check(e, s))
+                                   on_change=lambda e, s=status: filtration_check(e, s),
+                                   label_style=ft.TextStyle(size=15, )
+                                   )
             checkboxes[status] = checkbox
             rows.append(ft.Row([ft.Icon(icon, size=25, color=color), checkbox],
                                alignment=ft.MainAxisAlignment.START))
@@ -153,20 +156,44 @@ def update_results(filter_statuses, page, search_value):
             color = ft.colors.BLUE
         elif status == 'просрочен':
             stat.controls.append(failed_icon)
-            color = const.tasks_failed_color
+            color = ft.Colors.RED
 
         result_info = ft.Column([
             ft.Text(f"ул.{street} д.{dom} кв.{apartment}", weight=ft.FontWeight.BOLD),
             stat,
-            ft.Text(f"Номер: {phone}"),
+            ft.Text(f"Номер: {phone}") if phone is not None and phone != "" else ft.Text(visible=False),
             ft.Text(f"Цель: {purpose}")
-        ])
+        ], col=4)
+
+        def call_click(e):
+            page.launch_url(f"tel:{phone}")
+
+        call_ = ft.ResponsiveRow([
+            result_info,
+            ft.Container(
+                content=ft.Row([
+                    ft.Icon(ft.icons.PHONE, color=ft.colors.WHITE),
+                ],
+                    alignment=ft.MainAxisAlignment.CENTER,
+                ),
+                padding=ft.padding.only(top=40, bottom=40),
+                bgcolor=const.tasks_completed_text_color,
+                border_radius=ft.border_radius.all(25),
+                shadow=ft.BoxShadow(
+                    offset=ft.Offset(5, 5),
+                    blur_radius=10,
+                    color=ft.colors.BLACK38
+                ),
+                ink=True,
+                ink_color=ft.colors.RED_200, col=1, on_click=call_click)
+        ], columns=5, expand=True, vertical_alignment=ft.CrossAxisAlignment.CENTER
+        )
 
         return ft.Card(
             content=ft.Container(
                 content=ft.Row([
                     ft.Container(width=10, height=105, bgcolor=color),
-                    result_info
+                    call_ if phone is not None and phone != "" else result_info
                 ]),
                 padding=10,
                 margin=5,
@@ -219,6 +246,9 @@ def update_results(filter_statuses, page, search_value):
             personal_account, date, date_end, remark_task, status, purpose, \
             registered_residing, standarts, area, saldo = result
 
+        if date:
+            date = scr.func.reverse_date(date)
+
         # Проверяем, существует ли уже ключ для этой даты, если нет - создаем
         if date not in tasks_by_date:
             tasks_by_date[date] = {}
@@ -253,8 +283,11 @@ def update_results(filter_statuses, page, search_value):
 
             for result in filtered_results:
                 id_address, id_task, person_name, street, dom, apartment, phone_number, \
-                    personal_account, date, remark, status, purpose, registered_residing, \
-                    status_address, standarts, area, saldo, type_address = result
+                    personal_account, date, date_end, remark, status, purpose, registered_residing, \
+                    standarts, area, saldo, type_address = result
+                if date and date_end:
+                    date = scr.func.reverse_date(date)
+                    date_end = scr.func.reverse_date(date_end)
             result_info_address = f"Адрес: ул.{street} д.{dom} кв.{apartment}"
             result_info_person = f"ФИО владельца: {person_name}"
             view = ft.AlertDialog(
@@ -266,7 +299,8 @@ def update_results(filter_statuses, page, search_value):
                         ft.Text(f"{result_info_person}"),
                         ft.Text(f"Номер телефона: {phone_number}"),
                         ft.Text(f"Тип адресса: {type_address}"),
-                        ft.Text(f"Дата выполнения: {date}"),
+                        ft.Text(f"Дата начала выполнения: {date}"),
+                        ft.Text(f"Конечная дата выполнения:{date_end}"),
                         ft.Text(f"Тип задания: {purpose}"),
                         ft.Text(f"Количество прописанных: {registered_residing}"),
                         ft.Text(f"Нормативы: {standarts}"),
@@ -443,7 +477,12 @@ def user_main(page: ft.Page, container: ft.Container):
                                     statuses, page, search_bar.value),
                                 value=sorting,
                                 label="Сортировка",
-                                options=[ft.dropdown.Option("Адрес"), ft.dropdown.Option("Статус")],
+                                options=
+                                [
+                                    ft.dropdown.Option("Адрес"),
+                                    ft.dropdown.Option("Статус"),
+                                    ft.dropdown.Option("Дата")
+                                ],
                                 col=1.8,
                                 bgcolor=ft.colors.WHITE
                             )

@@ -16,10 +16,11 @@ def sealing(page, id_task, meter_id, where, container1):
     results_meters_data_v2 = scr.BD.bd_users.local.select_bd.select_meters_data_new_for_one(id_task, meter_id)
     if results_meters_data_v2:
         for result in results_meters_data_v2:
-            meter_number, seal_number, instalation_date, type_service, \
-                marka_id, marka_name, date_next_verification, location, \
-                status_filling, antimagnetic_protection, average_consumption, remark_meter = result
-    result_info_meters = f"Счетчик: {meter_number} \nДата установки: {instalation_date} \nТип: {type_service}"
+            (meter_number, seal_number, instalation_date, type_service, marka_id, marka_name, date_of_death, location,
+             status_filling, antimagnetic_protection, average_consumption, remark_meter) = result
+            if date_of_death:
+                date_of_death = scr.func.reverse_date(date_of_death)
+    result_info_meters = f"Счетчик: {meter_number} \nДата ликвидации: {date_of_death} \nТип: {type_service}"
 
     if antimagnetic_protection is not None:
         if antimagnetic_protection is True:

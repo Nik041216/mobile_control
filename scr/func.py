@@ -1,6 +1,6 @@
 import os
 import socket
-
+import datetime
 import flet as ft
 
 
@@ -60,3 +60,10 @@ def check_internet():
         return True
     except OSError:
         return False
+
+
+def reverse_date(date):
+    if date:
+        date_obj = datetime.datetime.strptime(date, "%Y-%m-%d")
+        date = date_obj.strftime("%d-%m-%Y")
+        return date
