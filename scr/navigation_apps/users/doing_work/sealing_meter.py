@@ -9,6 +9,7 @@ import scr.func
 import scr.navigation_apps.users.doing_work.chose_meters
 import os
 import base64
+from scr.components.loading import LoadingManager
 
 
 def sealing(page, id_task, meter_id, where, container1):
@@ -231,6 +232,7 @@ def sealing(page, id_task, meter_id, where, container1):
 
     def pick_files_result(e: ft.FilePickerResultEvent):
         if e.files:
+            LoadingManager.show_("Добавление фотографии")
             for file in e.files:
                 save_image_to_db(file.path)  # Сохраняем изображение в базу данных
                 update_saving_data(meter_id, id_task)
@@ -281,6 +283,7 @@ def sealing(page, id_task, meter_id, where, container1):
                     )
                 )
         page.update()
+        LoadingManager.hide_()
 
     update_saving_data(meter_id, id_task)
 
@@ -290,27 +293,34 @@ def sealing(page, id_task, meter_id, where, container1):
     # Добавление кнопки для выбора фотографии
     photo_button = ft.ElevatedButton("Добавить фотографии", on_click=zagr)  # они пока что чисто затычки
 
-    content = ft.Column(
-        [
-            seal_number_new,
-            meter_reading,
-            ft.Column(
-                [
-                    ft.Text("Есть ли антимагнитная защита у счетчика?", weight=ft.FontWeight.BOLD),
-                    protection_type_radio
-                ]
-            ),
-            ft.Column(
-                [
-                    ft.Text("Тип пломбы", weight=ft.FontWeight.BOLD),
-                    seal_type_radio
-                ]
-            ),
-            remark,
-            save_photos,
-            photo_button
-        ], scroll=ft.ScrollMode.AUTO, expand=True,
-        width=screen_width * 0.95
+    content = ft.Container(
+        content=ft.Stack(
+            controls=[
+                ft.Column(
+                    [
+                        seal_number_new,
+                        meter_reading,
+                        ft.Column(
+                            [
+                                ft.Text("Есть ли антимагнитная защита у счетчика?", weight=ft.FontWeight.BOLD),
+                                protection_type_radio
+                            ]
+                        ),
+                        ft.Column(
+                            [
+                                ft.Text("Тип пломбы", weight=ft.FontWeight.BOLD),
+                                seal_type_radio
+                            ]
+                        ),
+                        remark,
+                        save_photos,
+                        photo_button
+                    ], scroll=ft.ScrollMode.AUTO, expand=True
+
+                ),
+                LoadingManager.overlay
+            ]
+        ), width=screen_width * 0.95
     )
 
     def create_bottom_sheet(text):
