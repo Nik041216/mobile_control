@@ -112,6 +112,9 @@ def show_meters_data(page, id_task, where, container_chose_meters):
         id_address, id_task, person_name, street, dom, apartment, phone_number, \
             personal_account, date, date_end, remark_task, status, purpose, registered_residing, \
             standarts, area, saldo, type_address = result
+        if date and date_end:
+            date = scr.func.reverse_date(date)
+            date_end = scr.func.reverse_date(date_end)
 
     result_info_address = f"Адрес: ул.{street} д.{dom} кв.{apartment}"
 
@@ -186,6 +189,7 @@ def show_meters_data(page, id_task, where, container_chose_meters):
         [
             ft.Text(result_info_address, size=17, ),
             ft.Text(purpose, size=17, ),
+            ft.Text(f"Срок выполнения: {date} - {date_end}"),
             ft.Text(f"Примечание: {remark_task}", size=17)
         ],
     )

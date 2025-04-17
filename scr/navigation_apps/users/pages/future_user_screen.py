@@ -248,6 +248,8 @@ def update_results(filter_statuses, page, search_value):
 
         if date:
             date = scr.func.reverse_date(date)
+        if date_end:
+            date_end = scr.func.reverse_date(date_end)
 
         # Проверяем, существует ли уже ключ для этой даты, если нет - создаем
         if date not in tasks_by_date:
@@ -300,7 +302,7 @@ def update_results(filter_statuses, page, search_value):
                         ft.Text(f"Номер телефона: {phone_number}"),
                         ft.Text(f"Тип адресса: {type_address}"),
                         ft.Text(f"Дата начала выполнения: {date}"),
-                        ft.Text(f"Конечная дата выполнения:{date_end}"),
+                        ft.Text(f"Конечная дата выполнения: {date_end}"),
                         ft.Text(f"Тип задания: {purpose}"),
                         ft.Text(f"Количество прописанных: {registered_residing}"),
                         ft.Text(f"Нормативы: {standarts}"),
