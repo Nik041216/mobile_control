@@ -109,9 +109,31 @@ def get_appbar(page):
 
     def on_click_update(page):
         global statuses
-        statuses = list(status_icons.keys())  # Восстанавливаем все статусы
-        update_checkboxes()
+        statuses = list(status_icons.keys())  # Сброс фильтра
+
+        # Обновляем данные задач
         get_content(page)
+
+        # Пересоздаём чекбоксы с актуальными данными
+        new_checkboxes = create_checkboxes()
+
+        # Перезаписываем содержимое меню
+        menu_container.content.controls = ft.Column([
+            ft.Text("Фильтры", size=20, weight=ft.FontWeight.BOLD),
+            *new_checkboxes,
+            ft.Container(expand=True),
+            ft.Row([ft.ElevatedButton("Сбросить фильтры",
+                                      on_click=reset_filters,
+                                      bgcolor=ft.colors.RED_400,
+                                      icon=ft.icons.FILTER_ALT_OFF,
+                                      color=ft.colors.WHITE)]),
+            ft.Row([ft.ElevatedButton("Отгрузить все данные",
+                                      on_click=on_click_upload,
+                                      icon="BACKUP_ROUNDED",
+                                      bgcolor=ft.colors.BLUE_400,
+                                      color=ft.colors.WHITE)]),
+        ], expand=True).controls
+
         page.update()
 
     page.overlay.append(overlay_container)
