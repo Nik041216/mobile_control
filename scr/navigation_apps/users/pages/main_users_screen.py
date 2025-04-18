@@ -193,7 +193,7 @@ def update_results(filter_statuses, page, search_value):
         ], col=4)
 
         def call_click(e):
-            page.launch_url(f"tel:{phone}")
+            page.launch_url(f"tel:+7{phone}")
 
         call_ = ft.ResponsiveRow([
                         result_info,
