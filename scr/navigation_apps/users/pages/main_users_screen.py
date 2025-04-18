@@ -166,8 +166,7 @@ def update_results(filter_statuses, page, search_value):
         result_info = ft.Column([
             ft.Text(f"ул.{street} д.{dom} кв.{apartment}", weight=ft.FontWeight.BOLD),
             stat,
-            # ft.Text(f"Срок: {date_reverse} - {date_end_reverse}"),
-            ft.Text(f"Номер: {phone}") if phone is not None and phone != "" else ft.Text(visible=False),
+            ft.Text(f"Срок: {date_reverse} - {date_end_reverse}"),
             ft.Text(f"Цель: {purpose}")
         ], col=4)
 
@@ -198,8 +197,11 @@ def update_results(filter_statuses, page, search_value):
         return ft.Card(
             content=ft.Container(
                 content=ft.Row([
-                    # ft.Container(width=10, height=135, bgcolor=color),
-                    ft.Container(width=10, height=105, bgcolor=color),
+                    ft.Container(
+                        width=10,
+                        height=125 if purpose != "Повторная опломбировка ИПУ" else 135,
+                        bgcolor=color
+                    ),
                     call_ if phone is not None and phone != "" else result_info
                 ]),
                 padding=10,

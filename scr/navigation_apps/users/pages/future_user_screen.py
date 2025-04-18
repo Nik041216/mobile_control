@@ -142,7 +142,10 @@ def update_results(filter_statuses, page, search_value):
     unloaded_icon = ft.Icon(ft.icons.BUILD)
 
     def create_task_container(result):
-        id_task, _, _, _, street, dom, apartment, phone, _, _, _, _, status, purpose, *_ = result
+        id_task, _, _, _, street, dom, apartment, phone, _, date, date_end, _, status, purpose, *_ = result
+        date_reverse = scr.func.reverse_date(date)
+        date_end_reverse = scr.func.reverse_date(date_end)
+
         stat = ft.Row([ft.Text(f"Статус: {status}")])
 
         if status == 'выполнен':
@@ -161,7 +164,7 @@ def update_results(filter_statuses, page, search_value):
         result_info = ft.Column([
             ft.Text(f"ул.{street} д.{dom} кв.{apartment}", weight=ft.FontWeight.BOLD),
             stat,
-            ft.Text(f"Номер: {phone}") if phone is not None and phone != "" else ft.Text(visible=False),
+            ft.Text(f"Срок: {date_reverse} - {date_end_reverse}"),
             ft.Text(f"Цель: {purpose}")
         ], col=4)
 
@@ -192,7 +195,11 @@ def update_results(filter_statuses, page, search_value):
         return ft.Card(
             content=ft.Container(
                 content=ft.Row([
-                    ft.Container(width=10, height=105, bgcolor=color),
+                    ft.Container(
+                        width=10,
+                        height=125 if purpose != "Повторная опломбировка ИПУ" else 135,
+                        bgcolor=color
+                    ),
                     call_ if phone is not None and phone != "" else result_info
                 ]),
                 padding=10,

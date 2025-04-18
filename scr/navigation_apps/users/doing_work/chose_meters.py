@@ -189,7 +189,7 @@ def show_meters_data(page, id_task, where, container_chose_meters):
         [
             ft.Text(result_info_address, size=17, ),
             ft.Text(purpose, size=17, ),
-            ft.Text(f"Срок выполнения: {date} - {date_end}", size=17),
+            ft.Text(f"Срок выполнения: \n{date} - {date_end}", size=17),
             ft.Text(f"Примечание: {remark_task}", size=17)
         ],
     )
