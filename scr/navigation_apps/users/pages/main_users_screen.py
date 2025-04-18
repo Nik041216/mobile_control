@@ -7,7 +7,7 @@ from scr.components.search_field import SearchField
 import scr.func
 import scr.navigation_apps.users.doing_work.alert_check_data as check_alert
 
-statuses = ['не выполнен', 'выполнен', 'в исполнении', 'просрочен']
+statuses = ['не выполнен', 'в исполнении', 'просрочен']
 status_icons = {
     'не выполнен': (ft.icons.HOURGLASS_EMPTY, ft.colors.BLUE),
     'в исполнении': (ft.icons.BUILD_OUTLINED, '#ffc107'),
@@ -24,7 +24,7 @@ def get_appbar(page):
 
     def reset_filters(e):
         global statuses
-        statuses = list(status_icons.keys())  # Восстанавливаем все статусы
+        statuses = ['не выполнен', 'в исполнении', 'просрочен']
         update_checkboxes()
         get_content(page)
         page.update()
@@ -108,7 +108,7 @@ def get_appbar(page):
 
     def on_click_update(page):
         global statuses
-        statuses = list(status_icons.keys())  # Сброс фильтра
+        statuses = ['не выполнен', 'в исполнении', 'просрочен']
 
         # Обновляем данные задач
         get_content(page)
