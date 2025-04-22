@@ -58,5 +58,4 @@ def delete_task_completed():
                             datetime('now') > datetime (unloading_time, '+1 days') RETURNING id """
         result = cursor.execute(query)
         deleted_ids = [row[0] for row in result]
-        print(deleted_ids)
         db.commit()

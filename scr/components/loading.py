@@ -25,7 +25,6 @@ class LoadingManager:
             expand=True
         )
         cls.page = page
-        print(page.overlay)
         if cls.overlay in cls.page.overlay:
             cls.page.overlay.remove(cls.overlay)
         cls.page.overlay.append(cls.overlay)  # Добавляем в конец (поверх всех)
