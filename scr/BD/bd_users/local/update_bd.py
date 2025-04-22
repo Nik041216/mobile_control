@@ -34,36 +34,21 @@ def update_local_tasks(unloading_time, task_id, reading_value, remark, meter_id)
         cursor.execute(query)
         db.commit()
 
-        query = f""" UPDATE tasks SET 
-                    unloading_time = '{unloading_time}',  
-                    status = CASE 
+        if scr.func.check_internet():
+            scr.BD.bd_users.bd_server_user.unload_task(task_id if isinstance(task_id, list) else [task_id])
+
+
+def completed_task(task_id, unloading_time):
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" update tasks set 
+                   unloading_time = '{unloading_time}',  
+                   status = CASE 
                         WHEN status = 'просрочен' THEN status 
                          ELSE 'выполнен' 
                      END,
                    unloaded = false
-                    WHERE id = {task_id} AND id IN (
-                        SELECT DISTINCT t.id
-                        FROM tasks t
-                        JOIN address a ON t.id_address = a.id
-                        JOIN meter_task mt ON t.id = mt.task_id
-                        JOIN meters m ON mt.meter_id = m.meter_number
-                        WHERE NOT EXISTS (
-                            SELECT 1
-                            FROM meters m2
-                            JOIN meter_task mt2 ON m2.meter_number = mt2.meter_id
-                            WHERE m2.meter_number IN (
-                                SELECT meter_id 
-                                FROM meter_task 
-                                WHERE task_id = t.id
-                            )
-                            AND NOT EXISTS (
-                                SELECT 1
-                                FROM meter_reading mr
-                                WHERE mr.meter_id = m2.meter_number
-                                AND mr.new_reading_value IS NOT NULL
-                            )
-                        )
-                    ); """
+                   where id = {task_id}"""
         cursor.execute(query)
         db.commit()
         if scr.func.check_internet():
@@ -242,38 +227,6 @@ def update_seal(seal_number, meter_id, task_id, remark, meter_reading, seal_type
         cursor.execute(query)
         db.commit()
 
-        query = f""" update tasks set 
-                            unloading_time = '{str(today)}',  
-                            status = CASE 
-                                WHEN status = 'просрочен' THEN status 
-                                ELSE 'выполнен' 
-                            END,
-                            WHERE id = {task_id} AND id IN (
-                                SELECT DISTINCT t.id
-                                    FROM tasks t
-                                    JOIN address a ON t.id_address = a.id
-                                    JOIN meter_task mt ON t.id = mt.task_id
-                                    JOIN meters m ON mt.meter_id = m.meter_number
-                                    WHERE NOT EXISTS (
-                                        SELECT 1
-                                        FROM meters m2
-                                        JOIN meter_task mt2 ON m2.meter_number = mt2.meter_id
-                                        WHERE m2.meter_number IN (
-                                            SELECT meter_id 
-                                            FROM meter_task 
-                                            WHERE task_id = t.id
-                                        )
-                                        AND NOT EXISTS (
-                                            SELECT 1
-                                            FROM meter_reading mr
-                                            WHERE mr.meter_id = m2.meter_number
-                                            AND mr.new_reading_value IS NOT NULL
-                                        )
-                                    )
-                            );
-                  """
-        cursor.execute(query)
-        db.commit()
         if scr.func.check_internet():
             scr.BD.bd_users.bd_server_user.unload_task(task_id if isinstance(task_id, list) else [task_id])
 

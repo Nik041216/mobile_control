@@ -1,4 +1,5 @@
 import flet as ft
+import datetime
 import scr.BD.bd_users.local.update_bd
 import scr.BD.bd_users.local.select_bd
 import scr.func
@@ -8,6 +9,7 @@ import scr.navigation_apps.users.pages.future_user_screen
 import scr.navigation_apps.users.doing_work.update_data_meters
 import scr.navigation_apps.users.doing_work.sealing_meter
 import scr.navigation_apps.users.doing_work.create_new_meters as new_meters
+from scr.components.loading import LoadingManager
 
 
 def get_appbar(page, id_task, where, container1):
@@ -108,6 +110,9 @@ def show_meters_data(page, id_task, where, container_chose_meters):
         result_address_data_v2 for result_address_data_v2 in results_address_data
     ]
 
+    completed = 0
+    all_ = 0
+
     for result in filtered_results:
         id_address, id_task, person_name, street, dom, apartment, phone_number, \
             personal_account, date, date_end, remark_task, status, purpose, registered_residing, \
@@ -118,13 +123,13 @@ def show_meters_data(page, id_task, where, container_chose_meters):
 
     result_info_address = f"Адрес: ул.{street} д.{dom} кв.{apartment}"
 
-    def on_click_back(e):
-        if where == "task":
-            page.go("/")
-        else:
-            page.go("/future")
+    def on_click_save(e):
+        LoadingManager.show_()
+        today = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        scr.BD.bd_users.local.update_bd.completed_task(id_task, str(today))
+        LoadingManager.hide_()
 
-    button_back = ft.ElevatedButton("Назад", on_click=on_click_back, bgcolor=ft.colors.RED_200)
+    button_save = ft.ElevatedButton("Выполнить", on_click=on_click_save, bgcolor=ft.Colors.GREEN_200, visible=False)
     filtered_results_meters = [result for result in results_meters_data]
     column = ft.Column(scroll=ft.ScrollMode.AUTO, horizontal_alignment=ft.CrossAxisAlignment.CENTER, expand=True)
     color = ft.colors.GREY
@@ -133,6 +138,11 @@ def show_meters_data(page, id_task, where, container_chose_meters):
     for result in filtered_results_meters:
         id_meters, seal_number, instalation_day, meter_type, marka_id, marka, date_meter_end, \
             location, status_filling, antimagnetic_protection, average_consumption = result
+        all_ += 1
+        if status_filling is not None:
+            completed += 1
+        if all_ == completed:
+            button_save.visible = True
 
         if status_filling == 'выполнен':
             color = const.tasks_completed_color
@@ -194,7 +204,7 @@ def show_meters_data(page, id_task, where, container_chose_meters):
         ],
     )
     row_button = ft.Row(alignment=ft.MainAxisAlignment.CENTER)
-    row_button.controls.append(button_back)
+    row_button.controls.append(button_save)
 
     content1 = ft.Column([
         ft.Column(
