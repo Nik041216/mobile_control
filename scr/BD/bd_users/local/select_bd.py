@@ -198,7 +198,6 @@ def select_deleted_photo_id():
 
 
 def select_photo_to_unload(id_photo):
-    print(id_photo)
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
         query = f""" Select id, value, name_file, task_id, meter_id from picture where server_id is Null
