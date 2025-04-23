@@ -145,7 +145,8 @@ def func_check_address_data(page, id_task, where):
                         ], alignment=ft.MainAxisAlignment.CENTER)
                 ],
             )
-            page.open(bs)
+            if message_string != "":
+                page.open(bs)
             page.update()
             page.close(check_address_data)
 
@@ -199,6 +200,13 @@ def update_data_check(page, meter_id, id_task, where, container1):
     marka_checkbox = ft.Ref[ft.Checkbox]()
     serial_number_checkbox = ft.Ref[ft.Checkbox]()
     seal_number_checkbox = ft.Ref[ft.Checkbox]()
+    meter_integrity_checkbox = ft.Ref[ft.Checkbox]()
+    mechanic_defect_checkbox = ft.Ref[ft.Checkbox]()
+    have_cracks_holes_checkbox = ft.Ref[ft.Checkbox]()
+    glass_indicator_checkbox = ft.Ref[ft.Checkbox]()
+    indicators_checkbox = ft.Ref[ft.Checkbox]()
+    star_spin_checkbox = ft.Ref[ft.Checkbox]()
+    visual_litr_checkbox = ft.Ref[ft.Checkbox]()
 
     dict_checkboxes["marka"] = True
     dict_checkboxes["serial_number"] = True
@@ -229,6 +237,63 @@ def update_data_check(page, meter_id, id_task, where, container1):
         name="serial_number"
     )
 
+    meter_integrity_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
+        "Прибор учета ", "цел",
+        meter_integrity_checkbox,
+        on_checkbox_change,
+        toggle_checkbox,
+        name="meter_integrity"
+    )
+
+    mechanic_defect_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
+        "Нет ли у прибора учета ", "механических повреждений",
+        mechanic_defect_checkbox,
+        on_checkbox_change,
+        toggle_checkbox,
+        name="mechanic_defect"
+    )
+
+    have_cracks_holes_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
+        "Отстутствуют ли не предусмотренные изготовителем ", "отверстия или трещины",
+        have_cracks_holes_checkbox,
+        on_checkbox_change,
+        toggle_checkbox,
+        name="have_cracks_holes"
+    )
+
+    glass_indicator_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
+        "Стекло индикатора прилегает ", "плотно",
+        glass_indicator_checkbox,
+        on_checkbox_change,
+        toggle_checkbox,
+        name="glass_indicator"
+    )
+
+    indicators_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
+        "Присутствуют и сохраненны ли ", "контрольные пломбы и индикаторы антимагнитных пломб и других"
+                                         " устройств позволяющих фиксировать факт вмешательства",
+        indicators_checkbox,
+        on_checkbox_change,
+        toggle_checkbox,
+        name="indicators"
+    )
+
+    star_spin_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
+        "Сигнальня звездочка вращается ", "равномерно",
+        star_spin_checkbox,
+        on_checkbox_change,
+        toggle_checkbox,
+        name="star_spin"
+    )
+
+    visual_litr_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
+        "Производится ли ", "визуальный отчет литров",
+        visual_litr_checkbox,
+        on_checkbox_change,
+        toggle_checkbox,
+        name="visual_litr"
+    )
+
     seal_number_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
         "Номер пломбы совпадает с ",
         seal_number,
@@ -242,9 +307,18 @@ def update_data_check(page, meter_id, id_task, where, container1):
         [
             marka_checkbox_container,
             serial_number_checkbox_container,
+            meter_integrity_checkbox_container,
+            mechanic_defect_checkbox_container,
+            have_cracks_holes_checkbox_container,
+            glass_indicator_checkbox_container,
+            indicators_checkbox_container,
             seal_number_checkbox_container,
+            star_spin_checkbox_container,
+            visual_litr_checkbox_container
         ],
-        width=screen_width * 0.95
+        width=screen_width * 0.95,
+        expand=True,
+        scroll=ft.ScrollMode.AUTO
     )
 
     def button_yes(e):
@@ -266,14 +340,52 @@ def update_data_check(page, meter_id, id_task, where, container1):
             elif chect == "seal":
                 message_string += "Включите в акт несоответствие Номера пломбы\n"
                 act_string += "Несоответствие Номера пломбы,"
+            elif chect == "meter_integrity":
+                message_string += "Включите в акт проблемы с целостностью счетчика\n"
+                act_string += "Проблемы целостности прибора,"
+            elif chect == "mechanic_defect":
+                message_string += "Включите в акт факт о наличии механических повреждений\n"
+                act_string += "Наличие механических повреждений,"
+            elif chect == "have_cracks_holes":
+                message_string += "Включите в акт факт наличия отверстий и трещин\n"
+                act_string += "Наличие отверстий и трещин,"
+            elif chect == "glass_indicator":
+                message_string += "Включите в акт неплотное прилегание стекла индикатора\n"
+                act_string += "Неплотное прилегание стекла индикатора,"
+            elif chect == "indicators":
+                message_string += "Включите в акт отсутствие или порчу устройств фиксирующих вмешательство\n"
+                act_string += "Отсутствие или порча устройств фиксирующих вмешательство,"
+            elif chect == "star_spin":
+                message_string += "Включите в акт информацию о неравномерном вращении сигнальной звездочки\n"
+                act_string += "Неравномерное вращение сигнальной звездочки,"
+            elif chect == "visual_litr":
+                message_string += "Включите в акт информацию о непроизводимости визульного отсчета литров\n"
+                act_string += "Непроизводимость визульного отсчета литров,"
         if total_months >= 6:
             message_string += "Включите в акт предписание о скором выходе МПИ\n"
             act_string += "Предписание о скором выходе МПИ,"
-        scr.navigation_apps.users.doing_work.update_data_meters.update_data(page, meter_id, id_task, where, container1)
-        if bool(message_string):
-            scr.func.show_alert_yn(page, message_string)
         if bool(act_string):
             scr.BD.bd_users.local.update_bd.update_acts_insert_meters(id_task, act_string)
+
+        def on_button_yes(e):
+            page.close(bs)
+            scr.navigation_apps.users.doing_work.update_data_meters.update_data(page, meter_id, id_task,
+                                                                                where, container1)
+
+        bs = ft.AlertDialog(
+            modal=True,
+            title=ft.Text("Предупреждение"),
+            content=ft.Text(message_string),
+            actions=[
+                ft.Row(
+                    [
+                        ft.ElevatedButton("ОК", on_click=on_button_yes)
+                    ], alignment=ft.MainAxisAlignment.CENTER)
+            ],
+        )
+        if message_string != "":
+            page.open(bs)
+        page.update()
         page.close(check_meters_data)
 
     def button_no(e):
