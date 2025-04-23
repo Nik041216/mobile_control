@@ -67,3 +67,48 @@ def reverse_date(date):
         date_obj = datetime.datetime.strptime(date, "%Y-%m-%d")
         date = date_obj.strftime("%d-%m-%Y")
         return date
+
+
+def create_checkbox_with_wrapped_text(
+        default_text: str,
+        bold_text: str,
+        checkbox_ref: ft.Ref[ft.Checkbox],
+        on_checkbox_change: callable,
+        toggle_checkbox: callable,
+        name: str = "serial_number",
+) -> ft.Container:
+    """
+    Создает контейнер с чекбоксом и текстом, где текст переносится,
+    но первая строка остается в одной линии с чекбоксом.
+
+    Возвращает:
+    - ft.Container с настроенными элементами
+    """
+    return ft.Container(
+        content=ft.Column(
+            [
+                ft.Row([
+                    ft.Checkbox(
+                        on_change=lambda e: on_checkbox_change(e.control, name),
+                        ref=checkbox_ref,
+                        value=True
+                    ),
+                    ft.Column(
+                        [
+                            ft.Text(
+                                spans=[
+                                    ft.TextSpan(default_text),
+                                    ft.TextSpan(bold_text, ft.TextStyle(weight=ft.FontWeight.BOLD)),
+                                    ft.TextSpan("?")
+                                ],
+                                no_wrap=False
+                            ),
+                        ],
+                        spacing=0,
+                        expand=True
+                    )
+                ], expand=True)
+            ]
+        ),
+        on_click=lambda e: toggle_checkbox(e, checkbox_ref.current, name)
+    )

@@ -7,6 +7,7 @@ import scr.constants as const
 import scr.navigation_apps.users.pages.main_users_screen
 import scr.navigation_apps.users.pages.future_user_screen
 import scr.navigation_apps.users.doing_work.update_data_meters
+import scr.navigation_apps.users.doing_work.alert_check_data as alert
 import scr.navigation_apps.users.doing_work.sealing_meter
 import scr.navigation_apps.users.doing_work.create_new_meters as new_meters
 from scr.components.loading import LoadingManager
@@ -163,7 +164,7 @@ def show_meters_data(page, id_task, where, container_chose_meters):
         def create_on_click(id_task, id_meters):
             def on_click(e):
                 if purpose == "Контрольный съем с ИПУ" or purpose == "Замена/Поверка ИПУ":
-                    scr.navigation_apps.users.doing_work.update_data_meters.update_data(
+                    alert.update_data_check(
                         page, id_meters, id_task, where, container_chose_meters
                     )
                 elif purpose == "Повторная опломбировка ИПУ":

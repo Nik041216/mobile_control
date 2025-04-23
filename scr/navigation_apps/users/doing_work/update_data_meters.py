@@ -69,8 +69,8 @@ def update_data(page, meter_id, id_task, where, container1):
         today = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         scr.BD.bd_users.local.update_bd.update_local_tasks(
             str(today), id_task, reading_value.value, remark.value, meter_id)
-        page.close(dlg_modal)
         scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where, container1)
+        page.close(dlg_modal)
         page.update()
 
     # Обработка нажатия кнопки сохранения
@@ -116,127 +116,6 @@ def update_data(page, meter_id, id_task, where, container1):
              location, status_filling, antimagnetic_protection, average_consumption, remark_meter) = result
             date_of_death2 = scr.func.reverse_date(date_of_death)
     result_info_meters = f"Счетчик: {meter_number} \nДата ликвидации: {date_of_death2} \nТип: {type_service}"
-
-    dict_checkboxes = {}
-
-    def on_checkbox_change(checkbox, name):
-        dict_checkboxes[name] = checkbox.value
-
-    def toggle_checkbox(e, checkbox, name):
-        checkbox.value = not checkbox.value
-        checkbox.update()
-        on_checkbox_change(checkbox, name)
-
-    marka_checkbox = ft.Ref[ft.Checkbox]()
-    serial_number_checkbox = ft.Ref[ft.Checkbox]()
-    seal_number_checkbox = ft.Ref[ft.Checkbox]()
-
-    dict_checkboxes["marka"] = True
-    dict_checkboxes["serial_number"] = True
-    dict_checkboxes["seal"] = True
-
-    content = ft.Column(
-        [
-            ft.Container(
-                content=ft.Column(
-                    [
-                        ft.Row([
-                            ft.Checkbox(on_change=lambda e, name="marka": on_checkbox_change(e.control, name),
-                                        ref=marka_checkbox, value=True),
-                            ft.Text("Марка счетчика совпадает с "),
-                        ]),
-                        ft.Row([
-                            ft.Text(f"{marka_name}", weight=ft.FontWeight.BOLD),
-                            ft.Text("?")
-                        ])
-                    ]
-                ),
-                on_click=lambda e, name="marka": toggle_checkbox(e, marka_checkbox.current, name)
-            ),
-            ft.Container(
-                content=ft.Column(
-                    [
-                        ft.Row([
-                            ft.Checkbox(on_change=lambda e, name="serial_number": on_checkbox_change(e.control, name),
-                                        ref=serial_number_checkbox, value=True),
-                            ft.Text("Заводской номер счетчика"),
-                        ]),
-                        ft.Row([
-                            ft.Text("совпадает с "),
-                            ft.Text(f"{meter_number}", weight=ft.FontWeight.BOLD),
-                            ft.Text("?")
-                        ]),
-                    ]
-                ),
-                on_click=lambda e, name="serial_number": toggle_checkbox(e, serial_number_checkbox.current, name)
-            ),
-            ft.Container(
-                content=ft.Column(
-                    [
-                        ft.Row([
-                            ft.Checkbox(on_change=lambda e, name="seal": on_checkbox_change(e.control, name),
-                                        ref=seal_number_checkbox, value=True),
-                            ft.Text("Номер пломбы совпадает с "),
-                        ]),
-                        ft.Row([
-                            ft.Text(f"{seal_number}", weight=ft.FontWeight.BOLD),
-                            ft.Text("?")
-                        ]),
-                    ]
-                ),
-                on_click=lambda e, name="seal": toggle_checkbox(e, seal_number_checkbox.current, name)
-            )
-        ],
-        width=screen_width * 0.95
-    )
-
-    def button_yes(e):
-        chect_list = [name for name, is_checked in dict_checkboxes.items() if not is_checked]
-        message_string = ""
-        act_string = ""
-        today = datetime.datetime.now()
-        date = datetime.datetime.strptime(date_of_death, "%Y-%m-%d")
-        total_months = (today.year - date.year) * 12 + (today.month - date.month)
-        if not chect_list:
-            page.close(check_meters_data)
-        for chect in chect_list:
-            if chect == "marka":
-                message_string += "Включите в акт несоответствие Марки счетчика\n"
-                act_string += "Несоответствие Марки счетчика,"
-            elif chect == "serial_number":
-                message_string += "Включите в акт несоответствие Заводского номера\n"
-                act_string += "Несоответствие Заводского номера,"
-            elif chect == "seal":
-                message_string += "Включите в акт несоответствие Номера пломбы\n"
-                act_string += "Несоответствие Номера пломбы,"
-        if total_months >= 6:
-            message_string += "Включите в акт предписание о скором выходе МПИ\n"
-            act_string += "Предписание о скором выходе МПИ,"
-        page.open(dlg_modal)
-        if bool(message_string):
-            scr.func.show_alert_yn(page, message_string)
-        if bool(act_string):
-            scr.BD.bd_users.local.update_bd.update_acts_insert_meters(id_task, act_string)
-        page.close(check_meters_data)
-
-    def button_no(e):
-        page.close(check_meters_data)
-        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where, container1)
-
-    check_meters_data = ft.AlertDialog(
-        modal=True,
-        content=content,
-        title=ft.Text("Уточните Данные"),
-        actions=[
-            ft.Row(
-                [
-                    ft.ElevatedButton("Да", on_click=button_yes, bgcolor=ft.colors.BLUE_200),
-                    ft.ElevatedButton("Назад", on_click=button_no, bgcolor=ft.colors.BLUE_200),
-                ], alignment=ft.MainAxisAlignment.CENTER
-            )
-        ],
-        inset_padding=screen_width * 0.05
-    )
 
     last_reading_date = "Неизвестно"
     last_reading_value = "Неизвестно"
@@ -418,5 +297,5 @@ def update_data(page, meter_id, id_task, where, container1):
 
     # Очищаем и обновляем контент страницы
     page.controls.clear()
-    page.open(check_meters_data)
+    page.open(dlg_modal)
     page.update()
