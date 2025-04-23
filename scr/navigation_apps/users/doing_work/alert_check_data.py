@@ -395,7 +395,7 @@ def update_data_check(page, meter_id, id_task, where, container1):
     check_meters_data = ft.AlertDialog(
         modal=True,
         content=content,
-        title=ft.Text("Проверка работоспособности прибора учета"),
+        title=ft.Text("Проверка состояния прибора учета"),
         actions=[
             ft.Row(
                 [
