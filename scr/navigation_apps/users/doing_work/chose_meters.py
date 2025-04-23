@@ -168,9 +168,7 @@ def show_meters_data(page, id_task, where, container_chose_meters):
                         page, id_meters, id_task, where, container_chose_meters
                     )
                 elif purpose == "Повторная опломбировка ИПУ":
-                    scr.navigation_apps.users.doing_work.sealing_meter.sealing(
-                        page, id_task, id_meters, where, container_chose_meters
-                    )
+                    alert.commissioning_meters(page, id_meters,id_task,where,container_chose_meters)
                 else:
                     scr.func.show_alert_yn(page, "Для этого типа заданий нет логики")
 
