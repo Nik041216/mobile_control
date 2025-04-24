@@ -72,6 +72,7 @@ def reverse_date(date):
 def create_checkbox_with_wrapped_text(
         default_text: str,
         bold_text: str,
+        after_text:str,
         checkbox_ref: ft.Ref[ft.Checkbox],
         on_checkbox_change: callable,
         toggle_checkbox: callable,
@@ -99,7 +100,7 @@ def create_checkbox_with_wrapped_text(
                                 spans=[
                                     ft.TextSpan(default_text),
                                     ft.TextSpan(bold_text, ft.TextStyle(weight=ft.FontWeight.BOLD)),
-                                    ft.TextSpan("?")
+                                    ft.TextSpan(after_text)
                                 ],
                                 no_wrap=False
                             ),

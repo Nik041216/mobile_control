@@ -41,6 +41,7 @@ def func_check_address_data(page, id_task, where):
     fio_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
         "ФИО совпадает с ",
         person_name,
+        "?",
         fio_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -49,6 +50,7 @@ def func_check_address_data(page, id_task, where):
     residing_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
         "Количество прописанных/проживающих совпадает с ",
         registered_residing,
+        "?",
         residing_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -57,6 +59,7 @@ def func_check_address_data(page, id_task, where):
     phone_number_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
         "Контактный телефон совпадает с ",
         phone_number,
+        "?",
         phone_number_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -65,6 +68,7 @@ def func_check_address_data(page, id_task, where):
     area_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
         "Площадь без построек ",
         area,
+        "?",
         area_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -223,6 +227,7 @@ def update_data_check(page, meter_id, id_task, where, container1):
     marka_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
         "Марка счетчика совпадает с ",
         marka_name,
+        "?",
         marka_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -232,6 +237,7 @@ def update_data_check(page, meter_id, id_task, where, container1):
     serial_number_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
         "Заводской номер счетчика совпадает с ",
         meter_number,
+        "?",
         serial_number_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -239,7 +245,7 @@ def update_data_check(page, meter_id, id_task, where, container1):
     )
 
     meter_integrity_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Прибор учета ", "цел",
+        "Прибор учета ", "цел", "?",
         meter_integrity_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -247,7 +253,7 @@ def update_data_check(page, meter_id, id_task, where, container1):
     )
 
     mechanic_defect_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Нет ли у прибора учета ", "механических повреждений",
+        "Нет ли у прибора учета ", "механических повреждений", "?",
         mechanic_defect_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -255,7 +261,7 @@ def update_data_check(page, meter_id, id_task, where, container1):
     )
 
     have_cracks_holes_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Отстутствуют ли не предусмотренные изготовителем ", "отверстия или трещины",
+        "Отстутствуют ли не предусмотренные изготовителем ", "отверстия или трещины", "?",
         have_cracks_holes_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -263,7 +269,7 @@ def update_data_check(page, meter_id, id_task, where, container1):
     )
 
     glass_indicator_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Стекло индикатора прилегает ", "плотно",
+        "Стекло индикатора прилегает ", "плотно", "?",
         glass_indicator_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -272,7 +278,7 @@ def update_data_check(page, meter_id, id_task, where, container1):
 
     indicators_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
         "Присутствуют и сохраненны ли ", "контрольные пломбы и индикаторы антимагнитных пломб и других"
-                                         " устройств позволяющих фиксировать факт вмешательства",
+                                         " устройств позволяющих фиксировать факт вмешательства", "?",
         indicators_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -280,7 +286,7 @@ def update_data_check(page, meter_id, id_task, where, container1):
     )
 
     star_spin_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Сигнальня звездочка вращается ", "равномерно",
+        "Сигнальня звездочка вращается ", "равномерно", "?",
         star_spin_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -288,7 +294,7 @@ def update_data_check(page, meter_id, id_task, where, container1):
     )
 
     visual_litr_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Производится ли ", "визуальный отчет литров",
+        "Производится ли ", "визуальный отчет литров", "?",
         visual_litr_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -298,6 +304,7 @@ def update_data_check(page, meter_id, id_task, where, container1):
     seal_number_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
         "Номер пломбы совпадает с ",
         seal_number,
+        "?",
         seal_number_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -445,15 +452,28 @@ def commissioning_meters(page, meter_id, id_task, where, container1):
     serial_number_checkbox = ft.Ref[ft.Checkbox]()
     installation_checkbox = ft.Ref[ft.Checkbox]()
     star_checkbox = ft.Ref[ft.Checkbox]()
+    pasport_checkbox = ft.Ref[ft.Checkbox]()
+    schema_checkbox = ft.Ref[ft.Checkbox]()
+    last_check_checkbox = ft.Ref[ft.Checkbox]()
+    seal_gos_checkbox = ft.Ref[ft.Checkbox]()
+    dovodomernye_vrezki_checkbox = ft.Ref[ft.Checkbox]()
+    utechki_do_meter_checkbox = ft.Ref[ft.Checkbox]()
 
     dict_checkboxes["marka"] = True
     dict_checkboxes["serial_number"] = True
     dict_checkboxes["installation"] = True
     dict_checkboxes["star"] = True
+    dict_checkboxes["pasport"] = True
+    dict_checkboxes["schema"] = True
+    dict_checkboxes["last_check"] = True
+    dict_checkboxes["seal_gos"] = True
+    dict_checkboxes["dovodomernye_vrezki"] = True
+    dict_checkboxes["utechki_do_meter"] = True
 
     marka_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
         "Марка счетчика совпадает с ",
         marka_name,
+        "?",
         marka_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -463,6 +483,7 @@ def commissioning_meters(page, meter_id, id_task, where, container1):
     serial_number_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
         "Заводской номер счетчика совпадает с ",
         meter_number,
+        "?",
         serial_number_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -470,7 +491,7 @@ def commissioning_meters(page, meter_id, id_task, where, container1):
     )
 
     installation_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Прибор учета устрановлен ", "по протоколу",
+        "Прибор учета устрановлен ", "по протоколу", "?",
         installation_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -478,7 +499,7 @@ def commissioning_meters(page, meter_id, id_task, where, container1):
     )
 
     star_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Сигнальная звезочка вращается ", "равномерно",
+        "Сигнальная звезочка вращается ", "равномерно", "?",
         star_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -546,7 +567,7 @@ def commissioning_meters(page, meter_id, id_task, where, container1):
     check_meters_data = ft.AlertDialog(
         modal=True,
         content=content_question,
-        title=ft.Text("Проверте работоспособность счетчика"),
+        title=ft.Text("Проверка пригодности ввода в эксплуатацию"),
         actions=[
             ft.Row(
                 [

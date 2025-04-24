@@ -200,7 +200,7 @@ def show_meters_data(page, id_task, where, container_chose_meters):
             ft.Text(purpose, size=17, ),
             ft.Text(f"Срок выполнения: \n{date} - {date_end}", size=17),
             ft.Text(f"Примечание: {remark_task}", size=17)
-        ],
+        ], spacing=2.5
     )
     row_button = ft.Row(alignment=ft.MainAxisAlignment.CENTER)
     row_button.controls.append(button_save)
