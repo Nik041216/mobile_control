@@ -43,9 +43,7 @@ def completed_task(task_id, unloading_time):
         cursor = db.cursor()
         query = f""" update tasks set 
                    unloading_time = '{unloading_time}',  
-                   status = CASE 
-                        WHEN status = 'просрочен' THEN status 
-                         ELSE 'выполнен' 
+                   status = 'выполнен' 
                      END,
                    unloaded = false
                    where id = {task_id}"""
