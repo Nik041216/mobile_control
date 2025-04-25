@@ -165,7 +165,7 @@ def show_meters_data(page, id_task, where, container_chose_meters):
             def on_click(e):
                 if purpose == "Контрольный съем с ИПУ" or purpose == "Замена/Поверка ИПУ":
                     alert.update_data_check(
-                        page, id_meters, id_task, where, container_chose_meters
+                        page, id_task, where, container_chose_meters, id_meters
                     )
                 elif purpose == "Повторная опломбировка ИПУ":
                     alert.commissioning_meters(page, id_meters,id_task,where,container_chose_meters)

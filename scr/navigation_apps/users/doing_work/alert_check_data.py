@@ -2,9 +2,9 @@ import flet as ft
 import scr.BD.bd_users.local.select_bd
 import scr.BD.bd_users.local.insert_bd
 import scr.navigation_apps.users.doing_work.update_data_meters
+import scr.navigation_apps.users.doing_work.photo_not_working_meters
 import scr.navigation_apps.users.doing_work.sealing_meter
 import scr.func
-import datetime
 
 
 def func_check_address_data(page, id_task, where):
@@ -179,18 +179,10 @@ def func_check_address_data(page, id_task, where):
     page.open(check_address_data)
 
 
-def update_data_check(page, meter_id, id_task, where, container1):
+# проверка рабоспособности счетчика
+def update_data_check(page, id_task, where, container1, meter_id=""):
     screen_width = page.window_width
-    marka_name = "Неизвестно"
-    meter_number = "Неизвестно"
-    date_of_death = "Неизвестно"
-    seal_number = "Неизвестно"
-
-    results_meters_data = scr.BD.bd_users.local.select_bd.select_meters_data_new_for_one(id_task, meter_id)
-    if results_meters_data:
-        for result in results_meters_data:
-            (meter_number, seal_number, instalation_date, type_service, marka_id, marka_name, date_of_death,
-             location, status_filling, antimagnetic_protection, average_consumption, remark_meter) = result
+    meter_number = "Неизвестно" if meter_id == "" else meter_id
 
     dict_checkboxes = {}
 
@@ -202,9 +194,7 @@ def update_data_check(page, meter_id, id_task, where, container1):
         checkbox.update()
         on_checkbox_change(checkbox, name)
 
-    marka_checkbox = ft.Ref[ft.Checkbox]()
-    serial_number_checkbox = ft.Ref[ft.Checkbox]()
-    seal_number_checkbox = ft.Ref[ft.Checkbox]()
+    gos_seal_checkbox = ft.Ref[ft.Checkbox]()
     meter_integrity_checkbox = ft.Ref[ft.Checkbox]()
     mechanic_defect_checkbox = ft.Ref[ft.Checkbox]()
     have_cracks_holes_checkbox = ft.Ref[ft.Checkbox]()
@@ -213,8 +203,6 @@ def update_data_check(page, meter_id, id_task, where, container1):
     star_spin_checkbox = ft.Ref[ft.Checkbox]()
     visual_litr_checkbox = ft.Ref[ft.Checkbox]()
 
-    dict_checkboxes["marka"] = True
-    dict_checkboxes["serial_number"] = True
     dict_checkboxes["seal"] = True
     dict_checkboxes["meter_integrity"] = True  # целостность счетчика
     dict_checkboxes["mechanic_defect"] = True  # механические повреждения
@@ -223,26 +211,6 @@ def update_data_check(page, meter_id, id_task, where, container1):
     dict_checkboxes["indicators"] = True  # короче буква д или 5 пункт
     dict_checkboxes["star_spin"] = True  # вращение звездочки
     dict_checkboxes["visual_litr"] = True  # визуалный отчет литров
-
-    marka_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Марка счетчика совпадает с ",
-        marka_name,
-        "?",
-        marka_checkbox,
-        on_checkbox_change,
-        toggle_checkbox,
-        name="marka"
-    )
-
-    serial_number_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Заводской номер счетчика совпадает с ",
-        meter_number,
-        "?",
-        serial_number_checkbox,
-        on_checkbox_change,
-        toggle_checkbox,
-        name="serial_number"
-    )
 
     meter_integrity_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
         "Прибор учета ", "цел", "?",
@@ -301,11 +269,9 @@ def update_data_check(page, meter_id, id_task, where, container1):
         name="visual_litr"
     )
 
-    seal_number_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Номер пломбы совпадает с ",
-        seal_number,
-        "?",
-        seal_number_checkbox,
+    gos_seal_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
+        "Есть ли пломба ", "госповерителя","?",
+        gos_seal_checkbox,
         on_checkbox_change,
         toggle_checkbox,
         name="seal"
@@ -313,14 +279,12 @@ def update_data_check(page, meter_id, id_task, where, container1):
 
     content = ft.Column(
         [
-            marka_checkbox_container,
-            serial_number_checkbox_container,
             meter_integrity_checkbox_container,
             mechanic_defect_checkbox_container,
             have_cracks_holes_checkbox_container,
             glass_indicator_checkbox_container,
             indicators_checkbox_container,
-            seal_number_checkbox_container,
+            gos_seal_checkbox_container,
             star_spin_checkbox_container,
             visual_litr_checkbox_container
         ],
@@ -333,59 +297,49 @@ def update_data_check(page, meter_id, id_task, where, container1):
         chect_list = [name for name, is_checked in dict_checkboxes.items() if not is_checked]
         message_string = ""
         act_string = ""
-        not_enter = ""
-        today = datetime.datetime.now()
-        date = datetime.datetime.strptime(date_of_death, "%Y-%m-%d")
-        total_months = (today.year - date.year) * 12 + (today.month - date.month)
+        not_enter = 0
         if not chect_list:
             page.close(check_meters_data)
         for chect in chect_list:
-            if chect == "marka":
-                message_string += "Включите в акт несоответствие Марки счетчика\n"
-                act_string += "Несоответствие Марки счетчика,"
-            elif chect == "serial_number":
-                message_string += "Включите в акт несоответствие Заводского номера\n"
-                act_string += "Несоответствие Заводского номера,"
-            elif chect == "seal":
-                message_string += "Включите в акт несоответствие Номера пломбы\n"
-                act_string += "Несоответствие Номера пломбы,"
+            if chect == "seal":
+                message_string += "Включите в акт отсутствие пломбы госповерителя\n"
+                act_string += f"Отсутствие пломбы госповерителя {meter_number},"
+                not_enter += 1
             elif chect == "meter_integrity":
                 message_string += "Включите в акт проблемы с целостностью счетчика\n"
-                act_string += "Проблемы целостности прибора,"
-                not_enter += "Проблемы целостности прибора,"
+                act_string += f"Проблемы целостности прибора {meter_number},"
+                not_enter += 1
             elif chect == "mechanic_defect":
                 message_string += "Включите в акт факт о наличии механических повреждений\n"
-                act_string += "Наличие механических повреждений,"
-                not_enter += "Наличие механических повреждений,"
+                act_string += f"Наличие механических повреждений {meter_number},"
+                not_enter += 1
             elif chect == "have_cracks_holes":
                 message_string += "Включите в акт факт наличия отверстий и трещин\n"
-                act_string += "Наличие отверстий и трещин,"
-                not_enter += "Наличие отверстий и трещин,"
+                act_string += f"Наличие отверстий и трещин {meter_number},"
+                not_enter += 1
             elif chect == "glass_indicator":
                 message_string += "Включите в акт неплотное прилегание стекла индикатора\n"
-                act_string += "Неплотное прилегание стекла индикатора,"
-                not_enter += "Неплотное прилегание стекла индикатора,"
+                act_string += f"Неплотное прилегание стекла индикатора {meter_number},"
+                not_enter += 1
             elif chect == "indicators":
                 message_string += "Включите в акт отсутствие или порчу устройств фиксирующих вмешательство\n"
-                act_string += "Отсутствие или порча устройств фиксирующих вмешательство,"
+                act_string += f"Отсутствие или порча устройств фиксирующих вмешательство {meter_number},"
+                not_enter += 1
             elif chect == "star_spin":
                 message_string += "Включите в акт информацию о неравномерном вращении сигнальной звездочки\n"
-                act_string += "Неравномерное вращение сигнальной звездочки,"
-                not_enter += "Неравномерное вращение сигнальной звездочки,"
+                act_string += f"Неравномерное вращение сигнальной звездочки {meter_number},"
+                not_enter += 1
             elif chect == "visual_litr":
                 message_string += "Включите в акт информацию о непроизводимости визульного отсчета литров\n"
-                act_string += "Непроизводимость визульного отсчета литров,"
-                not_enter += "Непроизводимость визульного отсчета литров,"
-        if total_months >= 6:
-            message_string += "Включите в акт предписание о скором выходе МПИ\n"
-            act_string += "Предписание о скором выходе МПИ,"
+                act_string += f"Непроизводимость визульного отсчета литров {meter_number},"
+                not_enter += 1
         if bool(act_string):
             scr.BD.bd_users.local.update_bd.update_acts_insert_meters(id_task, act_string)
 
         def on_button_yes(e):
             page.close(bs)
-            scr.navigation_apps.users.doing_work.update_data_meters.update_data(page, meter_id, id_task,
-                                                                                where, container1)
+            scr.navigation_apps.users.doing_work.photo_not_working_meters.add_photo(page, id_task, where,
+                                                                                    container1, meter_id)
 
         bs = ft.AlertDialog(
             modal=True,
