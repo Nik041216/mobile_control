@@ -9,10 +9,10 @@ import scr.navigation_apps.users.doing_work.alert_check_data as check_alert
 
 statuses = ['не выполнен', 'в исполнении', 'просрочен']
 status_icons = {
-    'не выполнен': (ft.icons.HOURGLASS_EMPTY, ft.colors.BLUE),
+    'не выполнен': (ft.icons.HOURGLASS_EMPTY, ft.Colors.BLUE),
     'в исполнении': (ft.icons.BUILD_OUTLINED, '#ffc107'),
-    'выполнен': (ft.icons.CHECK_CIRCLE_OUTLINE, ft.colors.GREEN),
-    'просрочен': (ft.icons.ERROR_OUTLINE, ft.colors.RED),
+    'выполнен': (ft.icons.CHECK_CIRCLE_OUTLINE, ft.Colors.GREEN),
+    'просрочен': (ft.icons.ERROR_OUTLINE, ft.Colors.RED),
 }
 sorting = "Адрес"
 menu_visible = False
@@ -156,10 +156,10 @@ def get_content(page):
 
 
 def update_results(filter_statuses, page, search_value):
-    completed_icon = ft.Icon(ft.icons.CHECK_CIRCLE_OUTLINE)
-    failed_icon = ft.Icon(ft.icons.ERROR_OUTLINE)
-    pending_icon = ft.Icon(ft.icons.HOURGLASS_EMPTY)
-    unloaded_icon = ft.Icon(ft.icons.BUILD)
+    completed_icon = ft.Icon(ft.icons.CHECK_CIRCLE_OUTLINE, ft.Colors.GREEN)
+    failed_icon = ft.Icon(ft.icons.ERROR_OUTLINE, ft.Colors.RED)
+    pending_icon = ft.Icon(ft.icons.HOURGLASS_EMPTY, ft.Colors.BLUE)
+    unloaded_icon = ft.Icon(ft.icons.BUILD, '#ffc107')
 
     def click_conteiner(e, id_task):
         where = "task"
