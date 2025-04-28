@@ -6,9 +6,7 @@ import scr.func
 import scr.constants as const
 import scr.navigation_apps.users.pages.main_users_screen
 import scr.navigation_apps.users.pages.future_user_screen
-import scr.navigation_apps.users.doing_work.update_data_meters
 import scr.navigation_apps.users.doing_work.alert_check_data as alert
-import scr.navigation_apps.users.doing_work.sealing_meter
 import scr.navigation_apps.users.doing_work.create_new_meters as new_meters
 from scr.components.loading import LoadingManager
 
@@ -78,7 +76,7 @@ def get_appbar(page, id_task, where, container1):
 
 def get_floating_action_button(page, id_task, where, container1):
     def onclick_floating_button(e):
-        new_meters.create_meter(page, id_task, where, container1)
+        alert.commissioning_meters(page,id_task,where, container1, meter_id="", purpose="новый")
 
     results_address_data = scr.BD.bd_users.local.select_bd.select_tasks_data_for_one(id_task)
     filtered_results = [
