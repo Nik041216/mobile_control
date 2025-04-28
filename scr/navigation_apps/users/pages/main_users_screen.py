@@ -162,8 +162,7 @@ def update_results(filter_statuses, page, search_value):
     unloaded_icon = ft.Icon(ft.icons.BUILD, '#ffc107')
 
     def click_conteiner(e, id_task):
-        where = "task"
-        check_alert.func_check_address_data(page, id_task, where)
+        check_alert.func_check_address_data(page, id_task, where="task")
 
     def create_task_container(result):
         id_task, _, _, _, street, dom, apartment, phone, _, date, date_end, _, status, purpose, *_ = result

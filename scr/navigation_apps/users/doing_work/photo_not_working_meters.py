@@ -9,7 +9,7 @@ import os
 import datetime
 
 
-def add_photo(page, id_task, where, container1, meter_id):
+def add_photo(page, id_task, container1, meter_id):
     screen_width = page.window_width
 
     def save_image_to_db(file_path):
@@ -106,7 +106,7 @@ def add_photo(page, id_task, where, container1, meter_id):
     def on_click_save(e):
         today = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         scr.BD.bd_users.local.update_bd.update_not_working_meters(str(today), id_task, meter_id)
-        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where, container1)
+        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, container1)
         page.close(dlg)
         page.update()
 

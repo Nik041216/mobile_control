@@ -239,3 +239,12 @@ def select_count_task(date):
             if status not in status_counts:
                 status_counts[status] = 0
         return status_counts
+
+
+def select_acts_(task_id):
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" select * from acts where task_id = {task_id} """
+        cursor.execute(query)
+        result = cursor.fetchall()
+        return result

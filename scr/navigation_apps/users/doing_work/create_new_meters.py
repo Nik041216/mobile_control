@@ -4,14 +4,13 @@ import scr.BD.bd_users.local.update_bd as update
 import scr.BD.bd_users.local.create_bd as create
 import scr.BD.bd_users.local.delete_bd as delete
 import scr.BD.bd_users.local.delete_bd
-import scr.BD.bd_users.bd_server_user
 import scr.constants as const
 import scr.navigation_apps.users.doing_work.chose_meters
 import os
 import base64
 
 
-def create_meter(page, id_task, where, container1):
+def create_meter(page, id_task, container1):
     screen_width = page.window_width
     create.create_temp_photo_table()
 
@@ -68,12 +67,12 @@ def create_meter(page, id_task, where, container1):
                 seal_number.value, remark.value, meter_type.value, seal_type_radio.value
             )
             page.close(create_meter_alert)
-            scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where, container1)
+            scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, container1)
             page.update()
 
     def on_click_back(e):
         page.close(create_meter_alert)
-        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, where, container1)
+        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, container1)
         delete.delete_photo_temp()
         page.update()
 

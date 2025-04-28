@@ -7,11 +7,11 @@ import scr.constants as const
 import scr.navigation_apps.users.pages.main_users_screen
 import scr.navigation_apps.users.pages.future_user_screen
 import scr.navigation_apps.users.doing_work.alert_check_data as alert
-import scr.navigation_apps.users.doing_work.create_new_meters as new_meters
+import scr.navigation_apps.users.doing_work.act_info as act
 from scr.components.loading import LoadingManager
 
 
-def get_appbar(page, id_task, where, container1):
+def get_appbar(page, id_task, container1):
     screen_width = page.window_width
     results_address_data = scr.BD.bd_users.local.select_bd.select_tasks_data_for_one(id_task)
     filtered_results = [
@@ -25,7 +25,7 @@ def get_appbar(page, id_task, where, container1):
 
     def on_click_save(e):
         scr.BD.bd_users.local.update_bd.update_remark_task(remark_textfield.value, id_task)
-        show_meters_data(page, id_task, where, container1)
+        show_meters_data(page, id_task, container1)
         save_button.visible = False
         page.update()
 
@@ -74,9 +74,9 @@ def get_appbar(page, id_task, where, container1):
     )
 
 
-def get_floating_action_button(page, id_task, where, container1):
+def get_floating_action_button(page, id_task, container1):
     def onclick_floating_button(e):
-        alert.commissioning_meters(page,id_task,where, container1, meter_id="", purpose="новый")
+        alert.commissioning_meters(page,id_task, container1, meter_id="", purpose="новый")
 
     results_address_data = scr.BD.bd_users.local.select_bd.select_tasks_data_for_one(id_task)
     filtered_results = [
@@ -93,18 +93,19 @@ def get_floating_action_button(page, id_task, where, container1):
     return floating_action_button
 
 
-def get_content(page, id_task, where):
+def get_content(page, id_task):
     container = ft.Container(expand=True)
-    show_meters_data(page, id_task, where, container)
+    show_meters_data(page, id_task, container)
     return container
 
 
-def show_meters_data(page, id_task, where, container_chose_meters):
+def show_meters_data(page, id_task, container_chose_meters):
     screen_width = page.width
     screen_height = page.height
     page.controls.clear()
     results_meters_data = scr.BD.bd_users.local.select_bd.select_meters_data_new(id_task)
     results_address_data = scr.BD.bd_users.local.select_bd.select_tasks_data_for_one(id_task)
+    result_act = scr.BD.bd_users.local.select_bd.select_acts_(id_task)
     filtered_results = [
         result_address_data_v2 for result_address_data_v2 in results_address_data
     ]
@@ -128,7 +129,12 @@ def show_meters_data(page, id_task, where, container_chose_meters):
         scr.BD.bd_users.local.update_bd.completed_task(id_task, str(today))
         LoadingManager.hide_()
 
+    def on_click_act(e):
+        act.viewing_act(page, id_task)
+
     button_save = ft.ElevatedButton("Выполнить", on_click=on_click_save, bgcolor=ft.Colors.GREEN_200, visible=False)
+    button_act = ft.ElevatedButton("Акт", on_click=on_click_act, bgcolor=ft.Colors.PINK_200, color=ft.Colors.BLACK,
+                                   visible=False)
     filtered_results_meters = [result for result in results_meters_data]
     column = ft.Column(scroll=ft.ScrollMode.AUTO, horizontal_alignment=ft.CrossAxisAlignment.CENTER, expand=True)
     color = ft.colors.GREY
@@ -161,10 +167,10 @@ def show_meters_data(page, id_task, where, container_chose_meters):
             def on_click(e):
                 if purpose == "Контрольный съем с ИПУ" or purpose == "Замена/Поверка ИПУ":
                     alert.update_data_check(
-                        page, id_task, where, container_chose_meters, id_meters
+                        page, id_task, container_chose_meters, id_meters
                     )
                 elif purpose == "Повторная опломбировка ИПУ":
-                    alert.commissioning_meters(page, id_task, where, container_chose_meters, id_meters)
+                    alert.commissioning_meters(page, id_task, container_chose_meters, id_meters)
                 else:
                     scr.func.show_alert_yn(page, "Для этого типа заданий нет логики")
 
@@ -200,7 +206,10 @@ def show_meters_data(page, id_task, where, container_chose_meters):
     )
     if all_ == completed:
         button_save.visible = True
+    if result_act:
+        button_act.visible = True
     row_button = ft.Row(alignment=ft.MainAxisAlignment.CENTER)
+    row_button.controls.append(button_act)
     row_button.controls.append(button_save)
 
     content1 = ft.Column([
