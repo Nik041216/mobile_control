@@ -244,6 +244,8 @@ def unload_photo(id_photo):
                 for record in result:
                     photo_id, value, name_file, task_id, meter_id = record
                     value_base64 = base64.b64encode(value).decode('utf-8') if value else None
+                    if meter_id == "Неизвестный прибор учета":
+                        meter_id = None
                     update_data = {
                         "id_photo": photo_id,
                         "value": value_base64,
