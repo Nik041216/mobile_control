@@ -142,8 +142,10 @@ def get_task_for_upload(id_task):
 def select_photo_data(meter_id, task_id):
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
-        query = f""" select * from picture where meter_id = '{meter_id}' and task_id = {task_id} """
-        cursor.execute(query)
+        query = f""" SELECT * FROM picture 
+                        WHERE (meter_id = ? OR (meter_id IS NULL AND ? IS NULL))
+                        AND task_id = ? """
+        cursor.execute(query, (meter_id, meter_id, task_id))
         result = cursor.fetchall()
         return result
 

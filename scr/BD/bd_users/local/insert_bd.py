@@ -18,7 +18,7 @@ async def insert_bd_user(id_user, login, password, privileges, first_name, last_
     await scr.toggle_user_sessions.handle_user_sessions(page)
 
 
-def insert_photo(name_file, value, task_id, meter_id):
+def insert_photo(name_file, value, task_id, meter_id=None):
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
         query = """INSERT INTO picture 

@@ -316,3 +316,13 @@ def update_upload_status_true(id_task):
         cursor.execute(query, id_task)
         db.commit()
 
+
+def update_made_act_status(act_id, status):
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" update acts set
+                                    made = {status}
+                                    where id = {act_id} """
+        cursor.execute(query)
+        db.commit()
+
