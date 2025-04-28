@@ -57,8 +57,7 @@ def completed_task(task_id, unloading_time):
         cursor = db.cursor()
         query = f""" update tasks set 
                    unloading_time = '{unloading_time}',  
-                   status = 'выполнен' 
-                     END,
+                   status = 'выполнен',
                    unloaded = false
                    where id = {task_id}"""
         cursor.execute(query)
