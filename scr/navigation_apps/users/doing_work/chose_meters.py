@@ -142,8 +142,6 @@ def show_meters_data(page, id_task, where, container_chose_meters):
         all_ += 1
         if status_filling is not None:
             completed += 1
-        if all_ == completed:
-            button_save.visible = True
 
         if status_filling == 'выполнен':
             color = const.tasks_completed_color
@@ -202,6 +200,8 @@ def show_meters_data(page, id_task, where, container_chose_meters):
             ft.Text(f"Примечание: {remark_task}", size=17)
         ], spacing=2.5
     )
+    if all_ == completed:
+        button_save.visible = True
     row_button = ft.Row(alignment=ft.MainAxisAlignment.CENTER)
     row_button.controls.append(button_save)
 
