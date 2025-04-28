@@ -25,10 +25,7 @@ def update_local_tasks(unloading_time, task_id, reading_value, remark, meter_id)
 
         query = f""" update tasks set 
                    unloading_time = '{unloading_time}',  
-                   status = CASE 
-                        WHEN status = 'просрочен' THEN status 
-                         ELSE 'в исполнении' 
-                     END,
+                   status = 'в исполнении',
                    unloaded = false
                    where id = {task_id}"""
         cursor.execute(query)
@@ -36,6 +33,23 @@ def update_local_tasks(unloading_time, task_id, reading_value, remark, meter_id)
 
         if scr.func.check_internet():
             scr.BD.bd_users.bd_server_user.unload_task(task_id if isinstance(task_id, list) else [task_id])
+
+
+def update_not_working_meters(unloading_time, task_id, meter_id):
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" update meters set  
+                    status_filling = 'выполнен'
+                    where meter_number = '{meter_id}' """
+        cursor.execute(query)
+        db.commit()
+        query = f""" update tasks set 
+                           unloading_time = '{unloading_time}',  
+                           status = 'в исполнении',
+                           unloaded = false
+                           where id = {task_id}"""
+        cursor.execute(query)
+        db.commit()
 
 
 def completed_task(task_id, unloading_time):
@@ -216,10 +230,7 @@ def update_seal(seal_number, meter_id, task_id, remark, meter_reading, seal_type
 
         query = f""" update tasks set 
                            unloading_time = '{str(today)}',  
-                           status = CASE 
-                                WHEN status = 'просрочен' THEN status 
-                                ELSE 'в исполнении' 
-                           END,
+                           status = 'в исполнении',
                            unloaded = false
                            where id = {task_id}"""
         cursor.execute(query)
@@ -271,7 +282,7 @@ def update_status_task():
         cursor = db.cursor()
         query = """ update tasks set
                             status = 'просрочен' 
-                            where date_end < Date('now') and status != 'выполнен' """
+                            where date_end < Date('now') and status != 'выполнен' and status != 'в исполнении' """
         cursor.execute(query)
         db.commit()
 
