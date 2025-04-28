@@ -57,7 +57,7 @@ def select_tasks_data_new(sorting, search_value, date):
         if date == "future":
             query += f""" where t.date > current_date"""
         else:
-            query += f""" where t.date <= current_date and current_date <= t.date_end or t.status = 'просрочен' """
+            query += f""" where t.date <= current_date or current_date <= t.date_end or t.status = 'просрочен' """
         if sorting == "Адрес":
             query += f""" order by a.street, a.dom, a.apartment"""
         elif sorting == "Дата":
