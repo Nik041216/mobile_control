@@ -4,6 +4,7 @@ import scr.BD.bd_users.local.insert_bd
 import scr.navigation_apps.users.doing_work.update_data_meters
 import scr.navigation_apps.users.doing_work.photo_not_working_meters
 import scr.navigation_apps.users.doing_work.sealing_meter
+import scr.navigation_apps.users.doing_work.create_new_meters
 import scr.func
 
 
@@ -180,9 +181,9 @@ def func_check_address_data(page, id_task, where):
 
 
 # проверка рабоспособности счетчика
-def update_data_check(page, id_task, where, container1, meter_id=""):
+def update_data_check(page, id_task, where, container1, meter_id="", purpose="съем", failure=False):
     screen_width = page.window_width
-    meter_number = "Неизвестно" if meter_id == "" else meter_id
+    meter_number = "Неизвестный прибор учета" if meter_id == "" else meter_id
 
     dict_checkboxes = {}
 
@@ -270,7 +271,7 @@ def update_data_check(page, id_task, where, container1, meter_id=""):
     )
 
     gos_seal_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Есть ли пломба ", "госповерителя","?",
+        "Есть ли пломба ", "госповерителя", "?",
         gos_seal_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -346,8 +347,19 @@ def update_data_check(page, id_task, where, container1, meter_id=""):
         if message_string != "":
             page.open(bs)
         else:
-            scr.navigation_apps.users.doing_work.update_data_meters.update_data(page, meter_id, id_task, where,
-                                                                                container1)
+            if failure:
+                scr.navigation_apps.users.doing_work.photo_not_working_meters.add_photo(page, id_task, where,
+                                                                                        container1, meter_id)
+            else:
+                if purpose == "съем":
+                    scr.navigation_apps.users.doing_work.update_data_meters.update_data(page, meter_id, id_task, where,
+                                                                                        container1)
+                elif purpose == "новый":
+                    scr.navigation_apps.users.doing_work.create_new_meters.create_meter(page, id_task, where,
+                                                                                        container1)
+                else:
+                    scr.navigation_apps.users.doing_work.sealing_meter.sealing(page, id_task, meter_id, where,
+                                                                               container1)
         page.update()
         page.close(check_meters_data)
 
@@ -373,15 +385,10 @@ def update_data_check(page, id_task, where, container1, meter_id=""):
     page.update()
 
 
-def commissioning_meters(page, meter_id, id_task, where, container1):
+# при новом счетчике передавать "новый"
+def commissioning_meters(page, id_task, where, container1, meter_id="", purpose=""):
     screen_width = page.window_width
-    marka_name = "Неизвестно"
-    meter_number = "Неизвестно"
-    results_meters_data_v2 = scr.BD.bd_users.local.select_bd.select_meters_data_new_for_one(id_task, meter_id)
-    if results_meters_data_v2:
-        for result in results_meters_data_v2:
-            (meter_number, seal_number, instalation_date, type_service, marka_id, marka_name, date_of_death, location,
-             status_filling, antimagnetic_protection, average_consumption, remark_meter) = result
+    meter_number = "Неизвестный прибор учета" if meter_id == "" else meter_id
 
     dict_checkboxes = {}
 
@@ -393,42 +400,76 @@ def commissioning_meters(page, meter_id, id_task, where, container1):
         checkbox.update()
         on_checkbox_change(checkbox, name)
 
-    marka_checkbox = ft.Ref[ft.Checkbox]()
-    serial_number_checkbox = ft.Ref[ft.Checkbox]()
-    installation_checkbox = ft.Ref[ft.Checkbox]()
-    star_checkbox = ft.Ref[ft.Checkbox]()
-    pasport_checkbox = ft.Ref[ft.Checkbox]()
-    schema_checkbox = ft.Ref[ft.Checkbox]()
-    last_check_checkbox = ft.Ref[ft.Checkbox]()
-    seal_gos_checkbox = ft.Ref[ft.Checkbox]()
-    dovodomernye_vrezki_checkbox = ft.Ref[ft.Checkbox]()
-    utechki_do_meter_checkbox = ft.Ref[ft.Checkbox]()
+    serial_number_checkbox = ft.Ref[ft.Checkbox]()  #
+    installation_checkbox = ft.Ref[ft.Checkbox]()  #
+    pasport_checkbox = ft.Ref[ft.Checkbox]()  #
+    schema_checkbox = ft.Ref[ft.Checkbox]()  #
+    last_check_checkbox = ft.Ref[ft.Checkbox]()  #
+    seal_gos_checkbox = ft.Ref[ft.Checkbox]()  #
+    dovodomernye_vrezki_checkbox = ft.Ref[ft.Checkbox]()  #
+    utechki_do_meter_checkbox = ft.Ref[ft.Checkbox]()  #
 
-    dict_checkboxes["marka"] = True
     dict_checkboxes["serial_number"] = True
     dict_checkboxes["installation"] = True
-    dict_checkboxes["star"] = True
     dict_checkboxes["pasport"] = True
     dict_checkboxes["schema"] = True
-    dict_checkboxes["last_check"] = True
+    dict_checkboxes["last_check"] = True if purpose != "новый" else True  # заготовка на отключение всех галочек
     dict_checkboxes["seal_gos"] = True
     dict_checkboxes["dovodomernye_vrezki"] = True
     dict_checkboxes["utechki_do_meter"] = True
 
-    marka_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Марка счетчика совпадает с ",
-        marka_name,
-        "?",
-        marka_checkbox,
+    pasport_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
+        "Есть ли ", "оригинал паспорта ", "прибора учета?",
+        pasport_checkbox,
         on_checkbox_change,
         toggle_checkbox,
-        name="marka"
+        name="pasport"
+    )
+
+    schema_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
+        "Соответствует ли ", "типовой схеме узла", "?",
+        schema_checkbox,
+        on_checkbox_change,
+        toggle_checkbox,
+        name="schema"
+    )
+
+    last_check_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
+        "Есть ли на приборе учета ", "знаки последней поверки", "?",
+        last_check_checkbox,
+        on_checkbox_change,
+        toggle_checkbox,
+        name="last_check"
+    )
+
+    seal_gos_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
+        "Есть ли на приборе учета ", "пломба госповерителя ", "(согласно паспорту)?",
+        seal_gos_checkbox,
+        on_checkbox_change,
+        toggle_checkbox,
+        name="seal_gos"
+    )
+
+    dovodomernye_vrezki_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
+        "Есть ли ", "доводомерные врезки", "?",
+        dovodomernye_vrezki_checkbox,
+        on_checkbox_change,
+        toggle_checkbox,
+        name="dovodomernye_vrezki"
+    )
+
+    utechki_do_meter_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
+        "Есть ли ", "утечки до ", "прибора учета?",
+        utechki_do_meter_checkbox,
+        on_checkbox_change,
+        toggle_checkbox,
+        name="utechki_do_meter"
     )
 
     serial_number_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Заводской номер счетчика совпадает с ",
-        meter_number,
-        "?",
+        "Заводской номер на приборе учета ",
+        "совпадает с указанным ",
+        "в паспорте?",
         serial_number_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -436,27 +477,23 @@ def commissioning_meters(page, meter_id, id_task, where, container1):
     )
 
     installation_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Прибор учета устрановлен ", "по протоколу", "?",
+        "Прибор учета устрановлен ", "по потоку", "?",
         installation_checkbox,
         on_checkbox_change,
         toggle_checkbox,
         name="installation"
     )
 
-    star_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Сигнальная звезочка вращается ", "равномерно", "?",
-        star_checkbox,
-        on_checkbox_change,
-        toggle_checkbox,
-        name="star"
-    )
-
     content_question = ft.Column(
         [
-            marka_checkbox_container,
+            pasport_checkbox_container,
             serial_number_checkbox_container,
+            schema_checkbox_container,
+            last_check_checkbox_container if purpose != "новый" else ft.Text(visible=False),
+            seal_gos_checkbox_container,
             installation_checkbox_container,
-            star_checkbox_container
+            dovodomernye_vrezki_checkbox_container,
+            utechki_do_meter_checkbox_container
         ],
         width=screen_width * 0.95
     )
@@ -465,27 +502,42 @@ def commissioning_meters(page, meter_id, id_task, where, container1):
         chect_list = [name for name, is_checked in dict_checkboxes.items() if not is_checked]
         message_string = ""
         act_string = ""
+        failure = False
         if not chect_list:
             page.close(check_meters_data)
         for chect in chect_list:
-            if chect == "marka":
-                message_string += "Включите в акт несоответствие Марки счетчика\n"
-                act_string += "Несоответствие Марки счетчика,"
-            elif chect == "serial_number":
+            if chect == "serial_number":
                 message_string += "Включите в акт несоответствие Заводского номера\n"
-                act_string += "Несоответствие Заводского номера,"
+                act_string += f"Несоответствие Заводского номера {meter_number},"
             elif chect == "installation":
-                message_string += "Включите в акт информацию о неправильной установки прибора учета\n"
-                act_string += "Неправильной установки прибора учета,"
-            elif chect == "star":
-                message_string += "Включите в акт информацию о некоректной работе звездочки\n"
-                act_string += "Некоректная работа звездочки,"
+                message_string += "Включите в акт информацию об установке прибора учета не по потоку\n"
+                act_string += f"Установлен не по потоку {meter_number},"
+            elif chect == "pasport":
+                message_string += "Включите в акт отсутствие оригинала паспорта\n"
+                act_string += f"Отсутствие оригинала паспорта {meter_number},"
+                failure = True
+            elif chect == "schema":
+                message_string += "Включите в акт несоответствие типовой схеме узла\n"
+                act_string += f"Схема узла не соответствие типовой схеме узла {meter_number},"
+                failure = True
+            elif chect == "last_check":
+                message_string += "Включите в акт отсутствие знаков последней проверки\n"
+                act_string += f"Отсутствие пзнаков последней проверки {meter_number},"
+            elif chect == "seal_gos":
+                message_string += "Включите в акт отсутствие пломбы госповерителя\n"
+                act_string += f"Отсутствие пломбы госповерителя {meter_number},"
+            elif chect == "dovodomernye_vrezki":
+                message_string += "Включите в акт наличие доводомерных врезок\n"
+                act_string += f"Наличие доводомерных врезок {meter_number},"
+            elif chect == "utechki_do_meter":
+                message_string += "Включите в акт наличие утечек до прибора учета\n"
+                act_string += f"Наличие утечек до прибора учета {meter_number},"
         if bool(act_string):
             scr.BD.bd_users.local.update_bd.update_acts_insert_meters(id_task, act_string)
 
         def on_button_yes(e):
             page.close(bs)
-            scr.navigation_apps.users.doing_work.sealing_meter.sealing(page, id_task, meter_id, where, container1)
+            update_data_check(page, id_task, where, container1, meter_number, purpose, failure)
 
         bs = ft.AlertDialog(
             modal=True,
@@ -501,7 +553,7 @@ def commissioning_meters(page, meter_id, id_task, where, container1):
         if message_string != "":
             page.open(bs)
         else:
-            scr.navigation_apps.users.doing_work.sealing_meter.sealing(page, id_task, meter_id, where, container1)
+            update_data_check(page, id_task, where, container1, meter_number, purpose)
         page.update()
         page.close(check_meters_data)
 
