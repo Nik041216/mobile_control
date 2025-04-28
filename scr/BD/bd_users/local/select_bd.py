@@ -218,7 +218,7 @@ def select_count_task(date):
         if date == "future":
             query += f""" where date > current_date"""
         else:
-            query += f""" where date <= current_date and current_date <= date_end or status = 'просрочен' """
+            query += f""" where date <= current_date or current_date <= date_end or status = 'просрочен' """
         query += """ 
                     GROUP BY 
                         status
