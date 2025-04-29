@@ -7,6 +7,9 @@ import scr.constants as const
 import scr.navigation_apps.users.pages.main_users_screen
 import scr.navigation_apps.users.pages.future_user_screen
 import scr.navigation_apps.users.doing_work.alert_check_data as alert
+import scr.navigation_apps.users.doing_work.update_data_meters as update
+import scr.navigation_apps.users.doing_work.sealing_meter as sealing
+import scr.navigation_apps.users.doing_work.photo_not_working_meters as not_working
 import scr.navigation_apps.users.doing_work.act_info as act
 from scr.components.loading import LoadingManager
 
@@ -108,7 +111,8 @@ def show_meters_data(page, id_task, container_chose_meters):
     result_act = scr.BD.bd_users.local.select_bd.select_acts_(id_task)
     if result_act:
         for result in result_act:
-            act_id, task_id, date, reason, made = result
+            act_id, task_id, date, reason, made, not_working_meters = result
+            meters_split = [r.strip() for r in not_working_meters.split(',') if r.strip()]
     filtered_results = [
         result_address_data_v2 for result_address_data_v2 in results_address_data
     ]
@@ -168,14 +172,46 @@ def show_meters_data(page, id_task, container_chose_meters):
 
         def create_on_click(id_task, id_meters):
             def on_click(e):
-                if purpose == "Контрольный съем с ИПУ" or purpose == "Замена/Поверка ИПУ":
-                    alert.update_data_check(
-                        page, id_task, container_chose_meters, id_meters
-                    )
-                elif purpose == "Повторная опломбировка ИПУ":
-                    alert.commissioning_meters(page, id_task, container_chose_meters, id_meters)
+                if result_act:
+                    if id_meters in meters_split:
+                        not_working.add_photo(page, id_task, container_chose_meters, id_meters)
+                    elif status_filling == 'выполнен':
+                        if purpose == "Контрольный съем с ИПУ" or purpose == "Замена/Поверка ИПУ":
+                            update.update_data(
+                                page, id_meters, id_task, container_chose_meters
+                            )
+                        elif purpose == "Повторная опломбировка ИПУ":
+                            sealing.sealing(page, id_task, id_meters, container_chose_meters)
+                        else:
+                            scr.func.show_alert_yn(page, "Для этого типа заданий нет логики")
+                    else:
+                        if purpose == "Контрольный съем с ИПУ" or purpose == "Замена/Поверка ИПУ":
+                            alert.update_data_check(
+                                page, id_task, container_chose_meters, id_meters
+                            )
+                        elif purpose == "Повторная опломбировка ИПУ":
+                            alert.commissioning_meters(page, id_task, container_chose_meters, id_meters)
+                        else:
+                            scr.func.show_alert_yn(page, "Для этого типа заданий нет логики")
+
+                elif status_filling == 'выполнен':
+                    if purpose == "Контрольный съем с ИПУ" or purpose == "Замена/Поверка ИПУ":
+                        update.update_data(
+                            page, id_meters, id_task, container_chose_meters
+                        )
+                    elif purpose == "Повторная опломбировка ИПУ":
+                        sealing.sealing(page, id_task, id_meters, container_chose_meters)
+                    else:
+                        scr.func.show_alert_yn(page, "Для этого типа заданий нет логики")
                 else:
-                    scr.func.show_alert_yn(page, "Для этого типа заданий нет логики")
+                    if purpose == "Контрольный съем с ИПУ" or purpose == "Замена/Поверка ИПУ":
+                        alert.update_data_check(
+                            page, id_task, container_chose_meters, id_meters
+                        )
+                    elif purpose == "Повторная опломбировка ИПУ":
+                        alert.commissioning_meters(page, id_task, container_chose_meters, id_meters)
+                    else:
+                        scr.func.show_alert_yn(page, "Для этого типа заданий нет логики")
 
             return on_click
 

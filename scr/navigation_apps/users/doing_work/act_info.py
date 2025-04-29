@@ -112,7 +112,7 @@ def viewing_act(page, id_task, container1):
     reasons = ft.Column
     if results:
         for result in results:
-            act_id, task_id, date, reason, made = result
+            act_id, task_id, date, reason, made, not_working_meters = result
             date = scr.func.reverse_date(date)
             reasons_split = [r.strip() for r in reason.split(',') if r.strip()]
             reasons = ft.Column(
@@ -125,29 +125,52 @@ def viewing_act(page, id_task, container1):
                             expand=True)
                     ], spacing=2)
                     for idx, item in enumerate(reasons_split, 1)
-                ], spacing=4
+                ], spacing=4, scroll=ft.ScrollMode.AUTO
             )
 
-    title = ft.Text("Сформированный акт по заданию")
+    act_content = ft.Column(
+        [
+            ft.Text(f"Номер задания: {task_id}", size=17),
+            ft.Text(f"Дата формирования: {date}", size=17),
+            ft.Text("Причины формировния:", size=17),
+        ],
+    )
+
+    # Разделили контент на прокручиваемую и фиксированную части
+    reasons_content = ft.Column(
+        scroll=ft.ScrollMode.AUTO,
+        expand=True,
+        controls=[
+            reasons,
+        ]
+    )
+
+    fixed_content = ft.Column(
+        expand=False,
+        controls=[
+            save_photos,
+            ft.ElevatedButton("Добавить фотографию", on_click=zagr),
+        ]
+    )
+
     act_data = ft.Container(
-        content=ft.Stack(  # <-- Stack, чтобы наложить прогрузку поверх
+        content=ft.Stack(
             controls=[
                 ft.Column(
                     [
-                        ft.Text(f"Номер задания: {task_id}", size=17),
-                        ft.Text(f"Дата формирования: {date}", size=17),
-                        ft.Text("Причины формировния", size=17),
-                        reasons,
-                        save_photos,
-                        ft.ElevatedButton("Добавить фотографию",on_click=zagr),
+                        act_content,
+                        reasons_content,
+                        fixed_content  # Фиксированная часть (не прокручивается)
                     ],
-                    scroll=ft.ScrollMode.AUTO,
+                    expand=True
                 ),
-                LoadingManager.overlay  # <-- теперь он внутри AlertDialog
+                LoadingManager.overlay
             ]
         ),
         width=screen_width * 0.95
     )
+
+    title = ft.Text("Сформированный акт по заданию")
 
     def yes_click(e):
         if not selected_images:
@@ -179,4 +202,3 @@ def viewing_act(page, id_task, container1):
 
     page.open(act_)
     page.update()
-

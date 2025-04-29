@@ -44,7 +44,8 @@ def local_user_db():
                 task_id Integer,
                 date Text,
                 reason Text,
-                made bool) """
+                made bool,
+                not_working_meters Text) """
 
         cursor.execute(table_user)
         cursor.execute(table_meter_task)

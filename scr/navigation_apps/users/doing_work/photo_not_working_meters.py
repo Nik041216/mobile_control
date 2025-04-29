@@ -12,6 +12,15 @@ import datetime
 def add_photo(page, id_task, container1, meter_id):
     screen_width = page.window_width
 
+    def on_click_save(e):
+        today = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        scr.BD.bd_users.local.update_bd.update_not_working_meters(str(today), id_task, meter_id)
+        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, container1)
+        page.close(dlg)
+        page.update()
+
+    button_save = ft.ElevatedButton("Сохранить", on_click=on_click_save, bgcolor=ft.colors.BLUE_200, visible=False)
+
     def save_image_to_db(file_path):
         with open(file_path, 'rb') as file:
             file_data = file.read()
@@ -103,15 +112,6 @@ def add_photo(page, id_task, container1, meter_id):
         width=screen_width * 0.95
     )
 
-    def on_click_save(e):
-        today = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        scr.BD.bd_users.local.update_bd.update_not_working_meters(str(today), id_task, meter_id)
-        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, container1)
-        page.close(dlg)
-        page.update()
-
-    button_save = ft.ElevatedButton("Сохранить", on_click=on_click_save, bgcolor=ft.colors.BLUE_200, visible=False)
-
     dlg = ft.AlertDialog(
         modal=True,
         content=content,
@@ -119,7 +119,7 @@ def add_photo(page, id_task, container1, meter_id):
         actions=[
             ft.Row(
                 [
-                     button_save
+                    button_save
                 ], alignment=ft.MainAxisAlignment.CENTER
             )
         ],

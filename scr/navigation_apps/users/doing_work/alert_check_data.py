@@ -298,35 +298,47 @@ def update_data_check(page, id_task, container1, meter_id="", purpose="съем"
         chect_list = [name for name, is_checked in dict_checkboxes.items() if not is_checked]
         message_string = ""
         act_string = ""
+        not_working = 0
         if not chect_list:
             page.close(check_meters_data)
         for chect in chect_list:
             if chect == "seal":
                 message_string += "Включите в акт отсутствие пломбы госповерителя\n"
                 act_string += f"Отсутствие пломбы госповерителя {meter_number},"
+                not_working += 1
             elif chect == "meter_integrity":
                 message_string += "Включите в акт проблемы с целостностью счетчика\n"
                 act_string += f"Проблемы целостности прибора {meter_number},"
+                not_working += 1
             elif chect == "mechanic_defect":
                 message_string += "Включите в акт факт о наличии механических повреждений\n"
                 act_string += f"Наличие механических повреждений {meter_number},"
+                not_working += 1
             elif chect == "have_cracks_holes":
                 message_string += "Включите в акт факт наличия отверстий и трещин\n"
                 act_string += f"Наличие отверстий и трещин {meter_number},"
+                not_working += 1
             elif chect == "glass_indicator":
                 message_string += "Включите в акт неплотное прилегание стекла индикатора\n"
                 act_string += f"Неплотное прилегание стекла индикатора {meter_number},"
+                not_working += 1
             elif chect == "indicators":
                 message_string += "Включите в акт отсутствие или порчу устройств фиксирующих вмешательство\n"
                 act_string += f"Отсутствие или порча устройств фиксирующих вмешательство {meter_number},"
             elif chect == "star_spin":
                 message_string += "Включите в акт информацию о неравномерном вращении сигнальной звездочки\n"
                 act_string += f"Неравномерное вращение сигнальной звездочки {meter_number},"
+                not_working += 1
             elif chect == "visual_litr":
                 message_string += "Включите в акт информацию о непроизводимости визульного отсчета литров\n"
                 act_string += f"Непроизводимость визульного отсчета литров {meter_number},"
+                not_working += 1
         if bool(act_string):
-            scr.BD.bd_users.local.update_bd.update_acts_insert_meters(id_task, act_string)
+            if not_working != 0:
+                meter = f"{meter_number},"
+            else:
+                meter = ""
+            scr.BD.bd_users.local.update_bd.update_acts_insert_meters(id_task, act_string, meter)
 
         def on_button_yes(e):
             page.close(bs)
@@ -532,7 +544,11 @@ def commissioning_meters(page, id_task, container1, meter_id="", purpose=""):
                 message_string += "Включите в акт наличие утечек до прибора учета\n"
                 act_string += f"Наличие утечек до прибора учета {meter_number},"
         if bool(act_string):
-            scr.BD.bd_users.local.update_bd.update_acts_insert_meters(id_task, act_string)
+            if failure:
+                meter = f"{meter_number},"
+            else:
+                meter = ""
+            scr.BD.bd_users.local.update_bd.update_acts_insert_meters(id_task, act_string, meter)
 
         def on_button_yes(e):
             page.close(bs)
