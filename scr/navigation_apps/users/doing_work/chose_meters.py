@@ -106,6 +106,9 @@ def show_meters_data(page, id_task, container_chose_meters):
     results_meters_data = scr.BD.bd_users.local.select_bd.select_meters_data_new(id_task)
     results_address_data = scr.BD.bd_users.local.select_bd.select_tasks_data_for_one(id_task)
     result_act = scr.BD.bd_users.local.select_bd.select_acts_(id_task)
+    if result_act:
+        for result in result_act:
+            act_id, task_id, date, reason, made = result
     filtered_results = [
         result_address_data_v2 for result_address_data_v2 in results_address_data
     ]
@@ -130,7 +133,7 @@ def show_meters_data(page, id_task, container_chose_meters):
         LoadingManager.hide_()
 
     def on_click_act(e):
-        act.viewing_act(page, id_task)
+        act.viewing_act(page, id_task, container_chose_meters)
 
     button_save = ft.ElevatedButton("Выполнить", on_click=on_click_save, bgcolor=ft.Colors.GREEN_200, visible=False)
     button_act = ft.ElevatedButton("Акт", on_click=on_click_act, bgcolor=ft.Colors.PINK_200, color=ft.Colors.BLACK,
@@ -204,7 +207,8 @@ def show_meters_data(page, id_task, container_chose_meters):
             ft.Text(f"Примечание: {remark_task}", size=17)
         ], spacing=2.5
     )
-    if all_ == completed:
+
+    if all_ == completed and made:
         button_save.visible = True
     if result_act:
         button_act.visible = True

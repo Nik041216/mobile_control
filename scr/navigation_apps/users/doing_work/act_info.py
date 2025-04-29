@@ -8,7 +8,7 @@ import os
 import base64
 
 
-def viewing_act(page, id_task):
+def viewing_act(page, id_task, container1):
     screen_width = page.window_width
     selected_images = {}
     save_photos = ft.Row(scroll=ft.ScrollMode.AUTO, expand=True, )
@@ -154,10 +154,13 @@ def viewing_act(page, id_task):
             page.open(bottom_sheet)
         else:
             update.update_made_act_status(act_id, True)
+            chose.show_meters_data(page, id_task, container1)
+            page.update()
 
     def _close(e):
         page.close(act_)
-        chose.get_content(page, task_id)
+        chose.show_meters_data(page, id_task, container1)
+        page.update()
 
     act_ = ft.AlertDialog(
         modal=True,
