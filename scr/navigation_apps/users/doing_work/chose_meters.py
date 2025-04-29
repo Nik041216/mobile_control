@@ -208,8 +208,12 @@ def show_meters_data(page, id_task, container_chose_meters):
         ], spacing=2.5
     )
 
-    if all_ == completed and made:
-        button_save.visible = True
+    if all_ == completed:
+        if result_act:
+            if made:
+                button_save.visible = True
+        else:
+            button_save.visible = True
     if result_act:
         button_act.visible = True
     row_button = ft.Row(alignment=ft.MainAxisAlignment.CENTER)
