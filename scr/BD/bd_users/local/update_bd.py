@@ -336,3 +336,14 @@ def update_made_act_status(act_id, status):
         cursor.execute(query)
         db.commit()
 
+
+def update_act_status_unload(act_id):
+    id_act = [int(i) for i in act_id]
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" update acts set
+                                    unloaded = True
+                                    where id in ({','.join(['?'] * len(id_act))}) """
+        cursor.execute(query, id_act)
+        db.commit()
+

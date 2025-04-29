@@ -41,6 +41,10 @@ class WaterUtilityAPIClient:
                     if result_deleted_photo:
                         bd_update.delete_photo(result_deleted_photo)
                         print("Удаление фото")
+                    result_act = select.select_act_to_upload()
+                    if result_act:
+                        bd_update.unload_acts()
+                        print("Выгрузка актов")
                     while self.running:
                         message = await websocket.recv()
                         data = json.loads(message)
@@ -135,6 +139,10 @@ class WaterUtilityAPIClient:
     def batch_photo(self, photo_update: List[Dict[str, Any]]) -> Dict[str, Any]:
         data = {"photos": photo_update}
         return self._make_request("POST", "batch_photo", data=data)
+
+    def batch_act(self, acts_update: List[Dict[str, Any]]) -> Dict[str, Any]:
+        data = {"acts": acts_update}
+        return self._make_request("POST", "batch_act", data=data)
 
     def delete_photo(self, photo_del:List[int]):
         return self._make_request("DELETE", "delete_photo", data=photo_del)

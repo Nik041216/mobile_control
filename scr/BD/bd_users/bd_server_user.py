@@ -82,6 +82,18 @@ def upload_photo(login: str, password: str, photo_update: List[Dict[str, Any]]):
         return False
 
 
+def upload_acts(login: str, password: str, act_update: List[Dict[str, Any]]):
+    try:
+        if act_update:
+            print(f"Отправка данных актов: {json.dumps(act_update, indent=2, ensure_ascii=False)}")
+            result = api.batch_act(login, password, act_update)
+            return result
+        return True
+    except Exception as ex:
+        print(f"Ошибка при отправке данных фотографий: {ex}")
+        return False
+
+
 def upload_address_data(login: str, password: str, address_updates: List[Dict[str, Any]]) -> bool:
     """Отправка данных по адресам"""
     try:
@@ -277,3 +289,30 @@ def delete_photo(photo_ids):
         photo_success = api.delete_photo(login, password, photo_ids)
     except Exception as ex:
         print(f"Ошибка при выгрузке данных: {ex}")
+
+
+def unload_acts():
+    try:
+        res = scr.BD.bd_users.local.select_bd.select_user_data()
+        user_id, login, password, privileges, first_name, last_name = res[0]
+        act_lict = []
+        act_id_list = []
+        try:
+            result = scr.BD.bd_users.local.select_bd.select_act_to_upload()
+            if result:
+                for record in result:
+                    act_id, task_id, date, reason, made, not_working_meters, unloaded = record
+                    update_data = {
+                        "task_id": task_id,
+                        "date": date,
+                        "reason": reason
+                    }
+                    act_id_list.append(act_id)
+                    act_lict.append(update_data)
+        except Exception as e:
+            print(f"Ошиба получения актов {e}")
+        act_success = upload_acts(login, password, act_lict)
+        if act_success:
+            scr.BD.bd_users.local.update_bd.update_act_status_unload(act_id_list)
+    except Exception as e:
+        print(f"Ошибка при выгрузке данных {e}")

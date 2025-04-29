@@ -250,3 +250,12 @@ def select_acts_(task_id):
         cursor.execute(query)
         result = cursor.fetchall()
         return result
+
+
+def select_act_to_upload():
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" select * from acts where made = 1 and (unloaded = 0 or unloaded is Null)"""
+        cursor.execute(query)
+        result = cursor.fetchall()
+        return result

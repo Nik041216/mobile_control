@@ -4,6 +4,7 @@ import scr.BD.bd_users.local.update_bd as update
 import scr.func
 import scr.navigation_apps.users.doing_work.chose_meters as chose
 from scr.components.loading import LoadingManager
+import scr.BD.bd_users.bd_server_user as bd
 import os
 import base64
 
@@ -112,7 +113,7 @@ def viewing_act(page, id_task, container1):
     reasons = ft.Column
     if results:
         for result in results:
-            act_id, task_id, date, reason, made, not_working_meters = result
+            act_id, task_id, date, reason, made, not_working_meters, unloaded = result
             date = scr.func.reverse_date(date)
             reasons_split = [r.strip() for r in reason.split(',') if r.strip()]
             reasons = ft.Column(
@@ -178,6 +179,9 @@ def viewing_act(page, id_task, container1):
         else:
             update.update_made_act_status(act_id, True)
             chose.show_meters_data(page, id_task, container1)
+            page.close(act_)
+            if scr.func.check_internet():
+                bd.unload_acts()
             page.update()
 
     def _close(e):

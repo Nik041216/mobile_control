@@ -111,7 +111,7 @@ def show_meters_data(page, id_task, container_chose_meters):
     result_act = scr.BD.bd_users.local.select_bd.select_acts_(id_task)
     if result_act:
         for result in result_act:
-            act_id, task_id, date, reason, made, not_working_meters = result
+            act_id, task_id, date, reason, made, not_working_meters, unloaded = result
             meters_split = [r.strip() for r in not_working_meters.split(',') if r.strip()]
     filtered_results = [
         result_address_data_v2 for result_address_data_v2 in results_address_data
