@@ -88,6 +88,24 @@ def viewing_act(page, id_task, container1):
     def zagr(e):
         pick_files_dialog.pick_files(allow_multiple=True, allowed_extensions=["jpeg", "gif", "png", "webp"])
 
+    photo_picker_button = ft.ElevatedButton(
+        content=ft.Row(
+            controls=[
+                ft.Icon(name=ft.icons.CAMERA_ALT, size=22),
+                ft.Text("Выбрать фото"),
+            ], width=120,
+            alignment=ft.MainAxisAlignment.CENTER,
+            vertical_alignment=ft.CrossAxisAlignment.CENTER,
+        ),
+        style=ft.ButtonStyle(
+            shape=ft.RoundedRectangleBorder(radius=8),
+            padding=16,
+            side=ft.BorderSide(1, "#b8d1ff"),
+        ),
+        color="#1a3d7a",
+        on_click=zagr
+    )
+
     def bottom_sheet_yes(e):
         page.close(bottom_sheet)
 
@@ -150,7 +168,9 @@ def viewing_act(page, id_task, container1):
         expand=False,
         controls=[
             save_photos,
-            ft.ElevatedButton("Добавить фотографию", on_click=zagr),
+            ft.Row([
+                photo_picker_button
+            ], alignment=ft.MainAxisAlignment.CENTER),
         ], spacing=0
     )
 
@@ -196,8 +216,9 @@ def viewing_act(page, id_task, container1):
         actions=[
             ft.Row(
                 [
-                    ft.ElevatedButton("Подтвердить акт", on_click=yes_click, bgcolor=ft.colors.BLUE_200),
-                    ft.ElevatedButton("Назад", on_click=_close, bgcolor=ft.colors.RED_200)
+                    ft.ElevatedButton("Подтвердить акт", on_click=yes_click, bgcolor=ft.colors.BLUE_300,
+                                      color=ft.Colors.BLACK87),
+                    ft.ElevatedButton("Назад", on_click=_close, bgcolor=ft.colors.RED_300, color=ft.Colors.BLACK87)
                 ], alignment=ft.MainAxisAlignment.CENTER
             )
         ],

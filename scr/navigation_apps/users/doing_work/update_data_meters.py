@@ -263,6 +263,24 @@ def update_data(page, meter_id, id_task, container1):
     def zagr(e):
         pick_files_dialog.pick_files(allow_multiple=True, allowed_extensions=["jpeg", "gif", "png", "webp"])
 
+    photo_picker_button = ft.ElevatedButton(
+        content=ft.Row(
+            controls=[
+                ft.Icon(name=ft.icons.CAMERA_ALT, size=22),
+                ft.Text("Выбрать фото"),
+            ], width=120,
+            alignment=ft.MainAxisAlignment.CENTER,
+            vertical_alignment=ft.CrossAxisAlignment.CENTER,
+        ),
+        style=ft.ButtonStyle(
+            shape=ft.RoundedRectangleBorder(radius=8),
+            padding=16,
+            side=ft.BorderSide(1, "#b8d1ff"),
+        ),
+        color="#1a3d7a",
+        on_click=zagr
+    )
+
     # Основной контент модального окна
     meters_data = ft.Container(
         content=ft.Stack(  # <-- Stack, чтобы наложить прогрузку поверх
@@ -274,7 +292,9 @@ def update_data(page, meter_id, id_task, container1):
                         reading_value,
                         remark,
                         save_photos,
-                        ft.ElevatedButton("Добавить фотографию", on_click=zagr),
+                        ft.Row([
+                            photo_picker_button
+                        ], alignment=ft.MainAxisAlignment.CENTER),
                         ft.Column(
                             [
                                 panel_list

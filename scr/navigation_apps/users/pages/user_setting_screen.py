@@ -71,11 +71,12 @@ def setting(page: ft.Page, conteiner: ft.Container):
         width=220,
         height=44,
         border_radius=8,
-        gradient=ft.LinearGradient(
-            begin=ft.alignment.center_left,
-            end=ft.alignment.center_right,
-            colors=["#ffebee", "#ffcdd2"],  # Мягкий красный градиент
-        ),
+        # gradient=ft.LinearGradient(
+        #     begin=ft.alignment.center_left,
+        #     end=ft.alignment.center_right,
+        #     colors=["#ffebee", "#ffcdd2"],  # Мягкий красный градиент
+        # ),
+        bgcolor="#ffebee",
         content=ft.Row(
             alignment=ft.MainAxisAlignment.CENTER,
             spacing=12,
@@ -83,7 +84,7 @@ def setting(page: ft.Page, conteiner: ft.Container):
                 ft.Icon(
                     name=ft.icons.EXIT_TO_APP,  # Более подходящая иконка для выхода
                     color="#c62828",  # Приглушенный красный
-                    size=20,
+                    size=21,
                 ),
                 ft.Text(
                     "Выход",
@@ -102,11 +103,12 @@ def setting(page: ft.Page, conteiner: ft.Container):
         width=220,
         height=44,
         border_radius=8,
-        gradient=ft.LinearGradient(
-            begin=ft.alignment.center_left,
-            end=ft.alignment.center_right,
-            colors=["#e6f0ff", "#d0e1ff"],  # Мягкий синий градиент
-        ),
+        bgcolor="#dbe9ff",
+        # gradient=ft.LinearGradient(
+        #     begin=ft.alignment.center_left,
+        #     end=ft.alignment.center_right,
+        #     colors=["#e6f0ff", "#d0e1ff"],  # Мягкий синий градиент
+        # ),
         content=ft.Row(
             alignment=ft.MainAxisAlignment.CENTER,
             spacing=12,

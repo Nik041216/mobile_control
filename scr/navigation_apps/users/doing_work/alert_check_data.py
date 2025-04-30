@@ -585,12 +585,12 @@ def commissioning_meters(page, id_task, container1, meter_id="", purpose=""):
                 [
                     ft.ElevatedButton("Ввод прибора учета",
                                       on_click=button_yes,
-                                      bgcolor=ft.colors.BLUE_200,
+                                      bgcolor=ft.colors.BLUE_300,
                                       color=ft.Colors.BLACK87
                                       ),
                     ft.ElevatedButton("Назад",
                                       on_click=button_no,
-                                      bgcolor=ft.colors.RED_200,
+                                      bgcolor=ft.colors.RED_300,
                                       color=ft.Colors.BLACK87),
                 ], alignment=ft.MainAxisAlignment.CENTER
             )

@@ -178,7 +178,23 @@ def create_meter(page, id_task, container1):
         else:
             pick_files_dialog.pick_files(allow_multiple=True, allowed_extensions=["jpeg", "gif", "png", "webp"])
 
-    photo_button = ft.ElevatedButton("Выбрать фотографию", on_click=zagr)
+    photo_picker_button = ft.ElevatedButton(
+        content=ft.Row(
+            controls=[
+                ft.Icon(name=ft.icons.CAMERA_ALT, size=22),
+                ft.Text("Выбрать фото"),
+            ], width=120,
+            alignment=ft.MainAxisAlignment.CENTER,
+            vertical_alignment=ft.CrossAxisAlignment.CENTER,
+        ),
+        style=ft.ButtonStyle(
+            shape=ft.RoundedRectangleBorder(radius=8),
+            padding=16,
+            side=ft.BorderSide(1, "#b8d1ff"),
+        ),
+        color="#1a3d7a",
+        on_click=zagr
+    )
 
     content = ft.Column(
         [
@@ -193,7 +209,10 @@ def create_meter(page, id_task, container1):
             seal_type_radio,
             remark,
             save_photos,
-            photo_button
+            ft.Row([
+                photo_picker_button
+            ], alignment=ft.MainAxisAlignment.CENTER),
+            ft.Text(size=1)
         ],
         expand=True,
         scroll=ft.ScrollMode.AUTO,
