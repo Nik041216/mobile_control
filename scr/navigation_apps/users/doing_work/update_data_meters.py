@@ -147,34 +147,47 @@ def update_data(page, meter_id, id_task, container1):
     meter_type_textfield = ft.TextField(label="Тип услуги", value=type_service, read_only=True)
 
     # Расширяемый список для редактирования данных счетчика
-    dop_buttons_redact = ft.Row(
-        [
-            ft.Column(
-                [
-                    marka_textfield,
-                    meter_number_textfield,
-                    seal_number_textfield,
-                    location_textfield,
-                    meter_type_textfield,
-                ]
-            )
-        ]
+    dop_buttons_redact = ft.Container(
+        content=ft.Column(
+            [
+                marka_textfield,
+                meter_number_textfield,
+                seal_number_textfield,
+                location_textfield,
+                meter_type_textfield,
+            ],
+            spacing=5  # Уменьшенное расстояние между полями
+        ),
+        padding=ft.padding.symmetric(horizontal=10, vertical=5),  # Отступы внутри контейнера
+        border_radius=ft.border_radius.vertical(bottom=10),
     )
 
     panels = [
         ft.ExpansionPanel(
-            header=ft.Text("Данные по счетчику"),
+            header=ft.Container(
+                content=ft.Text(
+                    "Данные по прибору учета",
+                    style=ft.TextStyle(size=14, weight=ft.FontWeight.W_500)
+                ),
+                alignment=ft.alignment.center,
+                padding=ft.padding.symmetric(vertical=8),
+                border_radius=ft.border_radius.vertical(top=10),
+            ),
             can_tap_header=True,
             content=dop_buttons_redact,
             expanded=False,
-            aspect_ratio=100,
-            bgcolor=ft.colors.BLUE_100
-        ),
+            bgcolor=ft.colors.BLUE_100,
+        )
     ]
 
-    panel_list = ft.ExpansionPanelList(
-        elevation=10,
-        controls=panels
+    panel_list = ft.Container(
+        content=ft.ExpansionPanelList(
+            controls=panels,
+            elevation=0  # Убираем стандартную тень
+        ),
+        border_radius=10,  # Скругляем внешний контейнер
+        clip_behavior=ft.ClipBehavior.HARD_EDGE,  # Обрезаем содержимое по границам
+        bgcolor=ft.colors.BLUE_50,
     )
 
     def save_image_to_db(file_path):
