@@ -76,6 +76,7 @@ def setting(page: ft.Page, conteiner: ft.Container):
         #     end=ft.alignment.center_right,
         #     colors=["#ffebee", "#ffcdd2"],  # Мягкий красный градиент
         # ),
+        ink=True,
         bgcolor="#ffebee",
         content=ft.Row(
             alignment=ft.MainAxisAlignment.CENTER,
@@ -109,6 +110,7 @@ def setting(page: ft.Page, conteiner: ft.Container):
         #     end=ft.alignment.center_right,
         #     colors=["#e6f0ff", "#d0e1ff"],  # Мягкий синий градиент
         # ),
+        ink=True,
         content=ft.Row(
             alignment=ft.MainAxisAlignment.CENTER,
             spacing=12,
