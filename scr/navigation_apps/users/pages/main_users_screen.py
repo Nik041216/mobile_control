@@ -97,12 +97,14 @@ def get_appbar(page):
                                       on_click=reset_filters,
                                       bgcolor=ft.colors.RED_400,
                                       icon=ft.icons.FILTER_ALT_OFF,
-                                      color=ft.colors.WHITE)]),
+                                      icon_color=ft.Colors.BLUE_50,
+                                      color=ft.colors.WHITE)], alignment=ft.MainAxisAlignment.CENTER),
             ft.Row([ft.ElevatedButton("Отгрузить все данные",
                                       on_click=on_click_upload,
                                       icon="BACKUP_ROUNDED",
+                                      icon_color=ft.Colors.BLUE_50,
                                       bgcolor=ft.colors.BLUE_400,
-                                      color=ft.colors.WHITE)]),
+                                      color=ft.colors.WHITE)], alignment=ft.MainAxisAlignment.CENTER),
         ], expand=True),
     )
 
@@ -125,12 +127,14 @@ def get_appbar(page):
                                       on_click=reset_filters,
                                       bgcolor=ft.colors.RED_400,
                                       icon=ft.icons.FILTER_ALT_OFF,
-                                      color=ft.colors.WHITE)]),
+                                      icon_color=ft.Colors.BLUE_50,
+                                      color=ft.colors.WHITE)], alignment=ft.MainAxisAlignment.CENTER),
             ft.Row([ft.ElevatedButton("Отгрузить все данные",
                                       on_click=on_click_upload,
                                       icon="BACKUP_ROUNDED",
+                                      icon_color=ft.Colors.BLUE_50,
                                       bgcolor=ft.colors.BLUE_400,
-                                      color=ft.colors.WHITE)]),
+                                      color=ft.colors.WHITE)], alignment=ft.MainAxisAlignment.CENTER),
         ], expand=True).controls
 
         page.update()
@@ -178,10 +182,10 @@ def update_results(filter_statuses, page, search_value):
 
         if status == 'выполнен':
             stat.controls.append(completed_icon)
-            color = const.tasks_completed_color
+            color = ft.Colors.GREEN
         elif status == 'в исполнении':
             stat.controls.append(unloaded_icon)
-            color = const.tasks_unloaded_color
+            color = '#ffc107'
         elif status == 'не выполнен':
             stat.controls.append(pending_icon)
             color = ft.colors.BLUE
@@ -190,7 +194,7 @@ def update_results(filter_statuses, page, search_value):
             color = ft.Colors.RED
 
         result_info = ft.Column([
-            ft.Text(f"ул.{street} д.{dom} кв.{apartment}", weight=ft.FontWeight.BOLD),
+            ft.Text(f"ул.{street}, д.{dom}, кв.{apartment}", weight=ft.FontWeight.BOLD),
             stat,
             ft.Text(f"Срок: {date_reverse} - {date_end_reverse}"),
             ft.Text(f"Цель: {purpose}")

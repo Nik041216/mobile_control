@@ -206,8 +206,10 @@ def create_meter(page, id_task, container1):
         actions=[
             ft.Row(
                 [
-                    ft.ElevatedButton("Сохранить", on_click=on_click_save, bgcolor=ft.colors.BLUE_200),
-                    ft.ElevatedButton("Назад", on_click=on_click_back, bgcolor=ft.colors.RED_200)
+                    ft.ElevatedButton("Сохранить", on_click=on_click_save, bgcolor=ft.colors.BLUE_300,
+                                      color=ft.Colors.BLACK87),
+                    ft.ElevatedButton("Назад", on_click=on_click_back, bgcolor=ft.colors.RED_300,
+                                      color=ft.Colors.BLACK87)
                 ], alignment=ft.MainAxisAlignment.CENTER
             )
         ],

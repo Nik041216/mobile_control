@@ -46,12 +46,56 @@ def get_appbar(page, id_task, container1):
         title=ft.Text(f"Все данные по заявке {id_task}"),
         content=ft.Column(
             [
-                ft.Text(f"Адрес: {street} {dom} {apartment}"),
-                ft.Text(f"ФИО владельца: {person_name}"),
-                ft.Text(f"Номер телефона: {phone_number}"),
-                ft.Text(f"Кол-во прописаных: {registered_residing}"),
-                ft.Text(f"Нормативы: {standarts}"),
-                ft.Text(f"Площадь огорода: {area}"),
+                ft.Text(
+                    spans=[
+                        ft.TextSpan("Адрес: "),
+                        ft.TextSpan(f"ул. {street}, д. {dom}, кв. {apartment}",
+                                    ft.TextStyle(weight=ft.FontWeight.BOLD)),
+                    ],
+                    no_wrap=False
+                ),
+                ft.Text(
+                    spans=[
+                        ft.TextSpan("ФИО владельца: "),
+                        ft.TextSpan(person_name, ft.TextStyle(weight=ft.FontWeight.BOLD)),
+                    ],
+                    no_wrap=False
+                ),
+                ft.Text(
+                    spans=[
+                        ft.TextSpan("Лицевой счет: "),
+                        ft.TextSpan(personal_account, ft.TextStyle(weight=ft.FontWeight.BOLD)),
+                    ],
+                    no_wrap=False
+                ),
+                ft.Text(
+                    spans=[
+                        ft.TextSpan("Номер телефона: "),
+                        ft.TextSpan(phone_number, ft.TextStyle(weight=ft.FontWeight.BOLD)),
+                    ],
+                    no_wrap=False
+                ),
+                ft.Text(
+                    spans=[
+                        ft.TextSpan("Количество прописанных: "),
+                        ft.TextSpan(registered_residing, ft.TextStyle(weight=ft.FontWeight.BOLD)),
+                    ],
+                    no_wrap=False
+                ),
+                ft.Text(
+                    spans=[
+                        ft.TextSpan("Нормативы: "),
+                        ft.TextSpan(standarts, ft.TextStyle(weight=ft.FontWeight.BOLD)),
+                    ],
+                    no_wrap=False
+                ),
+                ft.Text(
+                    spans=[
+                        ft.TextSpan("Площадь огорода: "),
+                        ft.TextSpan(area, ft.TextStyle(weight=ft.FontWeight.BOLD)),
+                    ],
+                    no_wrap=False
+                ),
                 remark_textfield
             ],
             scroll=ft.ScrollMode.AUTO,
@@ -109,10 +153,14 @@ def show_meters_data(page, id_task, container_chose_meters):
     results_meters_data = scr.BD.bd_users.local.select_bd.select_meters_data_new(id_task)
     results_address_data = scr.BD.bd_users.local.select_bd.select_tasks_data_for_one(id_task)
     result_act = scr.BD.bd_users.local.select_bd.select_acts_(id_task)
+    meters_split = []
     if result_act:
         for result in result_act:
             act_id, task_id, date, reason, made, not_working_meters, unloaded = result
-            meters_split = [r.strip() for r in not_working_meters.split(',') if r.strip()]
+            try:
+                meters_split = [r.strip() for r in not_working_meters.split(',') if r.strip()]
+            except:
+                pass
     filtered_results = [
         result_address_data_v2 for result_address_data_v2 in results_address_data
     ]
@@ -139,7 +187,8 @@ def show_meters_data(page, id_task, container_chose_meters):
     def on_click_act(e):
         act.viewing_act(page, id_task, container_chose_meters)
 
-    button_save = ft.ElevatedButton("Выполнить", on_click=on_click_save, bgcolor=ft.Colors.GREEN_200, visible=False)
+    button_save = ft.ElevatedButton("Выполнить", on_click=on_click_save, bgcolor=ft.Colors.GREEN_200,
+                                    color=ft.Colors.BLACK, visible=False)
     button_act = ft.ElevatedButton("Акт", on_click=on_click_act, bgcolor=ft.Colors.PINK_200, color=ft.Colors.BLACK,
                                    visible=False)
     filtered_results_meters = [result for result in results_meters_data]

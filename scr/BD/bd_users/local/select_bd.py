@@ -57,7 +57,7 @@ def select_tasks_data_new(sorting, search_value, date):
         if date == "future":
             query += f""" where t.date > current_date"""
         else:
-            query += f""" where t.date <= current_date or current_date <= t.date_end or t.status = 'просрочен' """
+            query += f""" where t.date <= current_date"""
         if sorting == "Адрес":
             query += f""" order by a.street, a.dom, a.apartment"""
         elif sorting == "Дата":
@@ -220,7 +220,7 @@ def select_count_task(date):
         if date == "future":
             query += f""" where date > current_date"""
         else:
-            query += f""" where date <= current_date or current_date <= date_end or status = 'просрочен' """
+            query += f""" where date <= current_date """
         query += """ 
                     GROUP BY 
                         status

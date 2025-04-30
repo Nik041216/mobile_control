@@ -50,7 +50,7 @@ def get_appbar(page):
     def create_checkboxes():
         """Создаёт чекбоксы, привязывая их к массиву `statuses`."""
         rows = []
-        count = select_bd.select_count_task("now")
+        count = select_bd.select_count_task("future")
         for status, (icon, color) in status_icons.items():
             checkbox = ft.Checkbox(label=f"{status.capitalize()} ({count[status]})",
                                    value=status in statuses,
@@ -98,12 +98,14 @@ def get_appbar(page):
                                       on_click=reset_filters,
                                       bgcolor=ft.colors.RED_400,
                                       icon=ft.icons.FILTER_ALT_OFF,
-                                      color=ft.colors.WHITE)]),
+                                      icon_color=ft.Colors.BLUE_50,
+                                      color=ft.colors.WHITE)], alignment=ft.MainAxisAlignment.CENTER),
             ft.Row([ft.ElevatedButton("Отгрузить все данные",
                                       on_click=on_click_upload,
                                       icon="BACKUP_ROUNDED",
+                                      icon_color=ft.Colors.BLUE_50,
                                       bgcolor=ft.colors.BLUE_400,
-                                      color=ft.colors.WHITE)]),
+                                      color=ft.colors.WHITE)], alignment=ft.MainAxisAlignment.CENTER),
         ], expand=True),
     )
 
@@ -126,12 +128,14 @@ def get_appbar(page):
                                       on_click=reset_filters,
                                       bgcolor=ft.colors.RED_400,
                                       icon=ft.icons.FILTER_ALT_OFF,
-                                      color=ft.colors.WHITE)]),
+                                      icon_color=ft.Colors.BLUE_50,
+                                      color=ft.colors.WHITE)], alignment=ft.MainAxisAlignment.CENTER),
             ft.Row([ft.ElevatedButton("Отгрузить все данные",
                                       on_click=on_click_upload,
                                       icon="BACKUP_ROUNDED",
+                                      icon_color=ft.Colors.BLUE_50,
                                       bgcolor=ft.colors.BLUE_400,
-                                      color=ft.colors.WHITE)]),
+                                      color=ft.colors.WHITE)], alignment=ft.MainAxisAlignment.CENTER),
         ], expand=True).controls
 
         page.update()
@@ -158,10 +162,10 @@ def get_content(page):
 
 def update_results(filter_statuses, page, search_value):
     screen_width = page.window_width
-    completed_icon = ft.Icon(ft.icons.CHECK_CIRCLE_OUTLINE)
-    failed_icon = ft.Icon(ft.icons.ERROR_OUTLINE)
-    pending_icon = ft.Icon(ft.icons.HOURGLASS_EMPTY)
-    unloaded_icon = ft.Icon(ft.icons.BUILD)
+    completed_icon = ft.Icon(ft.icons.CHECK_CIRCLE_OUTLINE, ft.Colors.GREEN)
+    failed_icon = ft.Icon(ft.icons.ERROR_OUTLINE, ft.Colors.RED)
+    pending_icon = ft.Icon(ft.icons.HOURGLASS_EMPTY, ft.Colors.BLUE)
+    unloaded_icon = ft.Icon(ft.icons.BUILD, '#ffc107')
 
     def create_task_container(result):
         id_task, _, _, _, street, dom, apartment, phone, _, date, date_end, _, status, purpose, *_ = result
@@ -172,10 +176,10 @@ def update_results(filter_statuses, page, search_value):
 
         if status == 'выполнен':
             stat.controls.append(completed_icon)
-            color = const.tasks_completed_color
+            color = ft.Colors.GREEN
         elif status == 'в исполнении':
             stat.controls.append(unloaded_icon)
-            color = const.tasks_unloaded_color
+            color = '#ffc107'
         elif status == 'не выполнен':
             stat.controls.append(pending_icon)
             color = ft.colors.BLUE
@@ -184,7 +188,7 @@ def update_results(filter_statuses, page, search_value):
             color = ft.Colors.RED
 
         result_info = ft.Column([
-            ft.Text(f"ул.{street} д.{dom} кв.{apartment}", weight=ft.FontWeight.BOLD),
+            ft.Text(f"ул.{street}, д.{dom}, кв.{apartment}", weight=ft.FontWeight.BOLD),
             stat,
             ft.Text(f"Срок: {date_reverse} - {date_end_reverse}"),
             ft.Text(f"Цель: {purpose}")
@@ -234,7 +238,8 @@ def update_results(filter_statuses, page, search_value):
         )
 
     def date_change_picker(e):
-        new_date.value = str(date_picker.value.date())
+        new_ = str(date_picker.value.date())
+        new_date.value = scr.func.reverse_date(new_)
         new_date.update()
 
     date_picker = ft.DatePicker(cancel_text="Отмена",
@@ -319,30 +324,98 @@ def update_results(filter_statuses, page, search_value):
                 if date and date_end:
                     date = scr.func.reverse_date(date)
                     date_end = scr.func.reverse_date(date_end)
-            result_info_address = f"Адрес: ул.{street} д.{dom} кв.{apartment}"
+            result_info_address = f"Адрес: ул.{street}, д.{dom}, кв.{apartment}"
             result_info_person = f"ФИО владельца: {person_name}"
             view = ft.AlertDialog(
                 modal=True,
                 title=ft.Text(result_info_address),
                 content=ft.Column(
                     [
-                        ft.Text(f"Лицевой счет: {personal_account}"),
-                        ft.Text(f"{result_info_person}"),
-                        ft.Text(f"Номер телефона: {phone_number}"),
-                        ft.Text(f"Тип адресса: {type_address}"),
-                        ft.Text(f"Дата начала выполнения: {date}"),
-                        ft.Text(f"Конечная дата выполнения: {date_end}"),
-                        ft.Text(f"Тип задания: {purpose}"),
-                        ft.Text(f"Количество прописанных: {registered_residing}"),
-                        ft.Text(f"Нормативы: {standarts}"),
-                        ft.Text(f"Площадь: {area}"),
+                        ft.Text(
+                            spans=[
+                                ft.TextSpan("Лицевой счет: "),
+                                ft.TextSpan(personal_account, ft.TextStyle(weight=ft.FontWeight.BOLD)),
+                            ],
+                            no_wrap=False
+                        ),
+                        ft.Text(
+                            spans=[
+                                ft.TextSpan("ФИО владельца: "),
+                                ft.TextSpan(person_name, ft.TextStyle(weight=ft.FontWeight.BOLD)),
+                            ],
+                            no_wrap=False
+                        ),
+                        ft.Text(
+                            spans=[
+                                ft.TextSpan("Номер телефона: "),
+                                ft.TextSpan(phone_number, ft.TextStyle(weight=ft.FontWeight.BOLD)),
+                            ],
+                            no_wrap=False
+                        ),
+                        ft.Text(
+                            spans=[
+                                ft.TextSpan("Тип адресса: "),
+                                ft.TextSpan(type_address, ft.TextStyle(weight=ft.FontWeight.BOLD)),
+                            ],
+                            no_wrap=False
+                        ),
+                        ft.Text(
+                            spans=[
+                                ft.TextSpan("Дата начала выполнения: "),
+                                ft.TextSpan(date, ft.TextStyle(weight=ft.FontWeight.BOLD)),
+                            ],
+                            no_wrap=False
+                        ),
+                        ft.Text(
+                            spans=[
+                                ft.TextSpan("Конечная дата выполнения: "),
+                                ft.TextSpan(date_end, ft.TextStyle(weight=ft.FontWeight.BOLD)),
+                            ],
+                            no_wrap=False
+                        ),
+                        ft.Text(
+                            spans=[
+                                ft.TextSpan("Тип задания: "),
+                                ft.TextSpan(purpose, ft.TextStyle(weight=ft.FontWeight.BOLD)),
+                            ],
+                            no_wrap=False
+                        ),
+                        ft.Text(
+                            spans=[
+                                ft.TextSpan("Количество прописанных: "),
+                                ft.TextSpan(registered_residing, ft.TextStyle(weight=ft.FontWeight.BOLD)),
+                            ],
+                            no_wrap=False
+                        ),
+                        ft.Text(
+                            spans=[
+                                ft.TextSpan("Нормативы: "),
+                                ft.TextSpan(standarts, ft.TextStyle(weight=ft.FontWeight.BOLD)),
+                            ],
+                            no_wrap=False
+                        ),
+                        ft.Text(
+                            spans=[
+                                ft.TextSpan("Площадь огорода: "),
+                                ft.TextSpan(area, ft.TextStyle(weight=ft.FontWeight.BOLD)),
+                            ],
+                            no_wrap=False
+                        ),
+                        ft.Text(
+                            spans=[
+                                ft.TextSpan("Примечание: "),
+                                ft.TextSpan(remark, ft.TextStyle(weight=ft.FontWeight.BOLD)),
+                            ],
+                            no_wrap=False
+                        )
                     ],
-                    width=screen_width * 0.95
+                    width=screen_width * 0.95, scroll=ft.ScrollMode.AUTO
                 ),
                 actions=[
                     ft.Row(
                         [
-                            ft.ElevatedButton("Назад", on_click=on_click, bgcolor=ft.colors.RED_200)
+                            ft.ElevatedButton("Назад", on_click=on_click, bgcolor=ft.colors.RED_300,
+                                              color=ft.Colors.BLACK87)
                         ], alignment=ft.MainAxisAlignment.CENTER
                     )
                 ],
@@ -353,14 +426,16 @@ def update_results(filter_statuses, page, search_value):
         def reschedule_to_another_date(e, id_task, date):
 
             def on_click(e):
-                current_date = datetime.datetime.now().strftime('%Y-%m-%d')
-                if date_picker.value and date_picker.value.date() <= datetime.datetime.strptime(current_date, '%Y-%m-%d').date():
+                current_date = datetime.datetime.now().strftime("%d-%m-%Y")
+                if date_picker.value and date_picker.value.date() <= datetime.datetime.strptime(current_date, "%d-%m-%Y").date():
                     new_date.error_text = "Задание не может быть перенесено\n на сегодня"
-                elif date_picker.value.date() > datetime.datetime.strptime(date_end, '%Y-%m-%d').date():
+                elif date_picker.value.date() > datetime.datetime.strptime(date_end, "%d-%m-%Y").date():
                     new_date.error_text = "Обговорите такой перенос с мастером"
                 else:
+                    new_date_ = date_picker.value.date()
                     new_date.value = date_picker.value.date()
-                    scr.BD.bd_users.local.update_bd.update_date(id_task, new_date.value)
+                    new_date.value = scr.func.reverse_date(new_date.value)
+                    scr.BD.bd_users.local.update_bd.update_date(id_task, new_date_)
                     update_results(filter_statuses, page, search_value)
                     page.close(change_date)
                 page.update()
@@ -385,11 +460,11 @@ def update_results(filter_statuses, page, search_value):
                         [
                             ft.ElevatedButton("Подтвердить",
                                               on_click=on_click,
-                                              bgcolor=ft.colors.BLUE_200,
+                                              bgcolor=ft.colors.BLUE_300, color=ft.Colors.BLACK87,
                                               width=page.window_width * 0.30),
                             ft.ElevatedButton("Назад",
                                               on_click=close,
-                                              bgcolor=ft.colors.BLUE_200,
+                                              bgcolor=ft.colors.BLUE_300, color=ft.Colors.BLACK87,
                                               width=page.window_width * 0.30)
                         ], alignment=ft.MainAxisAlignment.CENTER
                     )
@@ -403,8 +478,12 @@ def update_results(filter_statuses, page, search_value):
         # Используем замыкание для передачи правильного id_task + выбор действия
         def create_on_click(id_task, date):
             def on_click(e):
-                page.close(chose_action)
-                check_alert.func_check_address_data(page, id_task, where="future")
+                res = select_bd.select_acts_(id_task)
+                where = "task"
+                if res or status == "выполнен" or status == "в исполнении":
+                    page.go(f"/choise_meters/{id_task}/{where}")
+                else:
+                    check_alert.func_check_address_data(page, id_task, where)
 
             chose_action = ft.AlertDialog(
                 title=ft.Text("Вы хотите просмотреть данные или выполнить задание?"),
@@ -415,11 +494,11 @@ def update_results(filter_statuses, page, search_value):
                             [
                                 ft.ElevatedButton("Просмотреть",
                                                   on_click=lambda e: viewing(e, id_task),
-                                                  bgcolor=ft.colors.BLUE_200,
+                                                  bgcolor=ft.colors.BLUE_300, color=ft.Colors.BLACK87,
                                                   width=page.window_width * 0.35),
                                 ft.ElevatedButton("Выполнить",
                                                   on_click=on_click,
-                                                  bgcolor=ft.colors.BLUE_200,
+                                                  bgcolor=ft.colors.BLUE_300, color=ft.Colors.BLACK87,
                                                   width=page.window_width * 0.30)
                             ], alignment=ft.MainAxisAlignment.CENTER
                         ),
@@ -428,7 +507,7 @@ def update_results(filter_statuses, page, search_value):
                                 ft.ElevatedButton("Перенос задания",
                                                   on_click=lambda e: reschedule_to_another_date(e, id_task,
                                                                                                 date),
-                                                  bgcolor=ft.colors.BLUE_200),
+                                                  bgcolor=ft.colors.BLUE_300, color=ft.Colors.BLACK87),
                             ],
                             alignment=ft.MainAxisAlignment.CENTER
                         )

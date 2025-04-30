@@ -19,7 +19,8 @@ def add_photo(page, id_task, container1, meter_id):
         page.close(dlg)
         page.update()
 
-    button_save = ft.ElevatedButton("Сохранить", on_click=on_click_save, bgcolor=ft.colors.BLUE_200, visible=False)
+    button_save = ft.ElevatedButton("Сохранить", on_click=on_click_save, bgcolor=ft.colors.BLUE_300,
+                                    color=ft.Colors.BLACK87, visible=False)
 
     def save_image_to_db(file_path):
         with open(file_path, 'rb') as file:

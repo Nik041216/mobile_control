@@ -170,8 +170,8 @@ def func_check_address_data(page, id_task, where):
         actions=[
             ft.Row(
                 [
-                    ft.ElevatedButton("Да", on_click=button_yes, bgcolor=ft.colors.BLUE_200),
-                    ft.ElevatedButton("Назад", on_click=button_no, bgcolor=ft.colors.RED_200),
+                    ft.ElevatedButton("Да", on_click=button_yes, bgcolor=ft.colors.BLUE_300, color=ft.Colors.BLACK87),
+                    ft.ElevatedButton("Назад", on_click=button_no, bgcolor=ft.colors.RED_300, color=ft.Colors.BLACK87),
                 ], alignment=ft.MainAxisAlignment.CENTER
             )
         ],
@@ -385,8 +385,8 @@ def update_data_check(page, id_task, container1, meter_id="", purpose="съем"
         actions=[
             ft.Row(
                 [
-                    ft.ElevatedButton("Да", on_click=button_yes, bgcolor=ft.colors.BLUE_200),
-                    ft.ElevatedButton("Назад", on_click=button_no, bgcolor=ft.colors.BLUE_200),
+                    ft.ElevatedButton("Да", on_click=button_yes, bgcolor=ft.colors.BLUE_300, color=ft.Colors.BLACK87),
+                    ft.ElevatedButton("Назад", on_click=button_no, bgcolor=ft.colors.BLUE_300, color=ft.Colors.BLACK87),
                 ], alignment=ft.MainAxisAlignment.CENTER
             )
         ],
@@ -586,11 +586,12 @@ def commissioning_meters(page, id_task, container1, meter_id="", purpose=""):
                     ft.ElevatedButton("Ввод прибора учета",
                                       on_click=button_yes,
                                       bgcolor=ft.colors.BLUE_200,
-
+                                      color=ft.Colors.BLACK87
                                       ),
                     ft.ElevatedButton("Назад",
                                       on_click=button_no,
-                                      bgcolor=ft.colors.RED_200),
+                                      bgcolor=ft.colors.RED_200,
+                                      color=ft.Colors.BLACK87),
                 ], alignment=ft.MainAxisAlignment.CENTER
             )
         ],

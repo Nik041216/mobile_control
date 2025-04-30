@@ -140,11 +140,11 @@ def update_data(page, meter_id, id_task, container1):
     )
 
     # Поля ввода для редактирования данных счетчика
-    marka_textfield = ft.TextField(label="Марка", value=marka_name)
-    meter_number_textfield = ft.TextField(label="Заводской номер", value=meter_number)
-    seal_number_textfield = ft.TextField(label="Номер пломбы", value=seal_number)
-    location_textfield = ft.TextField(label="Место расположения", value=location)
-    meter_type_textfield = ft.TextField(label="Тип услуги", value=type_service)
+    marka_textfield = ft.TextField(label="Марка", value=marka_name, read_only=True)
+    meter_number_textfield = ft.TextField(label="Заводской номер", value=meter_number, read_only=True)
+    seal_number_textfield = ft.TextField(label="Номер пломбы", value=seal_number, read_only=True)
+    location_textfield = ft.TextField(label="Место расположения", value=location, read_only=True)
+    meter_type_textfield = ft.TextField(label="Тип услуги", value=type_service, read_only=True)
 
     # Расширяемый список для редактирования данных счетчика
     dop_buttons_redact = ft.Row(
@@ -163,7 +163,7 @@ def update_data(page, meter_id, id_task, container1):
 
     panels = [
         ft.ExpansionPanel(
-            header=ft.Text("Редактирование данных счётчика"),
+            header=ft.Text("Данные по счетчику"),
             can_tap_header=True,
             content=dop_buttons_redact,
             expanded=False,
@@ -287,8 +287,10 @@ def update_data(page, meter_id, id_task, container1):
         actions=[
             ft.Row(
                 [
-                    ft.ElevatedButton("Сохранить", on_click=on_click_time_task, bgcolor=ft.colors.BLUE_200),
-                    ft.ElevatedButton("Назад", on_click=on_click_back, bgcolor=ft.colors.RED_200)
+                    ft.ElevatedButton("Сохранить", on_click=on_click_time_task, bgcolor=ft.colors.BLUE_300,
+                                      color=ft.Colors.BLACK87,),
+                    ft.ElevatedButton("Назад", on_click=on_click_back, bgcolor=ft.colors.RED_300,
+                                      color=ft.Colors.BLACK87)
                 ], alignment=ft.MainAxisAlignment.CENTER
             )
         ],

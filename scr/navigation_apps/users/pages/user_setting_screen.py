@@ -20,7 +20,7 @@ def get_appbar(page):
 
 
 def get_content(page):
-    container = ft.Container(expand=True)
+    container = ft.Container(expand=True, alignment=ft.alignment.center)
     setting(page, container)
     return container
 
@@ -67,24 +67,66 @@ def setting(page: ft.Page, conteiner: ft.Container):
         ],
     )
 
-    bte = ft.Container(
-        content=ft.Row([
-            ft.Icon(ft.icons.TIME_TO_LEAVE, color=ft.colors.WHITE),
-            ft.Text("Выход", style=ft.TextStyle(color=ft.colors.WHITE))
-        ],
+    exit_button = ft.Container(
+        width=220,
+        height=44,
+        border_radius=8,
+        gradient=ft.LinearGradient(
+            begin=ft.alignment.center_left,
+            end=ft.alignment.center_right,
+            colors=["#ffebee", "#ffcdd2"],  # Мягкий красный градиент
+        ),
+        content=ft.Row(
             alignment=ft.MainAxisAlignment.CENTER,
+            spacing=12,
+            controls=[
+                ft.Icon(
+                    name=ft.icons.EXIT_TO_APP,  # Более подходящая иконка для выхода
+                    color="#c62828",  # Приглушенный красный
+                    size=20,
+                ),
+                ft.Text(
+                    "Выход",
+                    color="#8e0000",  # Темно-красный
+                    size=14,
+                    weight=ft.FontWeight.W_500,
+                ),
+            ],
         ),
-        padding=ft.padding.only(top=20, left=50, right=50, bottom=20),
-        bgcolor=const.tasks_completed_text_color,
-        border_radius=ft.border_radius.all(25),
-        shadow=ft.BoxShadow(
-            offset=ft.Offset(5, 5),
-            blur_radius=10,
-            color=ft.colors.BLACK38
-        ),
-        ink=True,
-        ink_color=ft.colors.RED_200,
+        padding=ft.padding.symmetric(horizontal=16),
+        border=ft.border.all(1, "#ef9a9a"),  # Светлая красная граница
         on_click=on_click_exit,
+    )
+
+    notification_button = ft.Container(
+        width=220,
+        height=44,
+        border_radius=8,
+        gradient=ft.LinearGradient(
+            begin=ft.alignment.center_left,
+            end=ft.alignment.center_right,
+            colors=["#e6f0ff", "#d0e1ff"],  # Мягкий синий градиент
+        ),
+        content=ft.Row(
+            alignment=ft.MainAxisAlignment.CENTER,
+            spacing=12,
+            controls=[
+                ft.Icon(
+                    name=ft.icons.NOTIFICATIONS_ACTIVE,
+                    color="#2a5db0",  # Приглушенный синий
+                    size=20,
+                ),
+                ft.Text(
+                    "Включить уведомления",
+                    color="#1a3d7a",  # Темно-синий
+                    size=14,
+                    weight=ft.FontWeight.W_500,
+                ),
+            ],
+        ),
+        padding=ft.padding.symmetric(horizontal=16),
+        border=ft.border.all(1, "#b8d1ff"),  # Светлая синяя граница
+        on_click=on_click
     )
 
     if result:
@@ -96,10 +138,11 @@ def setting(page: ft.Page, conteiner: ft.Container):
             ft.Text(f"Сотрудник: {last_name} {first_name}"),
             ft.Text(f"Логин: {login_user}"),
             ft.Text(f"Пароль: {password_user}"),
-            bte,
-            ft.ElevatedButton("Я хочу получать индивидуальные уведомления", on_click=on_click)
+            notification_button,
+            exit_button,
         ],
-        horizontal_alignment=ft.CrossAxisAlignment.CENTER
+        horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        expand=True
     )
     conteiner.content = content
     return conteiner

@@ -151,7 +151,7 @@ def viewing_act(page, id_task, container1):
         controls=[
             save_photos,
             ft.ElevatedButton("Добавить фотографию", on_click=zagr),
-        ]
+        ], spacing=0
     )
 
     act_data = ft.Container(
