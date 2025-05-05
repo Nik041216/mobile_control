@@ -71,17 +71,17 @@ def create_route(page):
                 )
             )
 
-        if page.route == "/rating":
-            page.views.append(
-                ft.View(
-                    route="/rating",
-                    controls=[ratyng_user_screen.get_content(page)],
-                    appbar=ratyng_user_screen.get_appbar(page),
-                    navigation_bar=get_navigation_bar(2),
-                    bgcolor=ft.Colors.BLUE_50,
-                    vertical_alignment=ft.MainAxisAlignment.CENTER
-                )
-            )
+        # if page.route == "/rating":
+        #     page.views.append(
+        #         ft.View(
+        #             route="/rating",
+        #             controls=[ratyng_user_screen.get_content(page)],
+        #             appbar=ratyng_user_screen.get_appbar(page),
+        #             navigation_bar=get_navigation_bar(2),
+        #             bgcolor=ft.Colors.BLUE_50,
+        #             vertical_alignment=ft.MainAxisAlignment.CENTER
+        #         )
+        #     )
 
         if page.route == "/settings":
             page.views.append(
@@ -146,17 +146,18 @@ def create_route(page):
                     icon=ft.Icons.TIMER_OUTLINED,
                     selected_icon=ft.Icons.TIMER_ROUNDED
                 ),
-                ft.NavigationBarDestination(
-                    icon=ft.Icons.ASSESSMENT_OUTLINED,
-                    selected_icon=ft.Icons.ASSESSMENT_ROUNDED
-                ),
+                # ft.NavigationBarDestination(
+                #     icon=ft.Icons.ASSESSMENT_OUTLINED,
+                #     selected_icon=ft.Icons.ASSESSMENT_ROUNDED
+                # ),
                 ft.NavigationBarDestination(
                     icon=ft.Icons.SETTINGS_OUTLINED,
                     selected_icon=ft.Icons.SETTINGS_ROUNDED
                 )
             ],
             on_change=lambda e: page.go(
-                ["/", "/future", "/rating", "/settings"][e.control.selected_index]
+                # ["/", "/future", "/rating", "/settings"][e.control.selected_index]
+                ["/", "/future", "/settings"][e.control.selected_index]
             ),
             label_behavior=ft.NavigationBarLabelBehavior.ONLY_SHOW_SELECTED,
             bgcolor=ft.Colors.BLUE_100,
