@@ -54,7 +54,7 @@ def delete_task(task_ids):
 def delete_task_completed():
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
-        query = f""" delete from tasks where status = 'выполнен' and 
+        query = f""" delete from tasks where status = 'выполнен' and unloaded = 1 and
                             datetime('now') > datetime (unloading_time, '+1 days') RETURNING id """
         result = cursor.execute(query)
         deleted_ids = [row[0] for row in result]
