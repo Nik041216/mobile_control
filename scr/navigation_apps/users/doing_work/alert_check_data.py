@@ -166,7 +166,7 @@ def func_check_address_data(page, id_task, where):
     check_address_data = ft.AlertDialog(
         modal=True,
         content=content,
-        title=ft.Text("Уточните Данные"),
+        title=ft.Text("Уточните данные"),
         actions=[
             ft.Row(
                 [
@@ -246,8 +246,8 @@ def update_data_check(page, id_task, container1, meter_id="", purpose="съем"
     )
 
     indicators_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Присутствуют и сохраненны ли ", "контрольные пломбы и индикаторы антимагнитных пломб и других"
-                                         " устройств позволяющих фиксировать факт вмешательства", "?",
+        "Присутствуют и сохраненны ли ", "контрольные пломбы и индикаторы антимагнитных пломб, и других"
+                                         " устройств, позволяющих фиксировать факт вмешательства", "?",
         indicators_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -255,7 +255,7 @@ def update_data_check(page, id_task, container1, meter_id="", purpose="съем"
     )
 
     star_spin_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Сигнальня звездочка вращается ", "равномерно", "?",
+        "Сигнальная звездочка вращается ", "равномерно", "?",
         star_spin_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -263,7 +263,7 @@ def update_data_check(page, id_task, container1, meter_id="", purpose="съем"
     )
 
     visual_litr_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Производится ли ", "визуальный отчет литров", "?",
+        "Производится ли ", "визуальный отсчет литров", "?",
         visual_litr_checkbox,
         on_checkbox_change,
         toggle_checkbox,

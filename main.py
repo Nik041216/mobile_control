@@ -20,7 +20,7 @@ async def main(page: ft.Page):
         ],
         current_locale=ft.Locale("ru", "RU")
     )
-    page.overlay.append(onesignal)
+    # page.overlay.append(onesignal)
     LoadingManager.init(page)
     await scr.toggle_user_sessions.handle_user_sessions(page)
 

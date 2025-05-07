@@ -176,7 +176,7 @@ def show_meters_data(page, id_task, container_chose_meters):
             date = scr.func.reverse_date(date)
             date_end = scr.func.reverse_date(date_end)
 
-    result_info_address = f"Адрес: ул.{street} д.{dom} кв.{apartment}"
+    result_info_address = f"Адрес: ул.{street}, д.{dom}, кв.{apartment}"
 
     def on_click_save(e):
         LoadingManager.show_()
