@@ -6,17 +6,7 @@ import scr.BD.bd_users.local.delete_bd
 import scr.BD.bd_users.local.select_bd
 import scr.API.api_user
 import scr.navigation_apps.navigations
-import scr.constants as const
 import flet_permission_handler as fph
-
-
-def get_appbar(page):
-    return ft.AppBar(
-        title=ft.Text("Профиль сотрудника"),
-        center_title=True,
-        toolbar_height=50,
-        bgcolor=ft.colors.BLUE_100,
-    )
 
 
 def get_content(page):

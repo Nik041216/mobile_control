@@ -274,6 +274,12 @@ def update_acts_insert_meters(id_task, string, meter):
                                      VALUES ({id_task}, '{today}', '{string}')"""
         cursor.execute(query)
         db.commit()
+        query = f""" update tasks set status = 'в испольнении'
+                    where id = {id_task} and status != 'выполнен' """
+        cursor.execute(query)
+        db.commit()
+        if scr.func.check_internet():
+            scr.BD.bd_users.bd_server_user.unload_task(id_task if isinstance(id_task, list) else [id_task])
 
 
 def update_photo_meter(last_meter_id, new_meter_id):

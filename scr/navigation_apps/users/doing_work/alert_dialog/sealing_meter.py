@@ -6,7 +6,7 @@ import scr.BD.bd_users.local.insert_bd
 import scr.BD.bd_users.local.select_bd
 import scr.BD.bd_users.bd_server_user
 import scr.func
-import scr.navigation_apps.users.doing_work.chose_meters
+import scr.navigation_apps.users.doing_work.chose_page.page_content as content2
 import os
 import base64
 from scr.components.loading import LoadingManager
@@ -37,7 +37,7 @@ def sealing(page, id_task, meter_id, container1):
 
     def not_installed(e):
         page.close(seal_al)
-        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, container1)
+        content2.show_meters_data(page, id_task, container1)
 
     seal_al = ft.AlertDialog(
         modal=True,
@@ -237,12 +237,12 @@ def sealing(page, id_task, meter_id, container1):
             scr.BD.bd_users.local.update_bd.update_seal(
                 seal_number_new.value, meter_id, id_task, remark.value, meter_reading.value, seal_type_radio.value
             )
-            scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, container1)
+            content2.show_meters_data(page, id_task, container1)
             page.close(alert)
 
     def on_click_back(e):
         page.close(alert)
-        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, container1)
+        content2.chose_meters.show_meters_data(page, id_task, container1)
 
     alert = ft.AlertDialog(
         modal=True,

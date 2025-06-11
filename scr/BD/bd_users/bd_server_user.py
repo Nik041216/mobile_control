@@ -220,15 +220,15 @@ def unload_task(id_task):
                         "time_to_server": time_to_server,
                         "remark": task_remark or "",
                         "status": status,
-                        "meter_id": meter_id,
+                        "meter_id": meter_id or "",
                         "purpose": purpose,
                         "last_reading_date": last_reading_date or "",
                         "last_reading_value": last_reading_value or "",
                         "meter_remark": meter_remark or "",
-                        "seal_number": seal_number,
-                        "meter_marka": meter_marka,
-                        "antimagnetic_protection": antimagnetic_protection,
-                        "type_water": type_water,
+                        "seal_number": seal_number or "",
+                        "meter_marka": meter_marka or "",
+                        "antimagnetic_protection": antimagnetic_protection or "",
+                        "type_water": type_water or "",
                         "id_address": id_address
                     }
                     task_updates.append(update_data)

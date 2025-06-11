@@ -1,12 +1,13 @@
 import scr.func
 import flet as ft
-from scr.navigation_apps.users.pages import (
-    main_users_screen,
-    future_user_screen,
-    ratyng_user_screen,
-    user_setting_screen
+from scr.navigation_apps.users.pages.task_page import (page_content as task_content, page_appbar as task_app)
+from scr.navigation_apps.users.pages.future_task_page import (
+    page_content as future_task_content,
+    page_appbar as future_task_app
 )
-from scr.navigation_apps.users.doing_work import chose_meters
+from scr.navigation_apps.users.pages.setting_page import (page_content as setting_content, page_appbar as setting_appbar)
+from scr.navigation_apps.users.doing_work.chose_page import (page_appbar as chose_appbar, page_content as chose_content,
+                                                             page_floating_button as chose_floating_button)
 from scr import verifications
 
 
@@ -53,8 +54,8 @@ def create_route(page):
         page.views.append(
             ft.View(
                 route="/",
-                controls=[main_users_screen.get_content(page)],
-                appbar=main_users_screen.get_appbar(page),
+                controls=[task_content.get_content(page)],
+                appbar=task_app.get_appbar(page),
                 navigation_bar=get_navigation_bar(0),
                 bgcolor=ft.Colors.BLUE_50
             )
@@ -64,8 +65,8 @@ def create_route(page):
             page.views.append(
                 ft.View(
                     route="/future",
-                    controls=[future_user_screen.get_content(page)],
-                    appbar=future_user_screen.get_appbar(page),
+                    controls=[future_task_content.get_content(page)],
+                    appbar=future_task_app.get_appbar(page),
                     navigation_bar=get_navigation_bar(1),
                     bgcolor=ft.Colors.BLUE_50
                 )
@@ -87,8 +88,8 @@ def create_route(page):
             page.views.append(
                 ft.View(
                     route="/settings",
-                    controls=[user_setting_screen.get_content(page)],
-                    appbar=user_setting_screen.get_appbar(page),
+                    controls=[setting_content.get_content(page)],
+                    appbar=setting_appbar.get_appbar(page),
                     navigation_bar=get_navigation_bar(3),
                     bgcolor=ft.Colors.BLUE_50
                 )
@@ -101,16 +102,16 @@ def create_route(page):
                 navigation_bar = get_navigation_bar(0)
             else:
                 navigation_bar = get_navigation_bar(1)
-            content = chose_meters.get_content(page, id_task)
+            content = chose_content.get_content(page, id_task)
 
             page.views.append(
                 ft.View(
                     route=page.route,
                     controls=[content],
-                    appbar=chose_meters.get_appbar(page, id_task, content),
+                    appbar=chose_appbar.get_appbar(page, id_task, content),
                     navigation_bar=navigation_bar,
                     bgcolor=ft.Colors.BLUE_50,
-                    floating_action_button=chose_meters.get_floating_action_button(page, id_task, content)
+                    floating_action_button=chose_floating_button.get_floating_action_button(page, id_task, content)
                 )
             )
 

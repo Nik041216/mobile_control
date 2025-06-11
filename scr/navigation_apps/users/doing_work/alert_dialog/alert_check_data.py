@@ -1,10 +1,11 @@
 import flet as ft
 import scr.BD.bd_users.local.select_bd
 import scr.BD.bd_users.local.insert_bd
-import scr.navigation_apps.users.doing_work.update_data_meters
-import scr.navigation_apps.users.doing_work.photo_not_working_meters
-import scr.navigation_apps.users.doing_work.sealing_meter
-import scr.navigation_apps.users.doing_work.create_new_meters
+import scr.navigation_apps.users.doing_work.alert_dialog.update_data_meters
+import scr.navigation_apps.users.doing_work.alert_dialog.photo_not_working_meters
+import scr.navigation_apps.users.doing_work.alert_dialog.sealing_meter
+import scr.navigation_apps.users.doing_work.alert_dialog.create_new_meters
+import scr.navigation_apps.users.doing_work.chose_page.page_content as chose
 import scr.func
 
 
@@ -342,7 +343,7 @@ def update_data_check(page, id_task, container1, meter_id="", purpose="съем"
 
         def on_button_yes(e):
             page.close(bs)
-            scr.navigation_apps.users.doing_work.photo_not_working_meters.add_photo(page, id_task, container1, meter_id)
+            scr.navigation_apps.users.doing_work.alert_dialog.photo_not_working_meters.add_photo(page, id_task, container1, meter_id)
 
         bs = ft.AlertDialog(
             modal=True,
@@ -359,24 +360,24 @@ def update_data_check(page, id_task, container1, meter_id="", purpose="съем"
             page.open(bs)
         else:
             if failure:
-                scr.navigation_apps.users.doing_work.photo_not_working_meters.add_photo(page, id_task, container1,
-                                                                                        meter_id)
+                scr.navigation_apps.users.doing_work.alert_dialog.photo_not_working_meters.add_photo(page, id_task, container1,
+                                                                                                     meter_id)
             else:
                 if purpose == "съем":
-                    scr.navigation_apps.users.doing_work.update_data_meters.update_data(page, meter_id, id_task,
-                                                                                        container1)
+                    scr.navigation_apps.users.doing_work.alert_dialog.update_data_meters.update_data(page, meter_id, id_task,
+                                                                                                     container1)
                 elif purpose == "новый":
-                    scr.navigation_apps.users.doing_work.create_new_meters.create_meter(page, id_task,
-                                                                                        container1)
+                    scr.navigation_apps.users.doing_work.alert_dialog.create_new_meters.create_meter(page, id_task,
+                                                                                                     container1)
                 else:
-                    scr.navigation_apps.users.doing_work.sealing_meter.sealing(page, id_task, meter_id,
-                                                                               container1)
+                    scr.navigation_apps.users.doing_work.alert_dialog.sealing_meter.sealing(page, id_task, meter_id,
+                                                                                            container1)
         page.update()
         page.close(check_meters_data)
 
     def button_no(e):
         page.close(check_meters_data)
-        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, container1)
+        chose.show_meters_data(page, id_task, container1)
 
     check_meters_data = ft.AlertDialog(
         modal=True,
@@ -574,7 +575,7 @@ def commissioning_meters(page, id_task, container1, meter_id="", purpose=""):
 
     def button_no(e):
         page.close(check_meters_data)
-        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, container1)
+        chose.show_meters_data(page, id_task, container1)
 
     check_meters_data = ft.AlertDialog(
         modal=True,

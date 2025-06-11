@@ -34,25 +34,6 @@ def show_alert_yn(page, message):
     page.update()
 
 
-def create_filter_button(icon, color, status, on_click):
-    return ft.Container(
-        content=ft.Row([icon], alignment=ft.MainAxisAlignment.CENTER),
-        padding=ft.padding.only(top=5, bottom=5),
-        margin=ft.margin.only(left=5, right=5),
-        bgcolor=color,
-        border_radius=ft.border_radius.all(35),
-        shadow=ft.BoxShadow(
-            offset=ft.Offset(5, 5),
-            blur_radius=10,
-            color=ft.colors.BLACK38
-        ),
-        ink=True,
-        ink_color=ft.colors.RED_200,
-        col=1,
-        on_click=lambda e: on_click(e, icon.color, status)
-    )
-
-
 def check_internet():
     try:
         # Проверяем доступность DNS-сервера Google
@@ -64,7 +45,7 @@ def check_internet():
 
 def reverse_date(date):
     if date:
-        date_obj = datetime.datetime.strptime(date, "%Y-%m-%d")
+        date_obj = datetime.datetime.strptime(str(date), "%Y-%m-%d")
         date = date_obj.strftime("%d-%m-%Y")
         return date
 

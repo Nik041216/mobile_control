@@ -97,6 +97,12 @@ def insert_acts(id_task, string):
                      VALUES ({id_task}, '{today}', '{string}')"""
         cursor.execute(query)
         db.commit()
+        query = f""" update tasks set status = 'в исполнении'
+                            where id = {id_task} and status != 'выполнен' """
+        cursor.execute(query)
+        db.commit()
+        if scr.func.check_internet():
+            scr.BD.bd_users.bd_server_user.unload_task(id_task if isinstance(id_task, list) else [id_task])
 
 
 def insert_deleted_photo(server_id):

@@ -2,7 +2,7 @@ import flet as ft
 import scr.BD.bd_users.local.select_bd as select
 import scr.BD.bd_users.local.update_bd as update
 import scr.func
-import scr.navigation_apps.users.doing_work.chose_meters as chose
+import scr.navigation_apps.users.doing_work.chose_page.page_content as chose
 from scr.components.loading import LoadingManager
 import scr.BD.bd_users.bd_server_user as bd
 import os

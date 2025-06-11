@@ -8,7 +8,7 @@ import scr.BD.bd_users.local.select_bd
 import scr.BD.bd_users.bd_server_user
 import scr.toggle_user_sessions
 import scr.func
-import scr.navigation_apps.users.doing_work.chose_meters
+import scr.navigation_apps.users.doing_work.chose_page.page_content as content
 import base64
 from scr.components.loading import LoadingManager
 
@@ -69,7 +69,7 @@ def update_data(page, meter_id, id_task, container1):
         today = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         scr.BD.bd_users.local.update_bd.update_local_tasks(
             str(today), id_task, reading_value.value, remark.value, meter_id)
-        scr.navigation_apps.users.doing_work.chose_meters.show_meters_data(page, id_task, container1)
+        content.show_meters_data(page, id_task, container1)
         page.close(dlg_modal)
         page.update()
 

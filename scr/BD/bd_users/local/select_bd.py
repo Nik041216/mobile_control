@@ -243,6 +243,21 @@ def select_count_task(date):
         return status_counts
 
 
+def select_count_all_task():
+    with sl.connect('database_client.db') as db:
+        cursor = db.cursor()
+        query = f""" SELECT 
+                        COUNT(*) as task_count
+                    FROM 
+                        tasks """
+        cursor.execute(query)
+        result = cursor.fetchone()
+        if result:
+            return result[0]
+        else:
+            return 0
+
+
 def select_acts_(task_id):
     with sl.connect('database_client.db') as db:
         cursor = db.cursor()
