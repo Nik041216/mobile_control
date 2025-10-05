@@ -130,8 +130,8 @@ def get_task_for_upload(id_task):
             mt.remark_meter, t.purpose, m.seal_number, m.marka_name, m.antimagnetic_protection,
             m.type_service, t.id_address
         FROM tasks AS t
-        JOIN meter_task AS mt ON mt.task_id = t.id
-        JOIN meters AS m ON mt.meter_id = m.meter_number
+        LEFT JOIN meter_task AS mt ON mt.task_id = t.id
+        LEFT JOIN meters AS m ON mt.meter_id = m.meter_number
         left JOIN meter_reading AS mr ON mr.meter_id = mt.meter_id
         where t.id in ({','.join(['?'] * len(id_task))})"""
         cursor.execute(query, id_task)

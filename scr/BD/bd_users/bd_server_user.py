@@ -227,7 +227,7 @@ def unload_task(id_task):
                         "meter_remark": meter_remark or "",
                         "seal_number": seal_number or "",
                         "meter_marka": meter_marka or "",
-                        "antimagnetic_protection": antimagnetic_protection or "",
+                        "antimagnetic_protection": antimagnetic_protection or None,
                         "type_water": type_water or "",
                         "id_address": id_address
                     }

@@ -463,7 +463,7 @@ def commissioning_meters(page, id_task, container1, meter_id="", purpose=""):
     )
 
     dovodomernye_vrezki_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Есть ли ", "доводомерные врезки", "?",
+        "Отсутствуют ли ", "доводомерные врезки", "?",
         dovodomernye_vrezki_checkbox,
         on_checkbox_change,
         toggle_checkbox,
@@ -471,7 +471,7 @@ def commissioning_meters(page, id_task, container1, meter_id="", purpose=""):
     )
 
     utechki_do_meter_checkbox_container = scr.func.create_checkbox_with_wrapped_text(
-        "Есть ли ", "утечки до ", "прибора учета?",
+        "Отсутствуют ли ", "утечки до ", "прибора учета?",
         utechki_do_meter_checkbox,
         on_checkbox_change,
         toggle_checkbox,
